@@ -1,0 +1,45 @@
+  # ATC Landing Page (Static HTML + Tailwind CDN)
+  Summary
+  using a single index.html and styles.css, Tailwind via CDN, and asset files
+  interactions 1:1.
+
+Design: https://www.figma.com/design/33uxOtpvFkDKlrqduaxDlg/ATC-Landing-new?node-id=0-1&t=fIxOIjkcxrSi4rih-1
+
+  Public APIs / Interfaces
+  - None. Static assets only. No backend or public API changes.
+
+  Implementation Steps
+
+      - Ensure MCP tools are available (restart Codex after config if needed).
+      - Call get_design_context for the provided Figma node URL (node 1-283).
+      - If response is too large, call get_metadata then re-fetch specific nodes.
+      - Call get_screenshot for the exact node to use as the visual reference.
+      - Download any required assets (images/SVGs) from MCP. Save in assets/
+  2. Project scaffold
+          - /home/hosz/src/ATC/index.html
+          - /home/hosz/src/ATC/styles.css
+          - /home/hosz/src/ATC/assets/ (for images/SVGs)
+      - Add Tailwind CDN in index.html.
+      - Set global typography and base styles in styles.css based on Figma.
+      - Translate Figma sections into semantic HTML (header, main, section,
+        in :root for brand colors from Figma.
+      - Implement any backgrounds (gradients/shapes/patterns) in CSS to match the
+        design.
+      - Build buttons, cards, badges, and other UI elements to match Figma.
+      - Use Tailwind for most styles; add custom CSS only when Tailwind can’t
+        express a design detail precisely.
+  5. Interactions + motion
+      - Implement interactions specified in Figma (hover, focus, transitions).
+      - If Figma defines interactive elements (e.g., toggles), add minimal JS
+
+  Assumptions / Defaults
+
+  - The page is hosted at the root of this static project (index.html), not
+    embedded into another app.
+  - Assets can be stored locally under assets/.
+  - Tailwind via CDN is acceptable (no build tooling).
+  - Figma MCP will be available in the next session so design context and assets
+    can be fetched.
+
+
+  If you want anything changed (e.g., different folder, build pipeline, or output

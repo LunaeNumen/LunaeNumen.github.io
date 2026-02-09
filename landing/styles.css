@@ -1,0 +1,24 @@
+:root {
+  color-scheme: light;
+  --atc-blue: #413ba2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: #ffffff;
+  color: var(--atc-blue);
+}
+
+img {
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
