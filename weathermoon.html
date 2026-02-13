@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<!-- saved from url=(1569)https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/9cef14adf4ca0f7a830574ebf1621ff2/c4ae3cf0-fe21-47f8-a8a8-83133e9c4808/c0bbe356.html?AWSAccessKeyId=ASIA2F3EMEYE5HYV7OI4&Signature=QqQMKuMm8h%2Bphw5KN%2BORDFJoGTs%3D&x-amz-security-token=IQoJb3JpZ2luX2VjECcaCXVzLWVhc3QtMSJHMEUCIHvjwAZoJMEvJpXgYNMLVYS%2Ft8Hb8x%2BGSRaklz6wBtcRAiEAglChzrOR16g3R7qH%2B5gF8D%2Fg3DXBxEMCxgwBS1OK2iUq%2FAQI8P%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARABGgw2OTk3NTMzMDk3MDUiDFRcD4mCkcKfpzKT9irQBJ51kdbxkNQoB5iN7mF4LxPFEUOdI7hA6t87y8smf70pdDvYC454xmAL1%2BAn8z7vHL7OpoY0B5PFSHImsgg4DLMqCkt42wRT0SucAYXfHu21qZ%2BdAj%2B0uvBP%2BJBFctg3zXe7oGsnRV40GsthS7WwI35u263QXyzeslibFEuCRgdUvYChVAbV3ao1srqPp9cUnWFUUl%2BCwfOnP1hpFMLBVb%2B1jTKbtdX%2B%2Fozk62dVgGCCAp%2BcldQ3Nkaay1y2L3X9Tku6ylkXm7ey7Hsm9sM3KujK1U3wwdgpvIpXSP3ogfxhz5PmGhAZrl8HU1vz6isLE%2FW0iWwCXaV55N%2FkL2flNKqfUHKdRbDJAXjQzUu3kFKr%2FwpP1QtFCkU50B7H%2BiTry%2BePYb2v5I066WfrtOYxOp6IJnvv52x9bM788gu6sPpkLt87YQc2A1libLwjM5Vj40bSfD0e8I1F9Ps873CywKpBla%2B3ZwnMkxvOWGFnr6n3h9pFghkTGBriEesE2PsasGNC1JuPEmv0UKrJ2udv%2FuDTt1I67zNmKyCXeO0zwtO%2BMX2SmIXxOaf0Axr9UU8FKTqwt2wzspqHTK9c3q1WF%2FrkZIPR223NzSM%2FG%2FyEpxsTrtPWWUzf4PMWDFhqmY8Iqdws3VTFWRVrg7tbN23PNmNf2bn3DGTUvnTLnaFxg9IB9DRidd3hWiNNFOZuqyKOlLSNhALJhU7ygJFn19I6MhiSLhSXGtdQERSOQ5AZPt9X4ljRjfMnT54NjKcgggC6LoA01NpNQou9lP%2BJFmgxhTAws%2Fm8zAY6mAGvEYBVu%2FdZs5oeFqm4zp8ctN6iCB3DTeA%2B%2F52QdOBzVdIv%2B193E6kDKYjWgrwlI3Ab3iQuF6S0bSEsf9pwK0aUIUUmOXDoxMbrf3Ph2qYexmg%2FZmm0kZZiiQwvCTqf1JlfPeWPlht9mayXC6MrtpVnH%2FiGx3SlKH2boi3u97NwErzRtHs2TNuXP64tBHrARuG%2BFrNphwXSXw%3D%3D&Expires=1771000602 -->
+<html lang="en" style="--vsc-domain: &quot;ppl-ai-code-interpreter-files.s3.amazonaws.com&quot;;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather &amp; Moon Widget</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+
+        .widget-container {
+            background: #ffffff;
+            padding: 20px;
+            color: #1f1e1d;
+            width: 280px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .location {
+            font-size: 11px;
+            font-weight: 600;
+            color: #1f1e1d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .moon-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #1f1e1d;
+            opacity: 0.8;
+        }
+
+        .moon-visual-small {
+            width: 20px;
+            height: 20px;
+        }
+
+        .moon-visual-small svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .main-weather {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .temperature {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+            color: #1f1e1d;
+        }
+
+        .weather-icon {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .weather-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .condition {
+            font-size: 13px;
+            color: #1f1e1d;
+            margin-bottom: 12px;
+            text-transform: capitalize;
+        }
+
+        .forecast {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            font-size: 10px;
+        }
+
+        .forecast-day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .day-label {
+            color: #1f1e1d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 2px;
+        }
+
+        .temp-range {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+        }
+
+        .temp-day {
+            font-weight: 600;
+            color: #1f1e1d;
+        }
+
+        .temp-night {
+            color: #1f1e1d;
+            opacity: 0.5;
+        }
+
+        .loading, .error {
+            text-align: center;
+            padding: 20px;
+            color: #1f1e1d;
+            font-size: 13px;
+        }
+    </style>
+<input type="hidden" id="_o_dbjbempljhcmhlfpfacalomonjpalpko" data-inspect-config="7"><script type="text/javascript" src="chrome-extension://dbjbempljhcmhlfpfacalomonjpalpko/scripts/inspector.js"></script><style>[_nghost-ng-c2697620354]{font-family:Open Sans,sans-serif;color:#121212}</style></head>
+<body>
+    <div class="widget-container" id="mainWidget">
+                <div class="header">
+                    <div class="location">Kraków</div>
+                    <div class="moon-info">
+                        <div class="moon-visual-small"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#1f1e1d" stroke-width="3"></circle>
+                <path d="M 50 10 A 40 40 0 0 0 50 90 Q 47.89246887539775 50 50 10 Z" fill="#1f1e1d"></path>
+            </svg></div>
+                        <span>Waning</span>
+                    </div>
+                </div>
+                <div class="main-weather">
+                    <div class="temperature">9°C</div>
+                    <div class="weather-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1f1e1d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></div>
+                </div>
+                <div class="condition">Clear sky</div>
+                <div class="forecast">
+                    
+                    <div class="forecast-day">
+                        <div class="day-label">Sat</div>
+                        <div class="temp-range">
+                            <div class="temp-day">5°</div>
+                            <div class="temp-night">1°</div>
+                        </div>
+                    </div>
+                
+                    <div class="forecast-day">
+                        <div class="day-label">Sun</div>
+                        <div class="temp-range">
+                            <div class="temp-day">1°</div>
+                            <div class="temp-night">-5°</div>
+                        </div>
+                    </div>
+                
+                    <div class="forecast-day">
+                        <div class="day-label">Mon</div>
+                        <div class="temp-range">
+                            <div class="temp-day">-2°</div>
+                            <div class="temp-night">-7°</div>
+                        </div>
+                    </div>
+                
+                    <div class="forecast-day">
+                        <div class="day-label">Tue</div>
+                        <div class="temp-range">
+                            <div class="temp-day">3°</div>
+                            <div class="temp-night">-5°</div>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+
+    <script>
+        const KRAKOW_LAT = 50.0647;
+        const KRAKOW_LON = 19.9450;
+
+        const weatherIcons = {
+            clear: '<svg viewBox="0 0 24 24" fill="none" stroke="#1f1e1d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>',
+            cloudy: '<svg viewBox="0 0 24 24" fill="none" stroke="#1f1e1d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>',
+            rain: '<svg viewBox="0 0 24 24" fill="none" stroke="#1f1e1d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16" y1="13" x2="16" y2="21"/><line x1="8" y1="13" x2="8" y2="21"/><line x1="12" y1="15" x2="12" y2="23"/><path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/></svg>',
+            snow: '<svg viewBox="0 0 24 24" fill="none" stroke="#1f1e1d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="m5 9 7-7 7 7"/><path d="m5 15 7 7 7-7"/><line x1="2" y1="12" x2="22" y2="12"/></svg>',
+            fog: '<svg viewBox="0 0 24 24" fill="none" stroke="#1f1e1d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18M3 14h18M3 18h18"/></svg>',
+            thunder: '<svg viewBox="0 0 24 24" fill="none" stroke="#1f1e1d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>'
+        };
+
+        const weatherCodes = {
+            0: { description: 'Clear sky', icon: 'clear' },
+            1: { description: 'Mainly clear', icon: 'clear' },
+            2: { description: 'Partly cloudy', icon: 'cloudy' },
+            3: { description: 'Overcast', icon: 'cloudy' },
+            45: { description: 'Foggy', icon: 'fog' },
+            48: { description: 'Foggy', icon: 'fog' },
+            51: { description: 'Light drizzle', icon: 'rain' },
+            53: { description: 'Drizzle', icon: 'rain' },
+            55: { description: 'Heavy drizzle', icon: 'rain' },
+            61: { description: 'Light rain', icon: 'rain' },
+            63: { description: 'Rain', icon: 'rain' },
+            65: { description: 'Heavy rain', icon: 'rain' },
+            71: { description: 'Light snow', icon: 'snow' },
+            73: { description: 'Snow', icon: 'snow' },
+            75: { description: 'Heavy snow', icon: 'snow' },
+            77: { description: 'Snow grains', icon: 'snow' },
+            80: { description: 'Light showers', icon: 'rain' },
+            81: { description: 'Showers', icon: 'rain' },
+            82: { description: 'Heavy showers', icon: 'rain' },
+            85: { description: 'Light snow showers', icon: 'snow' },
+            86: { description: 'Snow showers', icon: 'snow' },
+            95: { description: 'Thunderstorm', icon: 'thunder' },
+            96: { description: 'Thunderstorm with hail', icon: 'thunder' },
+            99: { description: 'Thunderstorm with hail', icon: 'thunder' }
+        };
+
+        function getMoonPhase(date = new Date()) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+
+            let jd = 367 * year - Math.floor(7 * (year + Math.floor((month + 9) / 12)) / 4) +
+                     Math.floor(275 * month / 9) + day + 1721013.5;
+
+            const daysSinceNew = jd - 2451549.5;
+            const newMoons = daysSinceNew / 29.53058867;
+            const phase = newMoons - Math.floor(newMoons);
+            const illumination = (1 - Math.cos(phase * 2 * Math.PI)) / 2 * 100;
+
+            return { phase: phase, illumination: illumination };
+        }
+
+        function getMoonPhaseName(phase) {
+            if (phase < 0.03 || phase > 0.97) return 'New';
+            if (phase < 0.22) return 'Waxing';
+            if (phase < 0.28) return '1st Qtr';
+            if (phase < 0.47) return 'Waxing';
+            if (phase < 0.53) return 'Full';
+            if (phase < 0.72) return 'Waning';
+            if (phase < 0.78) return 'Last Qtr';
+            return 'Waning';
+        }
+
+        function getMoonSVG(phase) {
+            const illum = phase;
+            let moonPath;
+
+            if (illum < 0.25) {
+                const curve = (illum * 4) * 50 - 25;
+                moonPath = `M 50 10 A 40 40 0 0 1 50 90 Q ${50 + curve} 50 50 10 Z`;
+            } else if (illum < 0.5) {
+                const curve = ((illum - 0.25) * 4) * 50 - 25;
+                moonPath = `M 50 10 A 40 40 0 0 1 50 90 Q ${50 - curve} 50 50 10 Z`;
+            } else if (illum < 0.75) {
+                const curve = ((illum - 0.5) * 4) * 50 - 25;
+                moonPath = `M 50 10 A 40 40 0 0 0 50 90 Q ${50 + curve} 50 50 10 Z`;
+            } else {
+                const curve = ((illum - 0.75) * 4) * 50 - 25;
+                moonPath = `M 50 10 A 40 40 0 0 0 50 90 Q ${50 - curve} 50 50 10 Z`;
+            }
+
+            return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#1f1e1d" stroke-width="3"/>
+                <path d="${moonPath}" fill="#1f1e1d"/>
+            </svg>`;
+        }
+
+        async function fetchWeather() {
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${KRAKOW_LAT}&longitude=${KRAKOW_LON}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=Europe/Warsaw&forecast_days=5`;
+
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Weather data unavailable');
+
+                const data = await response.json();
+                displayWidget(data);
+            } catch (error) {
+                document.getElementById('mainWidget').innerHTML = `
+                    <div class="error">Unable to load data</div>
+                `;
+                setTimeout(fetchWeather, 5000);
+            }
+        }
+
+        function displayWidget(data) {
+            const current = data.current;
+            const weatherCode = current.weather_code;
+            const weatherInfo = weatherCodes[weatherCode] || { description: 'Unknown', icon: 'clear' };
+            const iconSvg = weatherIcons[weatherInfo.icon];
+
+            // Moon phase
+            const moonData = getMoonPhase();
+            const moonName = getMoonPhaseName(moonData.phase);
+            const moonSvg = getMoonSVG(moonData.phase);
+
+            // Get next 4 days forecast (skip today, indices 1-4)
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const forecastHTML = [1, 2, 3, 4].map(i => {
+                const date = new Date();
+                date.setDate(date.getDate() + i);
+                const dayName = days[date.getDay()];
+                const maxTemp = Math.round(data.daily.temperature_2m_max[i]);
+                const minTemp = Math.round(data.daily.temperature_2m_min[i]);
+
+                return `
+                    <div class="forecast-day">
+                        <div class="day-label">${dayName}</div>
+                        <div class="temp-range">
+                            <div class="temp-day">${maxTemp}°</div>
+                            <div class="temp-night">${minTemp}°</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('mainWidget').innerHTML = `
+                <div class="header">
+                    <div class="location">Kraków</div>
+                    <div class="moon-info">
+                        <div class="moon-visual-small">${moonSvg}</div>
+                        <span>${moonName}</span>
+                    </div>
+                </div>
+                <div class="main-weather">
+                    <div class="temperature">${Math.round(current.temperature_2m)}°C</div>
+                    <div class="weather-icon">${iconSvg}</div>
+                </div>
+                <div class="condition">${weatherInfo.description}</div>
+                <div class="forecast">
+                    ${forecastHTML}
+                </div>
+            `;
+        }
+
+        fetchWeather();
+        setInterval(fetchWeather, 30 * 60 * 1000);
+    </script>
+
+<div id="react-toast" class="Toaster"><span class="Toaster__manager-top-left" style="max-width: 560px; position: fixed; z-index: 5500; pointer-events: none; top: 0px; left: 0px;"></span><span class="Toaster__manager-top" style="max-width: 560px; position: fixed; z-index: 5500; pointer-events: none; margin: 0px auto; text-align: center; top: 0px; right: 0px; left: 0px;"></span><span class="Toaster__manager-top-right" style="max-width: 560px; position: fixed; z-index: 5500; pointer-events: none; top: 0px; right: 0px;"></span><span class="Toaster__manager-bottom-left" style="max-width: 560px; position: fixed; z-index: 5500; pointer-events: none; bottom: 0px; left: 0px;"></span><span class="Toaster__manager-bottom" style="max-width: 560px; position: fixed; z-index: 5500; pointer-events: none; margin: 0px auto; text-align: center; bottom: 0px; right: 0px; left: 0px;"></span><span class="Toaster__manager-bottom-right" style="max-width: 560px; position: fixed; z-index: 5500; pointer-events: none; bottom: 0px; right: 0px;"></span></div></body><app-ls-content ng-version="17.3.7"><template shadowrootmode="open"><!----><app-similar-tools _nghost-ng-c2697620354=""><!----><!----><!----></app-similar-tools><!----><!----><style>[_nghost-ng-c2697620354]{font-family:Open Sans,sans-serif;color:#121212}</style></template></app-ls-content></html>
