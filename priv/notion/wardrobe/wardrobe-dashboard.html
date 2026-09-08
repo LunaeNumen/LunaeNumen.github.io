@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Wardrobe — Lunar Notion</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="./chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
 
@@ -60,10 +60,14 @@ body::after {
 .masthead h1 {
   font-family: 'Fraunces', serif;
   font-weight: 400;
-  font-size: clamp(3.6rem, 10.5vw, 7.4rem);
+  font-size: clamp(3rem, 12vw, 7.4rem);
   line-height: 0.98;
   letter-spacing: -0.02em;
-  margin: 40px 0 18px;
+  margin: 32px 0 18px;
+  overflow-wrap: break-word;
+}
+@media (max-width: 700px) {
+  .folio-top { font-size: 0.52rem; letter-spacing: 0.14em; gap: 8px; }
 }
 .masthead h1 em { font-style: italic; font-weight: 300; }
 .deck {
@@ -178,7 +182,11 @@ body::after {
 .kdetail { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 6px; }
 .kd { width: 7px; height: 7px; border-radius: 50%; display: inline-block; border: 1px solid rgba(64,56,44,.25); margin-right: 5px; flex: none; }
 .kd-item { display: inline-flex; align-items: center; margin-right: 12px; }
-@media (max-width: 640px) { .krow { grid-template-columns: 60px 1fr; } .krow .ktrack, .krow .kdetail { grid-column: 1 / -1; } .knum { font-size: 1.9rem; } }
+@media (max-width: 640px) {
+  .krow { grid-template-columns: 56px 1fr; gap: 14px; }
+  .knum { font-size: 1.7rem; }
+  .kmid { grid-column: 1 / -1; margin-top: 2px; }
+}
 
 /* ---------- season switch ---------- */
 .seg { display: flex; gap: 10px; margin: 6px 0 22px; flex-wrap: wrap; }
@@ -196,7 +204,11 @@ body::after {
 
 /* ---------- shoes ---------- */
 .zcol { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
-@media (max-width: 950px) { .zcol { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); } }
+@media (max-width: 950px) {
+  .zcol { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0 18px; }
+  .zcell { border-left: none; border-top: 1px solid var(--line); padding: 16px 0 0; }
+  .zcell:first-child { border-top: none; padding-top: 0; }
+}
 .zcell { padding: 0 18px; border-left: 1px solid var(--line); }
 .zcell:first-child { border-left: none; padding-left: 0; }
 .zhead { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
@@ -437,6 +449,7 @@ a { color: var(--clay); }
   Chart.defaults.plugins.tooltip.cornerRadius = 2;
   Chart.defaults.plugins.tooltip.usePointStyle = true;
   const ANIM = reduceMotion ? false : { duration: 2200, easing: 'easeOutQuart' };
+  const MOBILE = window.matchMedia('(max-width: 700px)').matches;
   const GRID = { color: '#E5E0D3' };
   const seasonColors = { summer: '#C79A4B', 'autumn/spring': '#A9714B', winter: '#7C8B8F' };
   const pct = (v, arr) => Math.round(v / arr.reduce((s, x) => s + x[1], 0) * 100) + '%';
@@ -452,7 +465,7 @@ a { color: var(--clay); }
       responsive: true, maintainAspectRatio: false, animation: ANIM,
       cutout: '62%',
       plugins: {
-        legend: { position: 'right' },
+        legend: { position: MOBILE ? 'bottom' : 'right' },
         tooltip: { callbacks: { label: c => ` ${c.label}: ${c.parsed} (${pct(c.parsed, colorGroups)}) — ${membersOf[c.label] || c.label}` } }
       }
     }
