@@ -1,0 +1,1 @@
+﻿Misc private-ish utilities.
