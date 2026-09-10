@@ -698,7 +698,7 @@ a { color: var(--clay); }
       ${unassigned ? `<div class="kdetail" style="margin-top:14px"><span class="kd-item"><i class="kd" style="background:#D9C7A8"></i>unassigned ${unassigned}</span></div>` : ''}`;
   }
 
-  document.getElementById('foot-note').textContent = document.querySelector('#kpis .stat .val').textContent;
+  document.getElementById('foot-note').textContent = kpiData[0].n;
 
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
