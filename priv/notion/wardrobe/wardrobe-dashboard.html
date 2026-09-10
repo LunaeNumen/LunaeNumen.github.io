@@ -333,8 +333,8 @@ a { color: var(--clay); }
 
   const ACC_KINDS = ['Shoes', 'Bag', 'Hat', 'Scarf'];
   const isAcc = it => (it.kind || []).some(k => ACC_KINDS.includes(k));
-  const TRASHED = it => (it.destiny || []).includes('trash');
-  const L = D.filter(it => !TRASHED(it));   // owned items only
+  const EXCLUDED = it => (it.destiny || []).some(x => x === 'trash' || x === 'chudelata');
+  const L = D.filter(it => !EXCLUDED(it));   // owned & kept items only
   const C = L.filter(it => !isAcc(it));
   const A = L.filter(isAcc);
 

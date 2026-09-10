@@ -156,7 +156,7 @@
                      "Coats"
                  ],
         "color":  [
-                      "blue"
+                      "blue gray"
                   ],
         "season":  [
                        "summer",
@@ -438,7 +438,7 @@
                      "Pants tight"
                  ],
         "color":  [
-                      "light blue"
+                      "blue gray"
                   ],
         "season":  [
                        "summer"
@@ -873,7 +873,7 @@
                      "Shirt"
                  ],
         "color":  [
-                      "gold"
+                      "camel"
                   ],
         "season":  [
                        "autumn/spring",
@@ -895,7 +895,7 @@
                      "Shirt"
                  ],
         "color":  [
-                      "gold"
+                      "camel"
                   ],
         "season":  [
                        "autumn/spring",
@@ -1351,7 +1351,7 @@
                      "Shirt"
                  ],
         "color":  [
-                      "light blue"
+                      "blue"
                   ],
         "season":  [
                        "summer",
@@ -1418,8 +1418,8 @@
                  ],
         "color":  [
                       "black",
-                      "light blue",
-                      "red"
+                      "red",
+                      "blue"
                   ],
         "season":  [
                        "summer"
@@ -2258,7 +2258,7 @@
                      "Dress"
                  ],
         "color":  [
-                      "light blue"
+                      "blue"
                   ],
         "season":  [
                        "summer"
@@ -2732,7 +2732,7 @@
                      "Dress"
                  ],
         "color":  [
-                      "plum"
+                      "burgundy"
                   ],
         "season":  [
                        "autumn/spring",
@@ -3713,27 +3713,6 @@
         "cover":  true
     },
     {
-        "id":  "8e6fa75b-735f-494e-9cd9-613d3bcfc8a6",
-        "name":  "Koszula żółta satynowa",
-        "kind":  [
-                     "Shirt"
-                 ],
-        "color":  [
-                      "yellow"
-                  ],
-        "season":  [
-                       "summer"
-                   ],
-        "category":  [
-                         "Top"
-                     ],
-        "destiny":  [
-                        "trash"
-                    ],
-        "lastWorn":  null,
-        "cover":  true
-    },
-    {
         "id":  "92cc7aa6-c05a-40ae-a765-942cc3994bdd",
         "name":  "Doły - spódnice",
         "kind":  [
@@ -4469,7 +4448,7 @@
                      "Bag"
                  ],
         "color":  [
-                      "yellow"
+                      "camel"
                   ],
         "season":  [
 
@@ -4790,7 +4769,7 @@
                      "Dress"
                  ],
         "color":  [
-                      "light blue"
+                      "blue"
                   ],
         "season":  [
                        "summer"
@@ -5028,7 +5007,7 @@
                      "Sweater"
                  ],
         "color":  [
-                      "light blue"
+                      "blue gray"
                   ],
         "season":  [
                        "autumn/spring",
@@ -6612,7 +6591,7 @@
                      "Skirt"
                  ],
         "color":  [
-                      "rust"
+                      "camel"
                   ],
         "season":  [
                        "autumn/spring",
@@ -7642,7 +7621,7 @@
                      "Pants jeans"
                  ],
         "color":  [
-                      "light blue"
+                      "blue"
                   ],
         "season":  [
                        "autumn/spring",
