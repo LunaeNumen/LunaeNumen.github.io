@@ -333,8 +333,10 @@ a { color: var(--clay); }
 
   const ACC_KINDS = ['Shoes', 'Bag', 'Hat', 'Scarf'];
   const isAcc = it => (it.kind || []).some(k => ACC_KINDS.includes(k));
-  const C = D.filter(it => !isAcc(it));
-  const A = D.filter(isAcc);
+  const TRASHED = it => (it.destiny || []).includes('trash');
+  const L = D.filter(it => !TRASHED(it));   // owned items only
+  const C = L.filter(it => !isAcc(it));
+  const A = L.filter(isAcc);
 
   const GROUP_OF = {
     white: 'white/beige/cream', cream: 'white/beige/cream', beige: 'white/beige/cream',
