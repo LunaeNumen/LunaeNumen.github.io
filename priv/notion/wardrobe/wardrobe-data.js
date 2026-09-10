@@ -1698,7 +1698,7 @@
                      "Top"
                  ],
         "color":  [
-                      "red"
+                      "terracotta"
                   ],
         "season":  [
                        "summer"
@@ -3408,8 +3408,7 @@
                      "Shoes"
                  ],
         "color":  [
-                      "light brown",
-                      "brown"
+                      "camel"
                   ],
         "season":  [
                        "summer"
@@ -4727,7 +4726,7 @@
                      "Pants jeans"
                  ],
         "color":  [
-                      "chestnut"
+                      "terracotta"
                   ],
         "season":  [
                        "autumn/spring",
@@ -7133,7 +7132,7 @@
                      "Sweater coat"
                  ],
         "color":  [
-                      "chocolate"
+                      "brown"
                   ],
         "season":  [
                        "autumn/spring",
