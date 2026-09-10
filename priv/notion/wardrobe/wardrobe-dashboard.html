@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Wardrobe â€” Lunar Notion</title>
+<title>The Wardrobe — Lunar Notion</title>
 <script src="./chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -246,7 +246,7 @@ a { color: var(--clay); }
 
   <header class="masthead">
     <div class="folio-top">
-      <span><span class="sigil">â›§</span> Lunar Notion <span class="sigil">â›§</span></span>
+      <span><span class="sigil">⛧</span> Lunar Notion <span class="sigil">⛧</span></span>
       <span id="snap-date"></span>
     </div>
     <div class="nameplate">
@@ -280,7 +280,7 @@ a { color: var(--clay); }
       <div class="chart-box" style="height:330px"><canvas id="colorsChart" role="img" aria-label="Doughnut chart of color distribution"></canvas></div>
     </div>
     <div class="duo-col">
-      <div class="fig"><span class="no">03</span>Seasons â€” where they overlap</div>
+      <div class="fig"><span class="no">03</span>Seasons — where they overlap</div>
       <div class="chart-box" style="height:330px" id="vennBox"></div>
     </div>
   </div>
@@ -291,7 +291,7 @@ a { color: var(--clay); }
   </section>
 
   <section class="reveal">
-    <div class="fig"><span class="no">05</span>Colors Ã— Seasons</div>
+    <div class="fig"><span class="no">05</span>Colors × Seasons</div>
     <div class="seg" id="seasonSwitch" role="tablist">
       <button class="seg-btn active" data-season="all">All</button>
       <button class="seg-btn" data-season="summer">Summer</button>
@@ -318,8 +318,8 @@ a { color: var(--clay); }
   </section>
 
   <footer class="colophon">
-    <span>â›§ <span id="foot-note"></span> pieces and still nothing to wear â›§</span>
-    <span>Lunar Notion Â· MMXXVI</span>
+    <span>⛧ <span id="foot-note"></span> pieces and still nothing to wear ⛧</span>
+    <span>Lunar Notion · MMXXVI</span>
   </footer>
 </div>
 
@@ -468,7 +468,7 @@ a { color: var(--clay); }
       cutout: '62%',
       plugins: {
         legend: { position: MOBILE ? 'bottom' : 'right' },
-        tooltip: { callbacks: { label: c => ` ${c.label}: ${c.parsed} (${pct(c.parsed, colorGroups)}) â€” ${membersOf[c.label] || c.label}` } }
+        tooltip: { callbacks: { label: c => ` ${c.label}: ${c.parsed} (${pct(c.parsed, colorGroups)}) — ${membersOf[c.label] || c.label}` } }
       }
     }
   });
@@ -683,7 +683,7 @@ a { color: var(--clay); }
   ];
   const ssBox = document.getElementById('shoeSeasons');
   if (shoes.length) {
-    document.getElementById('shoeTitle').textContent = `Shoes Ã— seasons â€” ${shoes.length} pairs`;
+    document.getElementById('shoeTitle').textContent = `Shoes × seasons — ${shoes.length} pairs`;
     const cols = ZONES.map(z => {
       const key = z.k.slice().sort().join(' + ');
       const n = shoes.filter(d => d.season.slice().sort().join(' + ') === key).length;
