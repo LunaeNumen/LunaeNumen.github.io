@@ -535,12 +535,12 @@ a { color: var(--clay); }
     const total = segs.reduce((s, x) => s + x.n, 0);
     return { name: g.name, total, segs };
   }).filter(g => g.total > 0).sort((a, b) => b.total - a.total);
-  const maxG = groupRows[0].total;
+  const sumAll = groupRows.reduce((s, g) => s + g.total, 0);
   const krEl = document.getElementById('kindsRank');
   groupRows.forEach(g => {
     const row = document.createElement('div');
     row.className = 'krow';
-    const segHtml = g.segs.map(s => `<div class="kseg" data-w="${(s.n / maxG * 100).toFixed(2)}" style="background:${s.color}" title="${s.name}: ${s.n}"></div>`).join('');
+    const segHtml = g.segs.map(s => `<div class="kseg" data-w="${(s.n / sumAll * 100).toFixed(2)}" style="background:${s.color}" title="${s.name}: ${s.n}"></div>`).join('');
     const detHtml = g.segs.map(s => `<span class="kd-item"><i class="kd" style="background:${s.color}"></i>${s.name} ${s.n}</span>`).join('');
     row.innerHTML = `
       <div class="knum">${g.total}</div>
