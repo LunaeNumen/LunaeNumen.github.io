@@ -238,7 +238,7 @@
   @keyframes rollOut{
     from{opacity:0;clip-path:inset(0 0 100% 0);transform:translateY(-6px)}
     55%{opacity:1}
-    to{opacity:1;clip-path:inset(0 0 0 0);transform:none}
+    to{opacity:1;clip-path:inset(-60px -60px -60px -60px);transform:none}
   }
   .roll{animation:rollOut .6s cubic-bezier(.22,.61,.36,1) both}
   .col-left .card:nth-of-type(1).roll{animation-delay:.06s}
@@ -555,7 +555,12 @@
   function selectPlan(id) {
     state.plan = (state.plan === id) ? null : id;
     if (!state.plan) cbAI.checked = false;   // no plan → drop AI consent
-    render();
+  render();
+
+  /* remove entrance animation styles once done so clip-path never clips shadows */
+  document.querySelectorAll('.roll').forEach(el => {
+    el.addEventListener('animationend', () => el.classList.remove('roll'), { once: true });
+  });
   }
 
   /* ---- features expand / collapse ---- */
