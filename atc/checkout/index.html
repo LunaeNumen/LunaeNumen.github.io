@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agency Toolchest — Subscription</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#22222C;
+    --body:#7F7F89;
+    --muted:#7F7F89;
+    --accent:#4f46e5;
+    --accent-deep:#4338ca;
+    --line:#e5e8f4;
+    --green:#16a34a;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{
+    font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+    background:linear-gradient(180deg,#eef0fb 0%,#e9ecf9 55%,#e4e8f6 100%);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;flex-direction:column;
+    font-size:15px;
+  }
+  .bg-shape{position:fixed;inset:0;z-index:-1;pointer-events:none}
+  .bg-shape svg{width:100%;height:100%;display:block}
+
+  /* ---------- Header ---------- */
+  header{
+    background:#fff;
+    display:flex;align-items:center;justify-content:space-between;
+    height:40px;max-height:40px;padding:0 32px;
+    border-bottom:1px solid #eceef7;
+    box-shadow:0 1px 0 rgba(30,34,80,.03);
+    position:sticky;top:0;z-index:50;
+  }
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+  .logo-word{font-size:21px;font-weight:800;letter-spacing:-.02em}
+  .logo-word span{color:var(--accent-deep)}
+  .user{display:flex;align-items:center;gap:10px}
+  .avatar{
+    width:28px;height:28px;border-radius:50%;
+    background:linear-gradient(135deg,#f0a56c,#c96f4a);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .user-name{font-size:14px;font-weight:700;line-height:1.2}
+  .user-sub{font-size:12px;color:var(--muted);line-height:1.2}
+  .user-meta{min-width:200px}
+
+  /* ---------- Layout ---------- */
+  .page{flex:1;max-width:1440px;margin:0 auto;padding:48px 32px 40px;
+    display:grid;grid-template-columns:minmax(0,1fr) 408px;gap:44px;align-items:start}
+  .col-left{display:flex;flex-direction:column;gap:36px;min-width:0}
+
+  .card{
+    background:linear-gradient(135deg,rgba(255,255,255,.8),rgba(255,255,255,.4));
+    border:2px solid #fff;border-radius:18px;
+    box-shadow:0 10px 34px rgba(78,82,168,.10);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    padding:30px 32px 28px;
+  }
+  .eyebrow{
+    display:flex;align-items:center;gap:14px;
+    font-size:11.5px;font-weight:700;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .eyebrow::after{content:"";flex:1;height:1px;background:#dfe2ef}
+
+  /* ---------- Subscription card ---------- */
+  .sub-head{display:flex;justify-content:space-between;gap:24px;margin-top:26px}
+  .sub-title{font-size:22px;font-weight:800;letter-spacing:-.01em}
+  .sub-desc{margin-top:8px;color:var(--body);line-height:1.55;max-width:60ch}
+  .sub-price{text-align:right;white-space:nowrap}
+  .sub-price .amount{font-size:28px;font-weight:800;letter-spacing:-.02em}
+  .sub-price .per{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+
+  /* features */
+  .features{position:relative;margin-top:22px;overflow:hidden;max-height:92px;transition:max-height .35s ease}
+  .features:not(.expanded){
+    -webkit-mask-image:linear-gradient(180deg,#000 42%,transparent 96%);
+            mask-image:linear-gradient(180deg,#000 42%,transparent 96%);
+  }
+  .features.expanded{max-height:720px}
+  .features-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:40px}
+  .feat{display:flex;gap:11px;align-items:flex-start;padding:8px 0;font-size:14.5px;color:var(--body);line-height:1.45}
+  .feat svg{flex:none;margin-top:2px}
+  .feat-toggle{
+    display:flex;align-items:center;gap:7px;margin:18px auto 0;
+    background:none;border:0;cursor:pointer;
+    color:var(--accent);font:inherit;font-size:14.5px;font-weight:600;
+  }
+  .feat-toggle:hover{text-decoration:underline}
+  .feat-toggle svg{transition:transform .3s ease}
+  .feat-toggle.open svg{transform:rotate(180deg)}
+
+  /* ---------- AI plan card ---------- */
+  .ai-title{font-size:20px;font-weight:800;margin-top:26px}
+  .ai-desc{margin-top:8px;color:var(--body);line-height:1.55;max-width:88ch}
+  .plans{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:38px;align-items:stretch}
+
+  .plan-tile{
+    position:relative;background:#fff;border:2px solid #e8eaf5;border-radius:14px;
+    padding:22px 22px 18px;cursor:pointer;user-select:none;
+    transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+    display:flex;flex-direction:column;
+  }
+  .plan-tile:hover{box-shadow:0 10px 26px rgba(78,82,168,.12);transform:translateY(-1px)}
+  .plan-tile[data-plan="advanced"]{border-color:var(--accent);box-shadow:0 10px 28px rgba(79,70,229,.16)}
+  .plan-tile input[name="ai-plan"]{position:absolute;opacity:0;pointer-events:none}
+  .plan-tile:focus-visible{outline:3px solid #b9b2f5;outline-offset:2px}
+
+  .plan-top{display:flex;align-items:center;justify-content:space-between}
+  .plan-name{font-size:18px;font-weight:800}
+  .plan-bar{
+    position:absolute;top:0;left:50%;transform:translate(-50%,-50%);
+    padding:6px 16px;border-radius:999px;white-space:nowrap;
+    background:linear-gradient(90deg,#6d5ef0,#4f46e5);
+    color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    box-shadow:0 4px 12px rgba(79,70,229,.35);
+  }
+  .plan-price{margin-top:16px;display:flex;align-items:baseline;gap:5px}
+  .plan-price .amt{font-size:30px;font-weight:800;letter-spacing:-.02em}
+  .plan-price .mo{color:var(--muted);font-size:14px}
+  .plan-sub{color:var(--body);font-size:14px;margin-top:4px}
+  .plan-divider{height:1px;background:#e8eaf3;margin:16px 0 14px}
+  .plan-tokens{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--ink)}
+  .tok-dot{width:6px;height:6px;background:var(--accent);border-radius:2px;flex:none}
+  .info{color:var(--muted);display:inline-flex;cursor:help}
+
+  /* radios */
+  .radio{
+    appearance:none;-webkit-appearance:none;width:21px;height:21px;border-radius:50%;
+    border:2px solid #c9cde4;background:#fff;cursor:pointer;flex:none;
+    transition:border .15s ease;
+  }
+  .radio:hover{border-color:#a5aad0}
+  .radio:checked{border:7px solid var(--accent)}
+
+  /* ---------- Bonus banner ---------- */
+  .bonus{
+    margin-top:30px;display:flex;align-items:flex-start;gap:18px;
+    background:#edf1fe;border:1px solid #d4dcf8;border-radius:14px;padding:20px 24px;
+  }
+  .bonus-icon{flex:none;width:42px;height:42px}
+  .bonus-body{flex:1;min-width:0}
+  .bonus-title{font-size:15.5px;font-weight:800;letter-spacing:.01em;color:#413BA2;text-transform:uppercase}
+  .bonus-line{margin-top:5px;color:#413BA2;font-size:14.5px}
+  .bonus-line b{color:#413BA2}
+  .bonus-price{text-align:right;white-space:nowrap}
+  .bonus-price .zero{
+    font-size:26px;font-weight:800;
+    background:linear-gradient(135deg,#046BF2,#5E35F2);
+    -webkit-background-clip:text;background-clip:text;
+    color:transparent;-webkit-text-fill-color:transparent;
+  }
+  .bonus-price .then{display:block;color:#413BA2;opacity:.8;font-size:13px;font-style:italic;margin-top:2px}
+
+  /* ---------- Order / receipt ---------- */
+  .order-wrap{filter:drop-shadow(0 18px 34px rgba(78,82,168,.16));position:sticky;top:64px}
+  .receipt{
+    background:#fff;border:1px solid #E6E9F5;border-bottom:0;
+    border-radius:16px 16px 0 0;padding:30px 28px 24px;
+  }
+  .zig{
+    height:7.5px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 25.75 7.5' preserveAspectRatio='none'%3E%3Cpath d='M0 0H25.75L12.875 7.25Z' fill='%23fff'/%3E%3Cpath d='M0 0L12.875 7.25L25.75 0' fill='none' stroke='%23E6E9F5' stroke-width='0.75'/%3E%3C/svg%3E");
+    background-repeat:repeat-x;
+    background-size:25.75px 100%;
+  }
+  .fine{padding:18px 6px 0;color:var(--muted);font-size:12.5px;line-height:1.6}
+  .fine a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+  .fine p+p{margin-top:12px}
+
+  .o-item{display:flex;justify-content:space-between;gap:16px;padding:13px 0;animation:fadeIn .25s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+  .o-title{font-size:15px;font-weight:700;line-height:1.35}
+  .o-sub{font-size:13px;font-style:italic;color:var(--muted);margin-top:3px}
+  .o-price{font-size:15px;font-weight:700;white-space:nowrap}
+  .o-price.free{color:var(--green)}
+
+  .o-divider{height:1px;background:#e7e9f4;margin:14px 0 16px}
+  .due{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px}
+  .due-label{font-size:19px;font-weight:800}
+  .due-amount{font-size:21px;font-weight:800;letter-spacing:-.01em}
+
+  .consents{display:flex;flex-direction:column;gap:16px;margin-top:18px}
+  .consent{display:flex;gap:11px;align-items:flex-start;cursor:pointer;font-size:13.5px;color:var(--body);line-height:1.55}
+  .consent b{color:var(--ink)}
+  .checkbox{
+    appearance:none;-webkit-appearance:none;flex:none;width:19px;height:19px;margin-top:1px;
+    border:2px solid #c3c8e0;border-radius:5px;background:#fff;cursor:pointer;
+    display:inline-grid;place-content:center;transition:background .12s ease,border-color .12s ease;
+  }
+  .checkbox:hover{border-color:#9aa0d8}
+  .checkbox::before{
+    content:"";width:10px;height:10px;transform:scale(0);transition:transform .12s ease;
+    clip-path:polygon(14% 44%,0 62%,40% 100%,100% 16%,82% 2%,38% 66%);
+    background:#fff;
+  }
+  .checkbox:checked{background:var(--accent);border-color:var(--accent)}
+  .checkbox:checked::before{transform:scale(1)}
+
+  .subscribe{
+    width:100%;margin-top:22px;border:0;border-radius:11px;cursor:pointer;
+    padding:15px 18px;display:flex;align-items:center;justify-content:center;gap:11px;
+    background:linear-gradient(90deg,#6153e6,#3b6ef6);
+    color:#fff;font:inherit;font-size:16px;font-weight:700;
+    box-shadow:0 10px 24px rgba(79,70,229,.35);
+    transition:box-shadow .15s ease,transform .15s ease,filter .15s ease;
+  }
+  .subscribe:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
+  .subscribe:disabled{
+    background:linear-gradient(90deg,#b7bcf2,#c3cff7);
+    box-shadow:none;cursor:not-allowed;color:#fff;
+  }
+  .renew-note{display:flex;align-items:center;gap:8px;margin-top:14px;color:var(--muted);font-size:13px}
+  .renew-note svg{color:var(--accent);flex:none}
+
+  /* ---------- Footer / toast ---------- */
+  footer{margin-top:auto;text-align:center;color:#ADB2C5;font-size:13px;padding:0 20px 24px}
+  .toast{
+    position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);
+    background:#1d2233;color:#fff;padding:12px 22px;border-radius:10px;
+    font-size:14px;font-weight:600;opacity:0;pointer-events:none;
+    transition:opacity .25s ease,transform .25s ease;z-index:99;
+    box-shadow:0 14px 34px rgba(20,24,60,.35);
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  /* ---------- Entrance animation ---------- */
+  @keyframes rollOut{
+    from{opacity:0;clip-path:inset(0 0 100% 0);transform:translateY(-6px)}
+    55%{opacity:1}
+    to{opacity:1;clip-path:inset(0 0 0 0);transform:none}
+  }
+  .roll{animation:rollOut .6s cubic-bezier(.22,.61,.36,1) both}
+  .col-left .card:nth-of-type(1).roll{animation-delay:.06s}
+  .col-left .card:nth-of-type(2).roll{animation-delay:.2s}
+  .order-wrap.roll{animation-delay:.34s}
+  @media (prefers-reduced-motion:reduce){.roll{animation:none}}
+
+  @media (max-width:1120px){
+    .page{grid-template-columns:1fr}
+    .order-wrap{position:static}
+  }
+  @media (max-width:640px){
+    .plans,.features-grid{grid-template-columns:1fr}
+    .sub-head{flex-direction:column}
+    .bonus{flex-wrap:wrap}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-shape" aria-hidden="true">
+  <svg viewBox="0 0 1599 974" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g filter="url(#filter0_f_30383_7603)">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M1949.79 -274.864C2131.27 -185.923 2375.55 -201.271 2496.31 -37.418C2616.98 126.316 2555.3 359.701 2569.03 565.343C2581.46 751.659 2593.45 930.395 2573.34 1116.55C2547.74 1353.53 2635.07 1680.31 2434.95 1806.33C2221.87 1940.51 1967.88 1641.02 1719.34 1654.34C1516.58 1665.21 1360.61 1884.34 1158.11 1874.77C938.325 1864.39 734.507 1748.55 571.702 1600.12C395.753 1439.72 176.61 1242.13 198.953 1000.34C222.528 745.232 584.541 657.437 680.798 419.55C772.065 193.992 588.672 -92.8482 723.18 -295.223C856.161 -495.299 1120.71 -600.191 1355.97 -596.286C1585.41 -592.478 1744.23 -375.609 1949.79 -274.864Z" fill="url(#paint0_radial_30383_7603)" fill-opacity="0.18"/>
+    </g>
+    <defs>
+      <filter id="filter0_f_30383_7603" x="3.05176e-05" y="-793.764" width="2781.48" height="2866.22" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+        <feGaussianBlur stdDeviation="98.6868" result="effect1_foregroundBlur_30383_7603"/>
+      </filter>
+      <radialGradient id="paint0_radial_30383_7603" cx="0" cy="0" r="1" gradientTransform="matrix(-902.803 3541.76 -3504.57 -611.498 1609.92 -656.749)" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#8480FD"/>
+        <stop offset="1" stop-color="#04FFF2" stop-opacity="0.6"/>
+      </radialGradient>
+    </defs>
+  </svg>
+</div>
+
+<header>
+  <a class="logo" href="#" aria-label="Agency Toolchest home">
+    <svg width="225" height="27" viewBox="0 0 250 30" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+      <g clip-path="url(#clip0_14_785)">
+        <path d="M15.8455 11.3219L16.8217 9.28621L22.3039 20.7136C23.2468 22.6799 25.2766 23.9367 27.5076 23.9367H29.5981L18.5562 1.06925C17.8669 -0.35772 15.78 -0.35772 15.0919 1.06925L9.82751 11.9677L15.8467 11.3208L15.8455 11.3219Z" fill="url(#paint0_linear_14_785)"/>
+        <path d="M27.6838 2.94531L20.6563 17.5981H17.5146C16.3015 17.5981 15.5003 16.3714 16.0158 15.3043L20.4361 6.15456C21.3825 4.19637 23.4076 2.94531 25.6326 2.94531H27.6826H27.6838Z" fill="url(#paint1_linear_14_785)"/>
+        <path d="M20.9206 17.5982L16.9193 9.31641H15.1634C13.3264 9.31641 12.1109 11.1704 12.8871 12.7895L14.1729 15.4699C14.7955 16.7684 16.136 17.5993 17.611 17.5993H20.9206V17.5982Z" fill="url(#paint2_linear_14_785)"/>
+        <path d="M16.1074 9.31659L8.37873 25.4311C7.04894 28.2029 4.90247 29.9747 1.75718 29.9747H0L7.79419 13.8394C9.12755 11.078 10.7931 9.31543 13.93 9.31543H16.1062L16.1074 9.31659Z" fill="url(#paint3_linear_14_785)"/>
+        <path d="M40.9817 11.7523H40.827C40.6401 11.353 40.3746 10.9445 40.0293 10.5278C39.6853 10.1124 39.2317 9.76402 38.671 9.48279C38.1103 9.20156 37.4138 9.06152 36.5817 9.06152C35.4923 9.06152 34.4911 9.34159 33.5792 9.90289C32.6673 10.4642 31.9363 11.309 31.3887 12.4374C30.8411 13.5658 30.5673 14.9719 30.5673 16.6558C30.5673 18.3397 30.8363 19.6602 31.3744 20.7342C31.9125 21.8082 32.6375 22.6045 33.5506 23.1241C34.4626 23.6437 35.4769 23.903 36.5924 23.903C37.3793 23.903 38.0555 23.7872 38.6234 23.5546C39.1912 23.322 39.6543 23.0223 40.0162 22.6542C40.377 22.2862 40.6484 21.8962 40.8282 21.483H41.002V24.2016C41.002 25.2212 40.7103 25.948 40.127 26.3831C39.5436 26.8183 38.8031 27.0358 37.9079 27.0358C37.3079 27.0358 36.8007 26.9571 36.384 26.7986C35.9685 26.64 35.634 26.4329 35.3828 26.1748C35.1316 25.9167 34.9471 25.6389 34.8316 25.3427L31.0208 25.8554C31.1887 26.6354 31.553 27.339 32.1137 27.9652C32.6744 28.5901 33.4304 29.0854 34.3816 29.45C35.3328 29.8146 36.4757 29.9963 37.8103 29.9963C39.2281 29.9963 40.4841 29.781 41.577 29.3528C42.6699 28.9234 43.5258 28.2834 44.1449 27.4316C44.7639 26.5798 45.0735 25.5221 45.0735 24.2583V9.25595H43.4782C42.0996 9.25595 40.9829 10.3739 40.9829 11.7523H40.9817ZM40.6484 18.8779C40.3996 19.5005 40.046 19.9773 39.5841 20.3095C39.1234 20.6416 38.5603 20.8083 37.896 20.8083C37.2317 20.8083 36.6495 20.6393 36.1888 20.3002C35.7281 19.9611 35.3769 19.4809 35.1352 18.8582C34.8935 18.2356 34.7733 17.4961 34.7733 16.6373C34.7733 15.7786 34.8923 15.0472 35.1304 14.4025C35.3685 13.7579 35.7197 13.2533 36.184 12.8888C36.6483 12.5242 37.2186 12.3425 37.896 12.3425C38.5734 12.3425 39.1246 12.5196 39.5889 12.8749C40.0531 13.2302 40.4079 13.7278 40.652 14.3701C40.8972 15.0125 41.0198 15.7682 41.0198 16.6385C41.0198 17.5088 40.896 18.2564 40.6472 18.8779H40.6484Z" fill="#413BA2"/>
+        <path d="M59.9321 10.8934C59.2976 10.2835 58.5559 9.82517 57.7082 9.5208C56.8606 9.21527 55.9463 9.0625 54.9665 9.0625C53.5093 9.0625 52.2415 9.37729 51.1617 10.0069C50.0819 10.6365 49.245 11.5137 48.6521 12.6398C48.0593 13.7658 47.7628 15.0748 47.7628 16.5654C47.7628 18.056 48.0593 19.417 48.6521 20.5338C49.245 21.6506 50.0914 22.5129 51.1903 23.1204C52.2891 23.728 53.6034 24.0313 55.1308 24.0313C56.3558 24.0313 57.438 23.8472 58.3749 23.4792C59.313 23.1112 60.0809 22.595 60.6762 21.9319C61.2726 21.2676 61.6678 20.4899 61.8607 19.5964L58.0499 19.3511C57.9082 19.7156 57.7023 20.0246 57.4309 20.2758C57.1606 20.5281 56.8344 20.7167 56.4546 20.8417C56.0737 20.9678 55.6558 21.0303 55.1975 21.0303C54.5082 21.0303 53.9117 20.8891 53.4082 20.6056C52.9058 20.322 52.5165 19.9193 52.2427 19.3974C51.9688 18.8754 51.8319 18.2551 51.8319 17.5387V17.5294H61.9476V16.4254C61.9476 15.1917 61.7702 14.1142 61.4155 13.193C61.0607 12.2717 60.5654 11.5056 59.9309 10.8945L59.9321 10.8934ZM51.8415 15.0366C51.8665 14.5169 51.9986 14.039 52.2486 13.6073C52.5189 13.1386 52.8951 12.7648 53.3748 12.4847C53.8546 12.2046 54.4082 12.0646 55.0332 12.0646C55.6582 12.0646 56.1606 12.1919 56.6142 12.4465C57.0689 12.7011 57.4249 13.0518 57.6832 13.4985C57.9404 13.9452 58.0701 14.4579 58.0701 15.0366H51.8415Z" fill="#413BA2"/>
+        <path d="M76.1193 9.85723C75.3514 9.41166 74.4526 9.18945 73.4204 9.18945C72.318 9.18945 71.3799 9.43943 70.6061 9.93824C69.8323 10.437 69.2811 11.1129 68.9525 11.9647H68.7787C68.7787 10.5366 67.6203 9.37925 66.1917 9.37925H64.8524V24.0309H68.9715V15.5605C68.9787 14.9309 69.0989 14.3916 69.3346 13.9437C69.5704 13.4958 69.8989 13.1533 70.3216 12.9183C70.7442 12.6834 71.2323 12.5653 71.7859 12.5653C72.6109 12.5653 73.2597 12.8176 73.73 13.3234C74.2002 13.8291 74.4324 14.5305 74.4264 15.4262V23.9626C74.4264 23.9626 75.5431 24.0297 76.9217 24.0297H78.5467V14.7006C78.5467 13.563 78.3336 12.5816 77.9086 11.7575C77.4836 10.9347 76.8872 10.2993 76.1193 9.85491V9.85723Z" fill="#413BA2"/>
+        <path d="M86.8778 12.7C87.3517 12.3632 87.9076 12.1954 88.5457 12.1954C89.3005 12.1954 89.9112 12.4176 90.3779 12.8608C90.8458 13.3041 91.1339 13.8885 91.2434 14.6118H95.1316C95.0732 13.4916 94.7613 12.5171 94.1934 11.6861C93.6256 10.8552 92.8553 10.2106 91.8827 9.7511C90.9089 9.29165 89.7743 9.0625 88.4791 9.0625C86.9766 9.0625 85.6802 9.37845 84.5909 10.0115C83.5016 10.6434 82.6611 11.5218 82.0718 12.6444C81.4813 13.767 81.1873 15.0713 81.1873 16.5561C81.1873 18.041 81.4789 19.3187 82.0623 20.4447C82.6456 21.5708 83.4837 22.4504 84.5766 23.0823C85.6695 23.7141 86.9766 24.0313 88.4981 24.0313C89.8196 24.0313 90.9636 23.7952 91.9315 23.323C92.8982 22.8508 93.6577 22.1946 94.2089 21.3555C94.7601 20.5153 95.0685 19.542 95.1327 18.4345H91.2446C91.1672 18.9437 91.0041 19.38 90.7565 19.7422C90.5077 20.1033 90.1958 20.3788 89.8184 20.5674C89.441 20.756 89.0172 20.8509 88.5469 20.8509C87.9088 20.8509 87.3505 20.6808 86.8743 20.3417C86.3969 20.0015 86.0278 19.5085 85.7671 18.8604C85.5064 18.2123 85.3754 17.4253 85.3754 16.5006C85.3754 15.5759 85.5076 14.8109 85.7719 14.1697C86.0361 13.5274 86.4052 13.039 86.879 12.7023L86.8778 12.7Z" fill="#413BA2"/>
+        <path d="M106.97 10.9288L104.382 20.0045H104.227L101.664 10.9346C101.36 9.86178 100.379 9.12109 99.2626 9.12109H96.8197L102.148 24.3664L101.907 25.4694C101.727 25.9323 101.492 26.261 101.205 26.4531C100.919 26.6464 100.58 26.7355 100.19 26.7227C99.7995 26.71 99.3638 26.629 98.8793 26.482L97.9507 29.5501C98.2471 29.6716 98.6233 29.7734 99.0769 29.8544C99.5317 29.9343 100.02 29.9748 100.542 29.9748C101.56 29.9748 102.432 29.8128 103.153 29.4876C103.875 29.1624 104.473 28.7029 104.947 28.1081C105.421 27.5132 105.796 26.8165 106.073 26.0191L111.847 9.12109H109.37C108.254 9.12109 107.276 9.85946 106.97 10.9288Z" fill="#413BA2"/>
+        <path d="M135.86 3.04492H119.593C119.593 4.89895 121.138 6.40114 123.045 6.40114H125.656V23.9634C127.942 23.9634 129.795 22.1615 129.795 19.9395V6.40114H132.406C134.313 6.40114 135.859 4.89895 135.859 3.04492H135.86Z" fill="#413BA2"/>
+        <path d="M145.397 10.0562C144.304 9.43241 143.006 9.12109 141.504 9.12109C140.001 9.12109 138.704 9.43241 137.611 10.0562C136.518 10.68 135.675 11.5515 135.082 12.6694C134.489 13.7886 134.193 15.094 134.193 16.5858C134.193 18.0776 134.489 19.3634 135.082 20.4825C135.675 21.6016 136.518 22.4731 137.611 23.0957C138.704 23.7195 140.001 24.0308 141.504 24.0308C143.006 24.0308 144.304 23.7195 145.397 23.0957C146.49 22.4719 147.333 21.6005 147.925 20.4825C148.518 19.3634 148.815 18.0648 148.815 16.5858C148.815 15.1067 148.518 13.7886 147.925 12.6694C147.333 11.5503 146.49 10.68 145.397 10.0562ZM144.275 18.8044C144.04 19.4629 143.693 19.9814 143.236 20.3598C142.778 20.7394 142.207 20.9281 141.524 20.9281C140.841 20.9281 140.255 20.7383 139.788 20.3598C139.32 19.9802 138.969 19.4617 138.735 18.8044C138.499 18.1459 138.381 17.3971 138.381 16.5569C138.381 15.7166 138.499 14.9679 138.735 14.3094C138.97 13.6508 139.322 13.1312 139.788 12.7493C140.256 12.3674 140.835 12.1753 141.524 12.1753C142.213 12.1753 142.778 12.3662 143.236 12.7493C143.693 13.1312 144.04 13.652 144.275 14.3094C144.511 14.9679 144.629 15.7166 144.629 16.5569C144.629 17.3971 144.511 18.1459 144.275 18.8044Z" fill="#413BA2"/>
+        <path d="M162.108 10.0562C161.015 9.43241 159.717 9.12109 158.215 9.12109C156.712 9.12109 155.415 9.43241 154.322 10.0562C153.229 10.68 152.386 11.5515 151.793 12.6694C151.2 13.7886 150.904 15.094 150.904 16.5858C150.904 18.0776 151.2 19.3634 151.793 20.4825C152.386 21.6016 153.229 22.4731 154.322 23.0957C155.415 23.7195 156.712 24.0308 158.215 24.0308C159.717 24.0308 161.015 23.7195 162.108 23.0957C163.201 22.4719 164.044 21.6005 164.636 20.4825C165.229 19.3634 165.526 18.0648 165.526 16.5858C165.526 15.1067 165.229 13.7886 164.636 12.6694C164.044 11.5503 163.201 10.68 162.108 10.0562ZM160.986 18.8044C160.751 19.4629 160.404 19.9814 159.947 20.3598C159.489 20.7394 158.918 20.9281 158.235 20.9281C157.552 20.9281 156.966 20.7383 156.499 20.3598C156.032 19.9802 155.68 19.4617 155.446 18.8044C155.21 18.1459 155.092 17.3971 155.092 16.5569C155.092 15.7166 155.21 14.9679 155.446 14.3094C155.682 13.6508 156.033 13.1312 156.499 12.7493C156.967 12.3674 157.546 12.1753 158.235 12.1753C158.924 12.1753 159.489 12.3662 159.947 12.7493C160.404 13.1312 160.751 13.652 160.986 14.3094C161.222 14.9679 161.34 15.7166 161.34 16.5569C161.34 17.3971 161.222 18.1459 160.986 14.3094Z" fill="#413BA2"/>
+        <path d="M168.431 7.04924V24.0699C170.706 24.0699 172.55 22.2772 172.55 20.0656V3.04492C170.275 3.04492 168.431 4.83761 168.431 7.04924Z" fill="#413BA2"/>
+        <path d="M181.146 12.7447C181.62 12.409 182.176 12.2412 182.814 12.2412C183.569 12.2412 184.18 12.4623 184.646 12.9044C185.114 13.3465 185.402 13.9274 185.512 14.6484H189.4C189.342 13.5328 189.03 12.5618 188.462 11.7343C187.894 10.9068 187.124 10.2645 186.151 9.80738C185.177 9.35024 184.043 9.12109 182.747 9.12109C181.245 9.12109 179.949 9.43588 178.859 10.0666C177.77 10.6962 176.93 11.5711 176.34 12.6891C175.751 13.8082 175.456 15.1067 175.456 16.5858C175.456 18.0648 176.047 19.3367 176.631 20.4593C177.214 21.5808 178.052 22.4569 179.145 23.0864C180.238 23.716 181.245 24.032 182.767 24.032C184.088 24.032 185.232 23.797 186.2 23.3272C187.167 22.8573 187.926 22.2034 188.477 21.3667C189.029 20.5299 189.337 19.5601 189.401 18.4572H185.513C185.436 18.9652 185.273 19.3992 185.025 19.7592C184.776 20.1191 184.464 20.3934 184.087 20.582C183.709 20.7707 183.286 20.8644 182.815 20.8644C182.177 20.8644 181.619 20.6954 181.143 20.3575C180.665 20.0184 180.296 19.5265 180.036 17.8819C179.775 17.2361 179.644 16.4526 179.644 15.5314C179.644 14.6102 179.776 13.8487 180.04 13.2087C180.305 12.5698 180.674 13.0826 181.147 12.747L181.146 12.7447Z" fill="#413BA2"/>
+        <path d="M203.371 10.0557C202.6 9.62052 201.699 9.40179 200.667 9.40179C199.538 9.40179 198.6 9.64483 197.853 10.1309C197.105 10.617 196.563 11.2859 196.228 12.1377H196.054V3.17773C193.843 3.17773 192.05 4.92066 192.05 7.0698V24.0314H196.169V15.6826C196.176 15.0622 196.3 14.531 196.542 14.0889C196.783 13.6468 197.119 13.3101 197.548 13.0786C197.976 12.8471 198.472 12.7302 199.032 12.7302C199.87 12.7302 200.523 12.9779 200.991 13.4732C201.457 13.9686 201.688 14.6606 201.682 15.5506V24.0303H205.801V14.8354C205.809 13.707 205.597 12.7372 205.168 11.9259C204.74 11.1146 204.14 10.4908 203.369 10.0545L203.371 10.0557Z" fill="#413BA2"/>
+        <path d="M220.622 10.945C219.987 10.3374 219.246 9.88145 218.398 9.57708C217.55 9.2727 216.636 9.12109 215.656 9.12109C214.199 9.12109 212.931 9.43473 211.852 10.0608C210.772 10.6881 209.935 11.5619 209.342 12.6833C208.749 13.8059 208.453 15.1091 208.453 16.5939C208.453 18.0787 208.749 19.4351 209.342 20.5473C209.935 21.6595 210.781 22.5182 211.88 23.1235C212.979 23.7288 214.293 24.0308 215.821 24.0308C217.046 24.0308 218.128 23.848 219.065 23.4811C220.003 23.1142 220.771 21.6004 221.366 20.9395C221.962 20.2787 222.358 19.5033 222.551 19.6133L218.74 19.3691C218.598 19.7325 218.392 20.0392 218.121 20.2904C217.849 20.5415 217.524 20.729 217.144 20.8551C216.764 20.9801 216.346 21.0426 215.887 21.0426C215.198 21.0426 214.602 20.9014 214.098 20.619C213.594 20.3367 213.206 19.9362 212.932 19.4154C212.659 18.8958 212.522 18.2778 212.522 17.5637V17.5545H222.637V16.455C222.637 15.2271 222.46 14.1531 222.105 13.2354C221.751 12.3176 221.255 11.5538 220.621 10.9462L220.622 10.945ZM212.532 15.072C212.557 14.5547 212.69 14.0779 212.94 13.6474C213.21 13.181 213.586 12.8083 214.066 12.5282C214.546 12.2493 215.099 12.1104 215.724 12.1104C216.349 12.1104 216.852 12.2378 217.305 12.4912C217.76 12.7447 218.116 13.0942 218.374 13.5397C218.633 13.9841 218.761 14.4957 218.761 15.072H212.532Z" fill="#413BA2"/>
+        <path d="M237.178 16.7548C236.469 16.1159 235.392 15.6518 233.948 15.3637L231.26 14.8371C230.57 14.6936 230.084 14.5015 229.801 14.2631C229.517 14.0247 229.376 13.7342 229.376 13.3893C229.376 12.9564 229.595 12.6104 230.033 12.35C230.471 12.0896 231.01 11.96 231.648 11.96C232.126 11.96 232.536 12.0364 232.882 12.1903C233.227 12.3442 233.505 12.5479 233.719 12.8014C233.932 13.0548 234.07 13.3384 234.134 13.652L237.906 13.4263C237.725 12.0977 237.095 11.048 236.015 10.2773C234.935 9.50648 233.457 9.12109 231.58 9.12109C230.31 9.12109 229.203 9.30279 228.259 9.66619C227.315 10.0296 226.583 10.5469 226.064 11.217C225.545 11.8882 225.285 12.6868 225.285 13.6138C225.285 14.6924 225.639 15.5789 226.345 16.2745C227.051 16.97 228.129 17.4584 229.579 17.7408L232.152 18.2384C232.796 18.3634 233.273 18.544 233.583 18.7789C233.892 19.0138 234.051 19.3136 234.057 19.677C234.05 20.1098 233.826 20.4617 233.384 20.7348C232.942 21.0079 232.36 21.1433 231.639 21.1433C230.917 21.1433 230.301 20.9917 229.83 20.6873C229.36 20.383 229.064 19.9397 228.941 19.3576L224.889 19.5647C225.089 20.9431 225.77 22.0333 226.934 22.8318C228.097 23.6304 229.663 24.0308 231.629 24.0308C232.919 24.0308 234.058 23.8318 235.048 23.4336C236.038 23.0355 236.819 22.4789 237.389 21.7648C237.959 21.0507 238.245 20.2198 238.245 19.2731C238.245 18.2327 237.89 17.3924 237.181 16.7536L237.178 16.7548Z" fill="#413BA2"/>
+        <path d="M248.582 20.6683C248.478 20.6868 248.331 20.7134 248.137 20.7481C247.944 20.7829 247.75 20.8002 247.557 20.8002C247.28 20.8002 247.036 20.7597 246.827 20.6775C246.618 20.5965 246.455 20.453 246.339 20.2493C246.224 20.0456 246.165 19.7586 246.165 19.3894V12.3946H248.961V9.38559H246.165V3.17773C243.89 3.17773 242.045 4.97042 242.045 7.18321V9.38675H240.014V12.3958H242.045V19.9172C242.039 20.8639 242.241 21.6474 242.655 22.2677C243.068 22.888 243.646 23.3452 244.39 23.6403C245.136 23.9342 246.003 24.0639 246.996 24.0257C247.531 24.0071 247.986 23.9551 248.359 23.8706C248.733 23.7861 249.024 23.712 249.23 23.6495L248.582 20.6694V20.6683Z" fill="#413BA2"/>
+      </g>
+      <defs>
+        <linearGradient id="paint0_linear_14_785" x1="17.1227" y1="4.07397" x2="27.6796" y2="24.323" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#403BA2"/>
+          <stop offset="1" stop-color="#9D98FF"/>
+        </linearGradient>
+        <linearGradient id="paint1_linear_14_785" x1="18.3348" y1="15.5809" x2="25.1987" y2="3.3513" gradientUnits="userSpaceOnUse">
+          <stop offset="0.23" stop-color="#403BA2"/>
+          <stop offset="1" stop-color="#337BE7"/>
+        </linearGradient>
+        <linearGradient id="paint2_linear_14_785" x1="14.4955" y1="10.6369" x2="18.4869" y2="17.748" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#403BA2"/>
+          <stop offset="1" stop-color="#3D48D2"/>
+        </linearGradient>
+        <linearGradient id="paint3_linear_14_785" x1="2.25718" y1="29.4366" x2="12.793" y2="10.665" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#403BA2"/>
+          <stop offset="0.48" stop-color="#3F3FCE"/>
+          <stop offset="1" stop-color="#337BE6"/>
+        </linearGradient>
+        <clipPath id="clip0_14_785">
+          <rect width="249.231" height="30" fill="white"/>
+        </clipPath>
+      </defs>
+    </svg>
+  </a>
+  <div class="user">
+    <div class="avatar" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff">
+        <circle cx="12" cy="8.2" r="4"/><path d="M4 20c0-4 3.6-6.4 8-6.4s8 2.4 8 6.4v1H4v-1Z"/>
+      </svg>
+    </div>
+    <div class="user-meta">
+      <div class="user-name">Admin</div>
+      <div class="user-sub">Agency name</div>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <!-- ============ LEFT COLUMN ============ -->
+  <div class="col-left">
+
+    <!-- Subscription card -->
+    <section class="card roll">
+      <div class="eyebrow">Your Agency Tool Chest</div>
+      <div class="sub-head">
+        <div>
+          <h1 class="sub-title">Agency Tool Chest Subscription</h1>
+          <p class="sub-desc">Powerful analytics and tools to understand your market, evaluate lead
+          performance, manage your team, and run your agency more effectively.</p>
+        </div>
+        <div class="sub-price">
+          <div class="amount">$3,000.00</div>
+          <span class="per">/year</span>
+        </div>
+      </div>
+
+      <div class="features" id="features">
+        <div class="features-grid">
+          <div class="f-col">
+            <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Collect quotes data with the Chrome Extension Toolbar</div>
+            <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Boost morale with gamified targets and celebratory alerts</div>
+            <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Interoffice messaging: Share Texts &amp; GIFs</div>
+            <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Oversee agency-wide goals</div>
+            <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Identify and monitor the most effective lead sources</div>
+            <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Monitor the effectiveness of your campaigns</div>
+            <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Zip code competitiveness tracking</div>
+          </div>
+          <div class="f-col">
+            <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Track the success rate of bundling efforts</div>
+            <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Access all coaching and quality insights via the Dashboards</div>
+            <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Set and oversee individual staff goals and activity</div>
+            <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Retrieve detailed reports on quotes and sales</div>
+            <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Tailor coaching based on the source of the lead</div>
+            <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Cross-selling tracking</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="feat-toggle" id="feat-toggle" type="button" aria-expanded="false">
+        <span id="feat-label">Show all features</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+    </section>
+
+    <!-- AI plan card -->
+    <section class="card roll">
+      <div class="eyebrow">Add AI to Your Agency Tool Chest</div>
+      <h2 class="ai-title">Choose your AI plan</h2>
+      <p class="ai-desc">Unlock a private, hyper-personalized AI Agent trained exclusively on your agency's
+      data to automate your workflow and scale your billable output. Explore AI across your data to uncover
+      insights, connections, and opportunities. Choose the AI plan that best fits your organization's usage.</p>
+
+      <div class="plans" role="radiogroup" aria-label="AI plan">
+        <!-- Standard -->
+        <div class="plan-tile" data-plan="standard" tabindex="0" role="radio" aria-checked="false">
+          <input type="radio" name="ai-plan" id="plan-standard" value="standard" tabindex="-1">
+          <div class="plan-top">
+            <div class="plan-name">Standard</div>
+            <input class="radio" type="radio" aria-hidden="true" tabindex="-1">
+          </div>
+          <div class="plan-price"><span class="amt">$49</span><span class="mo">/mo</span></div>
+          <div class="plan-sub">Monthly subscription</div>
+          <div class="plan-divider"></div>
+          <div class="plan-tokens">
+            <span class="tok-dot"></span>100,000 tokens/month
+            <span class="info" title="Token usage resets at the start of each billing cycle.">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+            </span>
+          </div>
+        </div>
+
+        <!-- Advanced -->
+        <div class="plan-tile" data-plan="advanced" tabindex="0" role="radio" aria-checked="true">
+          <input type="radio" name="ai-plan" id="plan-advanced" value="advanced" tabindex="-1">
+          <div class="plan-bar">✦ Best Value</div>
+          <div class="plan-top">
+            <div class="plan-name">Advanced</div>
+            <input class="radio" type="radio" aria-hidden="true" tabindex="-1">
+          </div>
+          <div class="plan-price"><span class="amt">$99</span><span class="mo">/mo</span></div>
+          <div class="plan-sub">Monthly subscription</div>
+          <div class="plan-divider"></div>
+          <div class="plan-tokens">
+            <span class="tok-dot"></span>Unlimited tokens/month
+            <span class="info" title="No hard token caps; fair-use policy applies.">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bonus banner -->
+      <div class="bonus">
+        <div class="bonus-icon">
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="24" height="24" rx="6" fill="url(#bonusStarGrad)"/>
+            <path d="M12 5L13.3859 10.6141L19 12L13.3859 13.3859L12 19L10.6141 13.3859L5 12L10.6141 10.6141L12 5Z" fill="white"/>
+            <defs>
+              <linearGradient id="bonusStarGrad" x1="24" y1="4.50003" x2="1.34444" y2="9.49769" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#046BF2"/>
+                <stop offset="1" stop-color="#5E35F2"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="bonus-body">
+          <div class="bonus-title">Exclusive signup bonus: First 30 days of AI — free</div>
+          <div class="bonus-line">Add AI now and explore your selected plan at no cost for 30 days.</div>
+          <div class="bonus-line"><b>Signup only, new accounts only.</b></div>
+        </div>
+        <div class="bonus-price">
+          <div class="zero">$0</div>
+          <span class="then" id="bonus-then">Then $99 billed monthly</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ RIGHT COLUMN ============ -->
+  <aside>
+    <div class="order-wrap roll">
+      <div class="receipt">
+        <div class="eyebrow">Your Order</div>
+
+        <div id="order-items" style="margin-top:12px">
+          <div class="o-item">
+            <div><div class="o-title">Agency Tool Chest</div><div class="o-sub">Renews yearly</div></div>
+            <div class="o-price">$3,000/year</div>
+          </div>
+        </div>
+
+        <div class="o-divider"></div>
+        <div class="due">
+          <div class="due-label">Due today</div>
+          <div class="due-amount">$3,000.00</div>
+        </div>
+
+        <div class="consents">
+          <label class="consent">
+            <input class="checkbox" type="checkbox" id="cb-base">
+            <span>I understand and agree that Agency Tool Chest Yearly is a paid, recurring subscription
+            of <b>$3,000.00/year</b> that will renew automatically every year until I cancel it in my
+            Account Billing settings.</span>
+          </label>
+          <label class="consent" id="cb-ai-wrap">
+            <input class="checkbox" type="checkbox" id="cb-ai">
+            <span>I understand and agree that after my 30-day free trial period, my
+            <b id="ai-plan-name">Advanced</b> AI Plan will automatically renew at
+            <b id="ai-plan-price">$99/month</b> unless I cancel it before the renewal date.</span>
+          </label>
+        </div>
+
+        <button class="subscribe" id="subscribe-btn" type="button" disabled>
+          Subscribe &amp; Start AI Trial
+          <svg width="22" height="16" viewBox="0 0 26 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 8h23M18 2l6 6-6 6"/></svg>
+        </button>
+
+        <div class="renew-note">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_30390_9404)"><path d="M7.1985 12.8061C9.62492 11.9602 11.6664 10.5019 11.6664 7.5851V3.50164C11.6664 3.34693 11.6049 3.19855 11.4955 3.08915C11.3862 2.97975 11.2378 2.91829 11.0831 2.91829C9.91656 2.91829 8.4642 2.2241 7.44347 1.33157C7.3199 1.22598 7.16271 1.16797 7.00018 1.16797C6.83766 1.16797 6.68046 1.22598 6.55689 1.33157C5.542 2.21826 4.08381 2.91829 2.91726 2.91829C2.76257 2.91829 2.61421 2.97975 2.50482 3.08915C2.39544 3.19855 2.33398 3.34693 2.33398 3.50164V7.5851C2.33398 10.5019 4.37545 11.9602 6.8077 12.8003C6.93342 12.8471 7.07144 12.8492 7.1985 12.8061Z" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/></g><defs><clipPath id="clip0_30390_9404"><rect width="14" height="14" fill="white"/></clipPath></defs></svg>
+          Manage or cancel future renewals anytime · No hidden fees
+        </div>
+      </div>
+      <div class="zig" aria-hidden="true"></div>
+
+      <div class="fine">
+        <p>By selecting "Subscribe", you agree to our <a href="#">Terms of Service</a> and
+        <a href="#">Privacy Policy</a>.</p>
+        <p>You authorize us to store your payment method and charge it automatically for each scheduled
+        renewal until you cancel. You can manage or cancel your subscriptions at any time via your Account
+        Billing settings. Cancellation prevents future renewals; your access will remain active until the
+        end of your current paid billing period.</p>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<footer>Copyright © 2024–2026 | Agency Tool Chest, LLC | All Rights Reserved</footer>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+  const PLANS = {
+    standard: { name: 'Standard', price: 49 },
+    advanced: { name: 'Advanced', price: 99 }
+  };
+
+  // Pre-check Advanced plan; opt-in checkboxes deliberately NOT pre-checked
+  let state = { plan: 'advanced', expanded: false };
+
+  const features   = document.getElementById('features');
+  const featToggle = document.getElementById('feat-toggle');
+  const featLabel  = document.getElementById('feat-label');
+  const orderItems = document.getElementById('order-items');
+  const cbBase     = document.getElementById('cb-base');
+  const cbAI       = document.getElementById('cb-ai');
+  const cbAIWrap   = document.getElementById('cb-ai-wrap');
+  const aiName     = document.getElementById('ai-plan-name');
+  const aiPrice    = document.getElementById('ai-plan-price');
+  const bonusThen  = document.getElementById('bonus-then');
+  const btn        = document.getElementById('subscribe-btn');
+  const toast      = document.getElementById('toast');
+
+  /* ---- plan selection: whole tile clickable; clicking selected tile deselects ---- */
+  document.querySelectorAll('.plan-tile').forEach(tile => {
+    const activate = () => selectPlan(tile.dataset.plan);
+    tile.addEventListener('click', activate);
+    tile.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
+    });
+  });
+
+  function selectPlan(id) {
+    state.plan = (state.plan === id) ? null : id;
+    if (!state.plan) cbAI.checked = false;   // no plan → drop AI consent
+    render();
+  }
+
+  /* ---- features expand / collapse ---- */
+  featToggle.addEventListener('click', () => {
+    state.expanded = !state.expanded;
+    features.classList.toggle('expanded', state.expanded);
+    featToggle.classList.toggle('open', state.expanded);
+    featToggle.setAttribute('aria-expanded', state.expanded);
+    featLabel.textContent = state.expanded ? 'Hide features' : 'Show all features';
+  });
+
+  /* ---- consents gate the subscribe button ---- */
+  cbBase.addEventListener('change', updateButton);
+  cbAI.addEventListener('change', updateButton);
+
+  function updateButton() {
+    btn.disabled = !(cbBase.checked && (state.plan ? cbAI.checked : true));
+  }
+
+  /* ---- render order summary + dynamic copy ---- */
+  function render() {
+    document.querySelectorAll('.plan-tile').forEach(t => {
+      const active = t.dataset.plan === state.plan;
+      t.classList.toggle('selected', active);
+      t.setAttribute('aria-checked', active);
+      t.querySelectorAll('input[type="radio"]').forEach(r => { r.checked = active; });
+    });
+
+    let html = `
+      <div class="o-item">
+        <div><div class="o-title">Agency Tool Chest</div><div class="o-sub">Renews yearly</div></div>
+        <div class="o-price">$3,000/year</div>
+      </div>`;
+
+    if (state.plan) {
+      const p = PLANS[state.plan];
+      html += `
+      <div class="o-item">
+        <div><div class="o-title">${p.name} AI — first 30 days</div><div class="o-sub">Free trial for 30 days</div></div>
+        <div class="o-price free">$0</div>
+      </div>
+      <div class="o-item">
+        <div><div class="o-title">${p.name} AI</div><div class="o-sub">Renews monthly after 30 days</div></div>
+        <div class="o-price">$${p.price}/month</div>
+      </div>`;
+    }
+    orderItems.innerHTML = html;
+
+    if (state.plan) {
+      const p = PLANS[state.plan];
+      cbAIWrap.style.display = 'flex';
+      aiName.textContent  = p.name;
+      aiPrice.textContent = `$${p.price}/month`;
+      bonusThen.textContent = `Then $${p.price} billed monthly`;
+    } else {
+      cbAIWrap.style.display = 'none';
+      bonusThen.textContent = '';
+    }
+    updateButton();
+  }
+
+  /* ---- demo subscribe ---- */
+  btn.addEventListener('click', () => {
+    toast.textContent = 'Subscription confirmed — due today $3,000.00 (demo)';
+    toast.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => toast.classList.remove('show'), 2600);
+  });
+
+  render();
+</script>
+</body>
+</html>
