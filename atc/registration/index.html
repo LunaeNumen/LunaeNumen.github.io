@@ -1,0 +1,1960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create your account — Agency Toolchest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     BASE — taken verbatim from the deployed ATC checkout page
+     (https://lunaenumen.github.io/atc/checkout/index.html)
+     ============================================================ */
+  :root{
+    --ink:#22222C;
+    --body:#7F7F89;
+    --muted:#7F7F89;
+    --accent:#4f46e5;
+    --accent-deep:#4338ca;
+    --line:#e5e8f4;
+    --green:#16a34a;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{
+    font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+    background:linear-gradient(180deg,#eef0fb 0%,#e9ecf9 55%,#e4e8f6 100%);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;flex-direction:column;
+    font-size:15px;
+  }
+  .bg-shape{position:fixed;inset:0;z-index:-1;pointer-events:none}
+  .bg-shape svg{width:100%;height:100%;display:block}
+
+  /* ---------- Header ---------- */
+  header{
+    background:#fff;
+    display:flex;align-items:center;justify-content:space-between;
+    height:40px;max-height:40px;padding:0 32px;
+    border-bottom:1px solid #eceef7;
+    box-shadow:0 1px 0 rgba(30,34,80,.03);
+    position:sticky;top:0;z-index:50;
+  }
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+  .logo-word{font-size:21px;font-weight:800;letter-spacing:-.02em}
+  .logo-word span{color:var(--accent-deep)}
+  .user{display:flex;align-items:center;gap:10px}
+  .avatar{
+    width:28px;height:28px;border-radius:50%;
+    background:linear-gradient(135deg,#f0a56c,#c96f4a);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .user-name{font-size:14px;font-weight:700;line-height:1.2}
+  .user-sub{font-size:12px;color:var(--muted);line-height:1.2}
+  .user-meta{min-width:200px}
+
+  /* ---------- Layout ---------- */
+  .page{flex:1;max-width:1440px;margin:0 auto;padding:48px 32px 40px;
+    display:grid;grid-template-columns:minmax(0,1fr) 408px;gap:44px;align-items:start}
+  .col-left{display:flex;flex-direction:column;gap:36px;min-width:0}
+
+  .card{
+    background:linear-gradient(135deg,rgba(255,255,255,.8),rgba(255,255,255,.4));
+    border:2px solid #fff;border-radius:18px;
+    box-shadow:0 10px 34px rgba(78,82,168,.10);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    padding:30px 32px 28px;
+  }
+  .eyebrow{
+    display:flex;align-items:center;gap:14px;
+    font-size:11.5px;font-weight:700;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .eyebrow::after{content:"";flex:1;height:1px;background:#dfe2ef}
+
+  /* ---------- Subscription card ---------- */
+  .sub-head{display:flex;justify-content:space-between;gap:24px;margin-top:26px}
+  .sub-title{font-size:22px;font-weight:800;letter-spacing:-.01em}
+  .sub-desc{margin-top:8px;color:var(--body);line-height:1.55;max-width:60ch}
+  .sub-price{text-align:right;white-space:nowrap}
+  .sub-price .amount{font-size:28px;font-weight:800;letter-spacing:-.02em}
+  .sub-price .per{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+
+  /* features */
+  /* features */
+  .features{position:relative;margin-top:22px;overflow:hidden;max-height:92px;transition:max-height .35s ease}
+  .features:not(.expanded){
+    -webkit-mask-image:linear-gradient(180deg,#000 42%,transparent 96%);
+            mask-image:linear-gradient(180deg,#000 42%,transparent 96%);
+  }
+  .features.expanded{max-height:720px}
+  .features-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:40px}
+  .stage .feat{gap:10px;padding:7px 0;line-height:1.3}
+  .stage .feat svg{width:15px;height:15px;margin-top:3px}
+  .feat svg{flex:none;margin-top:2px}
+  .feat-toggle{
+    display:flex;align-items:center;gap:7px;margin:18px auto 0;
+    background:none;border:0;cursor:pointer;
+    color:var(--accent);font:inherit;font-size:14.5px;font-weight:600;
+  }
+  .feat-toggle:hover{text-decoration:underline}
+  .feat-toggle svg{transition:transform .3s ease}
+  .feat-toggle.open svg{transform:rotate(180deg)}
+
+  /* ---------- AI plan card ---------- */
+  .ai-title{font-size:20px;font-weight:800;margin-top:26px}
+  .ai-desc{margin-top:8px;color:var(--body);line-height:1.55;max-width:88ch}
+  .plans{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:38px;align-items:stretch}
+
+  .plan-tile{
+    position:relative;background:#fff;border:2px solid #e8eaf5;border-radius:14px;
+    padding:22px 22px 18px;cursor:pointer;user-select:none;
+    transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+    display:flex;flex-direction:column;
+  }
+  .plan-tile:hover{box-shadow:0 10px 26px rgba(78,82,168,.12);transform:translateY(-1px)}
+  .plan-tile[data-plan="advanced"]{border-color:var(--accent);box-shadow:0 10px 28px rgba(79,70,229,.16)}
+  .plan-tile input[name="ai-plan"]{position:absolute;opacity:0;pointer-events:none}
+  .plan-tile:focus-visible{outline:3px solid #b9b2f5;outline-offset:2px}
+
+  .plan-top{display:flex;align-items:center;justify-content:space-between}
+  .plan-name{font-size:18px;font-weight:800}
+  .plan-bar{
+    position:absolute;top:0;left:50%;transform:translate(-50%,-50%);
+    padding:6px 16px;border-radius:999px;white-space:nowrap;
+    background:linear-gradient(90deg,#6d5ef0,#4f46e5);
+    color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    box-shadow:0 4px 12px rgba(79,70,229,.35);
+  }
+  .plan-price{margin-top:16px;display:flex;align-items:baseline;gap:5px}
+  .plan-price .amt{font-size:30px;font-weight:800;letter-spacing:-.02em}
+  .plan-price .mo{color:var(--muted);font-size:14px}
+  .plan-sub{color:var(--body);font-size:14px;margin-top:4px}
+  .plan-divider{height:1px;background:#e8eaf3;margin:16px 0 14px}
+  .plan-tokens{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--ink)}
+  .tok-dot{width:6px;height:6px;background:var(--accent);border-radius:2px;flex:none}
+  .info{color:var(--muted);display:inline-flex;cursor:help}
+
+  /* radios */
+  .radio{
+    appearance:none;-webkit-appearance:none;width:21px;height:21px;border-radius:50%;
+    border:2px solid #c9cde4;background:#fff;cursor:pointer;flex:none;
+    transition:border .15s ease;
+  }
+  .radio:hover{border-color:#a5aad0}
+  .radio:checked{border:7px solid var(--accent)}
+
+  /* ---------- Bonus banner ---------- */
+  .bonus{
+    margin-top:30px;display:flex;align-items:flex-start;gap:18px;
+    background:#edf1fe;border:1px solid #d4dcf8;border-radius:14px;padding:20px 24px;
+  }
+  .bonus-icon{flex:none;width:42px;height:42px}
+  .bonus-body{flex:1;min-width:0}
+  .bonus-title{font-size:15.5px;font-weight:800;letter-spacing:.01em;color:#413BA2;text-transform:uppercase}
+  .bonus-line{margin-top:5px;color:#413BA2;font-size:14.5px}
+  .bonus-line b{color:#413BA2}
+  .bonus-price{text-align:right;white-space:nowrap}
+  .bonus-price .zero{
+    font-size:26px;font-weight:800;
+    background:linear-gradient(135deg,#046BF2,#5E35F2);
+    -webkit-background-clip:text;background-clip:text;
+    color:transparent;-webkit-text-fill-color:transparent;
+  }
+  .bonus-price .then{display:block;color:#413BA2;opacity:.8;font-size:13px;font-style:italic;margin-top:2px}
+
+  /* ---------- Order / receipt ---------- */
+  .order-wrap{position:sticky;top:64px}
+  .receipt{
+    background:#fff;border:1px solid #E6E9F5;border-bottom:0;
+    border-radius:16px 16px 0 0;padding:30px 28px 24px;
+    box-shadow:0 0 40px rgba(78,82,168,.16);
+  }
+  .zig{
+    height:7.5px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 25.75 7.5' preserveAspectRatio='none'%3E%3Cpath d='M0 0H25.75L12.875 7.25Z' fill='%23fff'/%3E%3Cpath d='M0 0L12.875 7.25L25.75 0' fill='none' stroke='%23E6E9F5' stroke-width='0.75'/%3E%3C/svg%3E");
+    background-repeat:repeat-x;
+    background-size:25.75px 100%;
+  }
+  .fine{padding:18px 6px 0;color:var(--muted);font-size:12.5px;line-height:1.6}
+  .fine a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+  .fine p+p{margin-top:12px}
+
+  .o-item{display:flex;justify-content:space-between;gap:16px;padding:13px 0;animation:fadeIn .25s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+  .o-title{font-size:15px;font-weight:700;line-height:1.35}
+  .o-sub{font-size:13px;font-style:italic;color:var(--muted);margin-top:3px}
+  .o-price{font-size:15px;font-weight:700;white-space:nowrap}
+  .o-price.free{color:var(--green)}
+
+  .o-divider{height:1px;background:#e7e9f4;margin:14px 0 16px}
+  .due{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px}
+  .due-label{font-size:19px;font-weight:800}
+  .due-amount{font-size:21px;font-weight:800;letter-spacing:-.01em}
+
+  .consents{display:flex;flex-direction:column;gap:16px;margin-top:18px}
+  .consent{display:flex;gap:11px;align-items:flex-start;cursor:pointer;font-size:13.5px;color:var(--body);line-height:1.55}
+  .consent b{color:var(--ink)}
+  .checkbox{
+    appearance:none;-webkit-appearance:none;flex:none;width:19px;height:19px;margin-top:1px;
+    border:2px solid #c3c8e0;border-radius:5px;background:#fff;cursor:pointer;
+    display:inline-grid;place-content:center;transition:background .12s ease,border-color .12s ease;
+  }
+  .checkbox:hover{border-color:#9aa0d8}
+  .checkbox::before{
+    content:"";width:10px;height:10px;transform:scale(0);transition:transform .12s ease;
+    clip-path:polygon(14% 44%,0 62%,40% 100%,100% 16%,82% 2%,38% 66%);
+    background:#fff;
+  }
+  .checkbox:checked{background:var(--accent);border-color:var(--accent)}
+  .checkbox:checked::before{transform:scale(1)}
+
+  .subscribe{
+    width:100%;margin-top:22px;border:0;border-radius:11px;cursor:pointer;
+    padding:15px 18px;display:flex;align-items:center;justify-content:center;gap:11px;
+    background:linear-gradient(90deg,#6153e6,#3b6ef6);
+    color:#fff;font:inherit;font-size:16px;font-weight:700;
+    box-shadow:0 10px 24px rgba(79,70,229,.35);
+    transition:box-shadow .15s ease,transform .15s ease,filter .15s ease;
+  }
+  .subscribe:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
+  .subscribe:disabled{
+    background:linear-gradient(90deg,#b7bcf2,#c3cff7);
+    box-shadow:none;cursor:not-allowed;color:#fff;
+  }
+  .renew-note{display:flex;align-items:center;gap:8px;margin-top:14px;color:var(--muted);font-size:13px}
+  .renew-note svg{color:var(--accent);flex:none}
+
+  /* ---------- Footer / toast ---------- */
+  footer{margin-top:auto;text-align:center;color:#ADB2C5;font-size:13px;padding:0 20px 24px}
+  .toast{
+    position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);
+    background:#1d2233;color:#fff;padding:12px 22px;border-radius:10px;
+    font-size:14px;font-weight:600;opacity:0;pointer-events:none;
+    transition:opacity .25s ease,transform .25s ease;z-index:99;
+    box-shadow:0 14px 34px rgba(20,24,60,.35);
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  /* ---------- Entrance animation ---------- */
+  @keyframes rollOut{
+    from{opacity:0;clip-path:inset(0 0 100% 0);transform:translateY(-6px)}
+    55%{opacity:1}
+    to{opacity:1;clip-path:inset(-60px -60px -60px -60px);transform:none}
+  }
+  .roll{animation:rollOut .6s cubic-bezier(.22,.61,.36,1) both}
+  .col-left .card:nth-of-type(1).roll{animation-delay:.06s}
+  .col-left .card:nth-of-type(2).roll{animation-delay:.2s}
+  .order-wrap.roll{animation-delay:.34s}
+  @media (prefers-reduced-motion:reduce){.roll{animation:none}}
+
+  @media (max-width:1120px){
+    .page{grid-template-columns:1fr}
+    .order-wrap{position:static}
+  }
+  @media (max-width:640px){
+    .plans,.features-grid{grid-template-columns:1fr}
+    .sub-head{flex-direction:column}
+    .bonus{flex-wrap:wrap}
+  }
+</style>
+<style>
+  /* ============================================================
+     EXTENSIONS — new components for the signup flow, measured
+     from the four SVG exports (1920px canvas, content 1198px).
+     Base tokens/typography above are never restyled.
+     ============================================================ */
+  :root{
+    --ok-bg:#ECFDF5; --ok-line:#A7F3D0; --ok-text:#065F46;
+    --info-bg:#EEF2FF; --info-line:#C7D2FE; --info-text:#413BA2;
+    --pend-bg:#FFFBEB; --pend-line:#FDE68A; --pend-text:#92400E;
+    --chip-bg:#F2F5FF; --green-check:#04AF72;
+  }
+  html{scroll-behavior:smooth}
+  body.clean{scroll-behavior:auto}
+
+  /* header: taller than checkout per SVG (54–60px) */
+  header{height:56px;max-height:56px;padding:0 24px}
+  .login-link{font-size:14px;color:var(--muted)}
+  .login-link a{color:var(--accent);font-weight:600;text-decoration:none}
+  .login-link a:hover{text-decoration:underline}
+  .user-meta{text-align:right}
+
+  /* ---------- Stage / step layout ---------- */
+  .wrap{width:100%;max-width:1198px;margin:0 auto;padding:0}
+  main{flex:1}
+  .stage{display:none}
+  .stage.active{display:block}
+  .stage .card{border-radius:16px;padding:32px;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+  .cols{display:grid;grid-template-columns:766px 406px;gap:26px;align-items:start}
+  /* SVG/PROMPT: the receipt column is sticky in the viewport at all times —
+     stretch the aside to the full row height so sticky has room to travel */
+  .cols>aside{align-self:stretch}
+  .col-left{gap:26px}
+
+  /* ---------- Stepper ---------- */
+  /* Figma: chips row gap 4, arrow separators 20px #ADB2C5.
+     Current = white chip + #4F46E5 badge + #444356 label.
+     Done = #ADB2C5 badge/label; future = #ADB2C5 badge + #7F7F89 label. */
+  .stepper{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:23px;flex-wrap:wrap}
+  .chip{
+    display:flex;align-items:center;
+    height:36px;padding:8px 12px;gap:12px;border:0;border-radius:8px;
+    background:transparent;color:#7F7F89;font:inherit;font-size:16px;font-weight:500;
+    letter-spacing:.1px;cursor:pointer;white-space:nowrap;
+    transition:box-shadow .18s ease,background .18s ease,color .18s ease;
+  }
+  .chip .badge{
+    display:flex;align-items:center;justify-content:center;flex:none;
+    width:20px;min-width:20px;height:20px;padding:2px;border-radius:999px;
+    background:#ADB2C5;color:#fff;font-size:12px;font-weight:500;line-height:16px;
+    letter-spacing:.5px;text-align:center;
+    transition:background .18s ease;
+  }
+  .chip.done{color:#ADB2C5}
+  .chip.done .badge{background:transparent;border:1.5px solid #ADB2C5;font-size:13px}
+  .chip.current{background:#fff;color:#444356}
+  .chip.current .badge{background:#4F46E5}
+  .chip[disabled]{cursor:default}
+  .chip.allowed:not([disabled]):not(.current):hover{box-shadow:0 0 0 1px #DDE2F2 inset}
+  .chip.hidden{display:none}
+  .stepper .sep{flex:none;display:inline-flex;color:#ADB2C5}
+  .stepper .sep.hidden{display:none}
+
+  /* ---------- Step headings ---------- */
+  .step-head{margin-top:32px}
+  .step-head h1{font-size:32px;font-weight:700;letter-spacing:-.01em;color:#413BA2}
+  .step-head .lead{margin-top:11px;font-size:15.5px;line-height:1.5;color:var(--body);max-width:none}
+  .backlink{
+    display:inline-flex;align-items:center;gap:6px;margin-top:0;
+    color:var(--accent);font-size:14px;font-weight:600;text-decoration:none;
+  }
+  .backlink:hover{text-decoration:underline}
+  .step-head.has-back{margin-top:44px}
+  .step-head.has-back h1{margin-top:24px}
+
+  /* ---------- Status strips ---------- */
+  .strip{
+    display:flex;align-items:center;gap:11px;
+    border-radius:7.5px;padding:0 14px;height:45px;margin-top:18px;
+    font-size:14px;font-weight:600;
+    transition:background .3s ease,border-color .3s ease,color .3s ease;
+  }
+  .strip .strip-note{font-weight:400;opacity:.85}
+  .strip .strip-actions{margin-left:auto;display:flex;gap:14px;align-items:center}
+  .strip a{color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+  .strip.ok{background:var(--ok-bg);border:1px solid var(--ok-line);color:var(--ok-text)}
+  .strip.info{background:var(--info-bg);border:1px solid var(--info-line);color:var(--info-text)}
+  .strip.pending{background:var(--pend-bg);border:1px solid var(--pend-line);color:var(--pend-text)}
+  .strip.processing{background:var(--info-bg);border:1px solid var(--info-line);color:var(--info-text)}
+  .strip .dot{
+    flex:none;width:22px;height:22px;border-radius:50%;display:inline-flex;
+    align-items:center;justify-content:center;
+  }
+  .strip.ok .dot{background:var(--green-check)}
+  .strip.pending .dot{background:#D97706}
+  .strip.info .dot{background:var(--accent)}
+  .strip.processing .dot{background:transparent}
+  .spinner{
+    width:20px;height:20px;border-radius:50%;
+    border:2.5px solid #C7D2FE;border-top-color:var(--accent);
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ---------- Forms (Step 1) — Figma: flex 44px, padding 8px 12px,
+     white bg, bottom border #E6E9F5, no radius, empty fields ---------- */
+  .field{margin-bottom:30px}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .label-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+  .label{display:block;font-size:13.5px;font-weight:500;color:#535D73;margin-bottom:9px}
+  .label-hint{font-size:12.5px;font-weight:500;color:var(--muted)}
+  .input{
+    width:100%;height:44px;padding:8px 12px;
+    background:#fff;border:0;border-bottom:1px solid #E6E9F5;
+    font:inherit;font-size:14.5px;color:var(--ink);
+    transition:border-color .18s ease,box-shadow .18s ease;
+  }
+  .input::placeholder{color:#A6ABC0}
+  .input:focus{outline:none;border-bottom-color:var(--accent);box-shadow:0 1px 0 var(--accent)}
+  textarea.input{height:auto;padding:10px 14px;resize:vertical}
+  select.input{
+    appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23555C7A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;
+  }
+  .field-note{margin-top:9px;font-size:13px;color:var(--muted);line-height:1.5}
+  .field-note.warn{color:#B45309}
+  .err{display:none;margin-top:7px;font-size:12.5px;font-weight:600;color:#ED0378}
+  .field.invalid .err{display:block}
+  .field.invalid .input{border-bottom-color:#ED0378}
+  .field.invalid .input:focus{box-shadow:0 1px 0 #ED0378}
+  .terms{display:flex;gap:11px;align-items:flex-start;cursor:pointer;font-size:13.5px;color:var(--body);line-height:1.55;margin:22px 0 0}
+  .terms a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+  .btn-note{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;color:var(--muted);font-size:13px}
+.hp{position:absolute;left:-9999px;top:-9999px;height:0;overflow:hidden}
+  select option{background:#fff;color:#111827;font-family:inherit;font-size:14px;padding:6px 10px}
+  select option:checked{background:#EEF2FF;color:#111827}
+
+  /* ---------- Ghost button (SVG: #EEF2FF fill, #4F46E5 label) ---------- */
+  .btn-ghost{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    height:44px;padding:0 22px;border:0;border-radius:8px;cursor:pointer;
+    background:#EEF2FF;color:#4F46E5;box-shadow:0 1px 2px rgba(0,0,0,.05);
+    font:inherit;font-size:14px;font-weight:500;line-height:28px;
+    transition:filter .15s ease,transform .15s ease;
+  }
+  .btn-ghost:hover{filter:brightness(.96)}
+  .stage .subscribe{background:linear-gradient(257.56deg,#046BF2 3.39%,#5E35F2 84.49%);border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.05);font-size:14px;font-weight:500}
+  .stage .subscribe:disabled{background:linear-gradient(90deg,#b7bcf2,#c3cff7)}
+  #subscribe-btn svg{display:none}
+  #subscribe-btn:not(:disabled) svg{display:inline-block}
+  .btn-ghost:active{transform:scale(.99)}
+
+  /* ---------- Sidebar cards (Step 1 / 3) ---------- */
+  aside .col-left{gap:22px}
+  .side-title{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:700;color:var(--ink)}
+  .side-title svg{flex:none}
+  .side-list{margin-top:20px;display:flex;flex-direction:column;gap:14px}
+  .side-item{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--body);line-height:1.45}
+  .side-item svg{flex:none;margin-top:2px}
+  
+  blockquote{margin-top:16px;font-size:15.5px;line-height:1.6;color:var(--ink);font-style:italic}
+  .attr{margin-top:14px;font-size:13.5px;color:var(--muted);font-style:normal}
+  .contact{display:flex;gap:10px;align-items:center;margin-top:18px;font-size:14px;color:var(--body)}
+  .contact svg{flex:none;color:var(--accent)}
+  .contact a{color:var(--body);text-decoration:none}
+  .contact a:hover{color:var(--accent)}
+
+  /* ---------- Billing plan tiles (Step 2) ---------- */
+  .bill-title{font-size:18px;font-weight:700;margin-top:24px;color:#111827}
+  .bill-tiles{display:flex;gap:12px;align-items:flex-end;margin-top:21px}
+  /* step-2 fine-tuning measured from SVG 2 */
+  .stage .features{margin-top:25px}
+  .stage .features-grid{column-gap:30px}
+  .stage .feat{gap:9px;padding:5px 0;line-height:1.3;font-size:14px}
+  .stage .feat svg{width:15px;height:15px;margin-top:3px}
+  .stage .feat-toggle{margin-top:24px}
+  .stage .ai-title{font-size:18px;font-weight:700;color:#111827}
+  .stage .ai-desc{max-width:none;font-size:14px;line-height:18px;color:#7F7F89}
+  .stage .plans{margin-top:14px;gap:12px}
+  .stage .plan-tile{padding:16px 18px;gap:12px;border-radius:12px}
+  .stage .plan-tile.has-pill{padding-top:42px}
+  .stage .plan-tile[aria-checked="true"] .plan-name{color:#312E81}
+  .stage .plan-price{margin:0;gap:2px;align-items:flex-end}
+  .stage .plan-price .amt{font-size:24px;line-height:30px;letter-spacing:-.01em}
+  .stage .plan-price .amt.big{font-size:28px;line-height:34px}
+  .stage .plan-price .mo{font-size:13px;font-weight:500;color:#6B7280}
+  .stage .plan-sub{margin:0;font-size:13px;color:#6B7280}
+  .stage .plan-divider{margin:0}
+  .stage .plan-tokens{font-size:13px;font-weight:500;color:#374151;gap:6px}
+  .stage .radio{width:16px;height:16px;border:1px solid #D1D5DB;border-radius:999px}
+  .stage .radio:checked{border-color:#4F46E5;background:radial-gradient(circle,#fff 2.5px,#4F46E5 3px)}
+  .stage .plan-sub{margin-top:2px}
+  .stage .plan-divider{margin:12px 0 10px}
+  .stage .plan-tile.has-pill{padding-top:49px}
+  .stage .receipt{padding-top:42px}
+  /* SVG: "Best Value" is a full-width accent band across the tile top (28px) */
+  .stage .plan-bar{
+    top:0;left:0;right:auto;transform:none;width:100%;height:28px;padding:0;
+    border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:center;gap:7px;
+    background:var(--accent);box-shadow:none;
+  }
+  .stage .bonus{margin-top:20px}
+  .bill-tiles .plan-tile{flex:1;min-height:0}
+  .bill-tiles .plan-tile.has-pill{min-height:217px}
+  .plan-tile[data-bill="annual"]{border-color:var(--accent);box-shadow:0 10px 28px rgba(79,70,229,.16)}
+  .plan-price .amt.big{font-size:42px;letter-spacing:-.025em}
+  .save-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#EEF2FF;border-radius:999px;padding:5px 12px;
+    color:#413BA2;font-size:12.5px;font-weight:700;
+  }
+  .fee-note{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--body)}
+  .bonus.dim{opacity:.45;filter:saturate(.35)}
+  .bonus{transition:opacity .25s ease,filter .25s ease;flex-direction:column;gap:16px;padding:24px;border-radius:12px}
+    .bonus-mark{flex:none;display:inline-flex}
+  .bonus-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;width:100%;flex:1;min-width:0}
+  .bonus-left{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;flex:1}
+  .bonus-header{display:flex;align-items:center;gap:8px}
+  #bonus-banner .bonus-title{font-size:16px;line-height:19px;white-space:nowrap}
+  .bonus-bodyx,#bonus-banner .bonus-left .bonus-text{margin:0;font-size:14px;line-height:22px;color:#413BA2}
+  .bonus-right{display:flex;flex-direction:column;align-items:flex-end;flex:none}
+  .bonus-right .zero{font-size:26px;font-weight:700;line-height:31px;background:linear-gradient(257.56deg,#046BF2 3.39%,#5E35F2 84.49%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+  .bonus-right .then{margin-top:0;font-size:12px;font-style:italic;line-height:22px;color:#413BA2;text-align:right;white-space:nowrap}
+          
+  /* ---------- Billing date card (Step 2) ---------- */
+  .billdate-sentence{margin-top:14px;font-size:15px;color:var(--ink);line-height:1.6}
+  .day-select{
+    appearance:none;-webkit-appearance:none;
+    margin:0 4px;padding:6px 30px 6px 12px;height:38px;
+    border:1.5px solid #C7D2FE;border-radius:8px;background:#fff;cursor:pointer;
+    font:inherit;font-size:14.5px;font-weight:600;color:#111827;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%234F46E5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 10px center;
+  }
+  .day-select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.15)}
+  .billdate-note{display:flex;gap:9px;margin-top:4px;font-size:13px;color:var(--muted);line-height:1.55}
+  .billdate-note svg{flex:none;margin-top:1px;color:var(--accent)}
+
+  /* ---------- Wizard (Step 3) ---------- */
+  .wiz{display:flex;flex-direction:column;gap:20px;margin-top:24px}
+  .wiz-item{display:flex;gap:16px;align-items:flex-start}
+  .wiz-num{
+    flex:none;width:28px;height:28px;border-radius:50%;
+    background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:700;margin-top:-2px;
+    box-shadow:0 4px 10px rgba(79,70,229,.30);
+  }
+  .wiz-title{font-size:15px;font-weight:700;color:var(--ink)}
+  .wiz-sub{margin-top:5px;font-size:14px;color:var(--body);line-height:1.5}
+
+  .accordion{margin-top:10px;background:#fff;border:1px solid #E0E7FF;border-radius:7.5px;
+  }
+  .acc-head{
+    width:100%;display:flex;align-items:center;gap:11px;
+    height:52px;padding:0 16px;border:0;background:none;cursor:pointer;
+    font:inherit;font-size:14.5px;font-weight:700;color:var(--ink);text-align:left;
+  }
+  .acc-head:hover{background:#F7F8FF;border-radius:7.5px}
+  .acc-head .chev{flex:none;color:var(--accent);transition:transform .25s ease}
+  .accordion.open .acc-head .chev{transform:rotate(90deg)}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease,padding-bottom .35s ease;padding:0 18px 0 43px}
+  .accordion.open .acc-body{max-height:440px;padding-bottom:18px}
+  .acc-body ol{margin:10px 0 0 18px;display:flex;flex-direction:column;gap:8px}
+  .acc-body code{background:#EEF2FF;border-radius:5px;padding:1px 7px;font-size:13px;color:#4F46E5}
+
+  /* ---------- Dropzone (Step 3) ---------- */
+  .dropzone{
+    margin-top:24px;height:178px;
+    background:#fff;border:1.5px dashed #C7D2FE;border-radius:7px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    cursor:pointer;text-align:center;padding:20px;
+    transition:border-color .15s ease,background .15s ease;
+  }
+  .dropzone:hover,.dropzone:focus-visible{border-color:var(--accent);background:#FBFCFF}
+  .dropzone.drag{border-color:var(--accent);background:#EEF2FF}
+  .dropzone.invalid{border-color:#ED0378;background:#FEF2F8}
+  .dz-title{font-size:16px;font-weight:700;color:var(--ink)}
+  .dz-sub{font-size:13px;color:var(--muted)}
+  .dz-file{display:flex;align-items:center;gap:10px;background:#EEF2FF;border:1px solid #C7D2FE;border-radius:8px;padding:10px 16px;font-size:14px;color:var(--ink)}
+  .dz-file b{font-weight:700}
+  .dz-file .rm{border:0;background:none;color:var(--muted);cursor:pointer;font:inherit;font-size:15px;line-height:1;padding:2px 4px}
+  .dz-file .rm:hover{color:#ED0378}
+  .upload-error{display:none;margin-top:12px;font-size:13px;font-weight:600;color:#ED0378}
+  .upload-error.show{display:block}
+  .two-btns{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px}
+  .two-btns .btn-ghost{width:209px}
+  .two-btns .subscribe{width:193px;font-size:15px;font-weight:600;padding:8px 16px;gap:8px}
+
+  /* ---------- Step 4 (Figma) ---------- */
+  .done-card{display:flex;flex-direction:column;align-items:stretch;gap:24px}
+  .done-head{display:flex;align-items:center;gap:20px}
+  .done-head .checkorb{flex:none}
+  .done-head h1{font-size:32px;font-weight:700;line-height:40px;color:#413BA2;letter-spacing:0}
+  .done-head .lead{margin-top:8px;font-size:15px;line-height:150%;color:#535D73}
+  .done-list{display:flex;flex-direction:column;gap:12px;padding-left:84px}
+  .done-item{display:flex;align-items:flex-start;gap:8px;font-size:14px;line-height:150%;color:#535D73}
+  .done-item svg{flex:none;margin-top:3px}
+  .warn-strip{
+    background:#EEF2FF;border:1px solid #C7D2FE;border-radius:8px;
+    padding:20px;display:flex;gap:12px;align-items:flex-start;
+    font-size:14px;font-weight:700;line-height:160%;color:#413BA2;
+  }
+  .warn-strip svg{flex:none;margin-top:2px}
+  .setup-cards{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .setup-card{padding:24px;gap:24px;display:flex;flex-direction:column;align-items:flex-start}
+  .setup-card .card-title{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;color:#413BA2}
+  .num-badge{
+    flex:none;width:28px;height:28px;border-radius:999px;
+    background:#4F46E5;color:#fff;font-size:14px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .setup-card .side-list{margin-top:0;gap:14px}
+  .setup-card .side-item{gap:8px;font-size:14px;line-height:150%;color:#535D73}
+  .setup-card .side-item svg{margin-top:3px;width:16px;height:16px}
+  .setup-card .btn{margin-top:0}
+  .dash-row{display:flex;justify-content:center}
+  #dashboard-btn{width:300px;font-size:15px;font-weight:600}
+  .support-line{margin-top:0;text-align:center;font-size:13px;line-height:150%;color:#6B7280}
+  .support-line a{color:#6B7280}
+  .support-line b{color:#6B7280;font-weight:600}
+
+  /* ---------- Payment: external Stripe-style page (no ATC chrome) ---------- */
+  body.pay-page{background:#F6F9FC}
+  body.pay-page header,body.pay-page .stepper,body.pay-page footer,body.pay-page .bg-shape{display:none}
+  .pay-shell{min-height:calc(100vh - 96px);display:flex;align-items:flex-start;justify-content:center;padding:56px 16px}
+  .stripe-card{
+    width:100%;max-width:440px;background:#fff;border:1px solid #E3E8EE;border-radius:12px;
+    box-shadow:0 8px 24px rgba(43,60,80,.10);padding:28px;
+  }
+  .sp-merchant{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:600;color:#3C4257;margin-bottom:18px}
+  .sp-amount{font-size:24px;font-weight:700;letter-spacing:-.02em;color:#1A1F36}
+  .sp-sub{margin-top:4px;font-size:14px;color:#6B7280}
+  #pay-form{margin-top:22px}
+  .sp-field{margin-bottom:16px}
+  .sp-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .sp-label{display:block;font-size:13.5px;font-weight:600;color:#3C4257;margin-bottom:6px}
+  .sp-input{
+    width:100%;height:42px;padding:0 12px;
+    background:#fff;border:1px solid #C1C9D2;border-radius:7px;
+    font:inherit;font-size:15px;color:#1A1F36;
+    transition:border-color .15s ease,box-shadow .15s ease;
+  }
+  .sp-input:focus{outline:none;border-color:#635BFF;box-shadow:0 0 0 1px #635BFF}
+  .sp-field.invalid .sp-input{border-color:#DF1B41;box-shadow:0 0 0 1px #DF1B41}
+  .sp-err{display:none;margin-top:6px;font-size:12.5px;font-weight:500;color:#DF1B41}
+  .sp-field.invalid .sp-err{display:block}
+  .sp-pay-err{
+    display:none;margin:0 0 14px;background:#FFF0F2;border:1px solid #FCC9D2;border-radius:7px;
+    padding:10px 12px;font-size:13.5px;font-weight:500;color:#DF1B41;line-height:1.5;
+  }
+  .sp-pay-err.show{display:block}
+  .sp-pay{
+    width:100%;height:44px;border:0;border-radius:7px;cursor:pointer;
+    background:#635BFF;color:#fff;font:inherit;font-size:16px;font-weight:600;
+    transition:filter .15s ease,transform .15s ease;
+  }
+  .sp-pay:hover{filter:brightness(1.08)}
+  .sp-pay:active{transform:scale(.99)}
+  .sp-return{display:block;margin-top:16px;text-align:center;font-size:13.5px;font-weight:500;color:#635BFF;text-decoration:none}
+  .sp-return:hover{text-decoration:underline}
+  .sp-powered{margin-top:14px;text-align:center;font-size:12px;color:#8792A2}
+  .sp-powered b{font-weight:700;color:#635BFF;letter-spacing:-.02em}
+
+  /* ---------- Demo bar ---------- */
+  .demo{
+    position:fixed;left:16px;bottom:16px;z-index:98;
+    background:#1d2233;color:#fff;border-radius:12px;padding:12px 14px;
+    font-size:12px;box-shadow:0 14px 34px rgba(20,24,60,.35);
+    display:flex;flex-direction:column;gap:8px;min-width:240px;
+  }
+  .demo h4{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9AA3B8}
+  .demo .row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .demo button{
+    border:1px solid #3a415c;background:#2a3046;color:#dfe3f2;border-radius:6px;
+    font:inherit;font-size:11.5px;font-weight:600;padding:4px 9px;cursor:pointer;
+  }
+  .demo button:hover{background:#343c58}
+  .demo button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .demo .st{color:#9AA3B8}
+  .demo .st b{color:#7EE0B8;font-weight:600}
+  body.clean .demo{display:none}
+  footer{padding-top:56px}
+  .stage .renew-note{font-size:12px;white-space:nowrap}
+  body.clean .roll{animation:none}
+
+  /* ---------- Smooth, unobtrusive motion ---------- */
+  /* step transition: gentle fade + rise */
+  .stage.active{animation:stageIn .38s cubic-bezier(.22,.61,.36,1) both}
+  @keyframes stageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  body.clean .stage.active{animation:none}
+  /* receipt lines already fade in (checkout fadeIn) */
+  .o-item{animation:fadeIn .3s ease}
+  /* subtle strip swap */
+  .strip .dot svg{transition:transform .2s ease}
+  /* button press feedback */
+  .subscribe:active:not(:disabled){transform:translateY(0);filter:brightness(.97)}
+  /* dropzone settle */
+  .dropzone *{pointer-events:none}
+  .dz-file *{pointer-events:none}
+  .dz-file .rm{pointer-events:auto}
+  @media (prefers-reduced-motion:reduce){
+    .stage.active,.o-item,.spinner{animation:none}
+    .roll{animation:none}
+    html{scroll-behavior:auto}
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:1240px){
+    .wrap{padding:0 16px}
+    .cols{grid-template-columns:1fr;gap:26px}
+    .order-wrap{position:static}
+    .setup-cards{grid-template-columns:1fr}
+    .bill-tiles{flex-direction:column;align-items:stretch}
+  }
+  @media (max-width:640px){
+    .field-row,.card-row{grid-template-columns:1fr}
+    .two-btns{flex-direction:column-reverse;gap:12px}
+    .two-btns .subscribe,.two-btns .btn-ghost{width:100%}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-shape" aria-hidden="true">
+  <svg viewBox="0 0 1599 974" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g filter="url(#filter0_f_30383_7603)">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M1949.79 -274.864C2131.27 -185.923 2375.55 -201.271 2496.31 -37.418C2616.98 126.316 2555.3 359.701 2569.03 565.343C2581.46 751.659 2593.45 930.395 2573.34 1116.55C2547.74 1353.53 2635.07 1680.31 2434.95 1806.33C2221.87 1940.51 1967.88 1641.02 1719.34 1654.34C1516.58 1665.21 1360.61 1884.34 1158.11 1874.77C938.325 1864.39 734.507 1748.55 571.702 1600.12C395.753 1439.72 176.61 1242.13 198.953 1000.34C222.528 745.232 584.541 657.437 680.798 419.55C772.065 193.992 588.672 -92.8482 723.18 -295.223C856.161 -495.299 1120.71 -600.191 1355.97 -596.286C1585.41 -592.478 1744.23 -375.609 1949.79 -274.864Z" fill="url(#paint0_radial_30383_7603)" fill-opacity="0.18"/>
+    </g>
+    <defs>
+      <filter id="filter0_f_30383_7603" x="3.05176e-05" y="-793.764" width="2781.48" height="2866.22" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+        <feGaussianBlur stdDeviation="98.6868" result="effect1_foregroundBlur_30383_7603"/>
+      </filter>
+      <radialGradient id="paint0_radial_30383_7603" cx="0" cy="0" r="1" gradientTransform="matrix(-902.803 3541.76 -3504.57 -611.498 1609.92 -656.749)" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#8480FD"/>
+        <stop offset="1" stop-color="#04FFF2" stop-opacity="0.6"/>
+      </radialGradient>
+    </defs>
+  </svg>
+</div>
+
+<header>
+  <a class="logo" href="#" aria-label="Agency Toolchest home">
+    <svg width="225" height="27" viewBox="0 0 250 30" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+      <g clip-path="url(#clip0_14_785)">
+        <path d="M15.8455 11.3219L16.8217 9.28621L22.3039 20.7136C23.2468 22.6799 25.2766 23.9367 27.5076 23.9367H29.5981L18.5562 1.06925C17.8669 -0.35772 15.78 -0.35772 15.0919 1.06925L9.82751 11.9677L15.8467 11.3208L15.8455 11.3219Z" fill="url(#paint0_linear_14_785)"/>
+        <path d="M27.6838 2.94531L20.6563 17.5981H17.5146C16.3015 17.5981 15.5003 16.3714 16.0158 15.3043L20.4361 6.15456C21.3825 4.19637 23.4076 2.94531 25.6326 2.94531H27.6826H27.6838Z" fill="url(#paint1_linear_14_785)"/>
+        <path d="M20.9206 17.5982L16.9193 9.31641H15.1634C13.3264 9.31641 12.1109 11.1704 12.8871 12.7895L14.1729 15.4699C14.7955 16.7684 16.136 17.5993 17.611 17.5993H20.9206V17.5982Z" fill="url(#paint2_linear_14_785)"/>
+        <path d="M16.1074 9.31659L8.37873 25.4311C7.04894 28.2029 4.90247 29.9747 1.75718 29.9747H0L7.79419 13.8394C9.12755 11.078 10.7931 9.31543 13.93 9.31543H16.1062L16.1074 9.31659Z" fill="url(#paint3_linear_14_785)"/>
+        <path d="M40.9817 11.7523H40.827C40.6401 11.353 40.3746 10.9445 40.0293 10.5278C39.6853 10.1124 39.2317 9.76402 38.671 9.48279C38.1103 9.20156 37.4138 9.06152 36.5817 9.06152C35.4923 9.06152 34.4911 9.34159 33.5792 9.90289C32.6673 10.4642 31.9363 11.309 31.3887 12.4374C30.8411 13.5658 30.5673 14.9719 30.5673 16.6558C30.5673 18.3397 30.8363 19.6602 31.3744 20.7342C31.9125 21.8082 32.6375 22.6045 33.5506 23.1241C34.4626 23.6437 35.4769 23.903 36.5924 23.903C37.3793 23.903 38.0555 23.7872 38.6234 23.5546C39.1912 23.322 39.6543 23.0223 40.0162 22.6542C40.377 22.2862 40.6484 21.8962 40.8282 21.483H41.002V24.2016C41.002 25.2212 40.7103 25.948 40.127 26.3831C39.5436 26.8183 38.8031 27.0358 37.9079 27.0358C37.3079 27.0358 36.8007 26.9571 36.384 26.7986C35.9685 26.64 35.634 26.4329 35.3828 26.1748C35.1316 25.9167 34.9471 25.6389 34.8316 25.3427L31.0208 25.8554C31.1887 26.6354 31.553 27.339 32.1137 27.9652C32.6744 28.5901 33.4304 29.0854 34.3816 29.45C35.3328 29.8146 36.4757 29.9963 37.8103 29.9963C39.2281 29.9963 40.4841 29.781 41.577 29.3528C42.6699 28.9234 43.5258 28.2834 44.1449 27.4316C44.7639 26.5798 45.0735 25.5221 45.0735 24.2583V9.25595H43.4782C42.0996 9.25595 40.9829 10.3739 40.9829 11.7523H40.9817ZM40.6484 18.8779C40.3996 19.5005 40.046 19.9773 39.5841 20.3095C39.1234 20.6416 38.5603 20.8083 37.896 20.8083C37.2317 20.8083 36.6495 20.6393 36.1888 20.3002C35.7281 19.9611 35.3769 19.4809 35.1352 18.8582C34.8935 18.2356 34.7733 17.4961 34.7733 16.6373C34.7733 15.7786 34.8923 15.0472 35.1304 14.4025C35.3685 13.7579 35.7197 13.2533 36.184 12.8888C36.6483 12.5242 37.2186 12.3425 37.896 12.3425C38.5734 12.3425 39.1246 12.5196 39.5889 12.8749C40.0531 13.2302 40.4079 13.7278 40.652 14.3701C40.8972 15.0125 41.0198 15.7682 41.0198 16.6385C41.0198 17.5088 40.896 18.2564 40.6472 18.8779H40.6484Z" fill="#413BA2"/>
+        <path d="M59.9321 10.8934C59.2976 10.2835 58.5559 9.82517 57.7082 9.5208C56.8606 9.21527 55.9463 9.0625 54.9665 9.0625C53.5093 9.0625 52.2415 9.37729 51.1617 10.0069C50.0819 10.6365 49.245 11.5137 48.6521 12.6398C48.0593 13.7658 47.7628 15.0748 47.7628 16.5654C47.7628 18.056 48.0593 19.417 48.6521 20.5338C49.245 21.6506 50.0914 22.5129 51.1903 23.1204C52.2891 23.728 53.6034 24.0313 55.1308 24.0313C56.3558 24.0313 57.438 23.8472 58.3749 23.4792C59.313 23.1112 60.0809 22.595 60.6762 21.9319C61.2726 21.2676 61.6678 20.4899 61.8607 19.5964L58.0499 19.3511C57.9082 19.7156 57.7023 20.0246 57.4309 20.2758C57.1606 20.5281 56.8344 20.7167 56.4546 20.8417C56.0737 20.9678 55.6558 21.0303 55.1975 21.0303C54.5082 21.0303 53.9117 20.8891 53.4082 20.6056C52.9058 20.322 52.5165 19.9193 52.2427 19.3974C51.9688 18.8754 51.8319 18.2551 51.8319 17.5387V17.5294H61.9476V16.4254C61.9476 15.1917 61.7702 14.1142 61.4155 13.193C61.0607 12.2717 60.5654 11.5056 59.9309 10.8945L59.9321 10.8934ZM51.8415 15.0366C51.8665 14.5169 51.9986 14.039 52.2486 13.6073C52.5189 13.1386 52.8951 12.7648 53.3748 12.4847C53.8546 12.2046 54.4082 12.0646 55.0332 12.0646C55.6582 12.0646 56.1606 12.1919 56.6142 12.4465C57.0689 12.7011 57.4249 13.0518 57.6832 13.4985C57.9404 13.9452 58.0701 14.4579 58.0701 15.0366H51.8415Z" fill="#413BA2"/>
+        <path d="M76.1193 9.85723C75.3514 9.41166 74.4526 9.18945 73.4204 9.18945C72.318 9.18945 71.3799 9.43943 70.6061 9.93824C69.8323 10.437 69.2811 11.1129 68.9525 11.9647H68.7787C68.7787 10.5366 67.6203 9.37925 66.1917 9.37925H64.8524V24.0309H68.9715V15.5605C68.9787 14.9309 69.0989 14.3916 69.3346 13.9437C69.5704 13.4958 69.8989 13.1533 70.3216 12.9183C70.7442 12.6834 71.2323 12.5653 71.7859 12.5653C72.6109 12.5653 73.2597 12.8176 73.73 13.3234C74.2002 13.8291 74.4324 14.5305 74.4264 15.4262V23.9626C74.4264 23.9626 75.5431 24.0297 76.9217 24.0297H78.5467V14.7006C78.5467 13.563 78.3336 12.5816 77.9086 11.7575C77.4836 10.9347 76.8872 10.2993 76.1193 9.85491V9.85723Z" fill="#413BA2"/>
+        <path d="M86.8778 12.7C87.3517 12.3632 87.9076 12.1954 88.5457 12.1954C89.3005 12.1954 89.9112 12.4176 90.3779 12.8608C90.8458 13.3041 91.1339 13.8885 91.2434 14.6118H95.1316C95.0732 13.4916 94.7613 12.5171 94.1934 11.6861C93.6256 10.8552 92.8553 10.2106 91.8827 9.7511C90.9089 9.29165 89.7743 9.0625 88.4791 9.0625C86.9766 9.0625 85.6802 9.37845 84.5909 10.0115C83.5016 10.6434 82.6611 11.5218 82.0718 12.6444C81.4813 13.767 81.1873 15.0713 81.1873 16.5561C81.1873 18.041 81.4789 19.3187 82.0623 20.4447C82.6456 21.5708 83.4837 22.4504 84.5766 23.0823C85.6695 23.7141 86.9766 24.0313 88.4981 24.0313C89.8196 24.0313 90.9636 23.7952 91.9315 23.323C92.8982 22.8508 93.6577 22.1946 94.2089 21.3555C94.7601 20.5153 95.0685 19.542 95.1327 18.4345H91.2446C91.1672 18.9437 91.0041 19.38 90.7565 19.7422C90.5077 20.1033 90.1958 20.3788 89.8184 20.5674C89.441 20.756 89.0172 20.8509 88.5469 20.8509C87.9088 20.8509 87.3505 20.6808 86.8743 20.3417C86.3969 20.0015 86.0278 19.5085 85.7671 18.8604C85.5064 18.2123 85.3754 17.4253 85.3754 16.5006C85.3754 15.5759 85.5076 14.8109 85.7719 14.1697C86.0361 13.5274 86.4052 13.039 86.879 12.7023L86.8778 12.7Z" fill="#413BA2"/>
+        <path d="M106.97 10.9288L104.382 20.0045H104.227L101.664 10.9346C101.36 9.86178 100.379 9.12109 99.2626 9.12109H96.8197L102.148 24.3664L101.907 25.4694C101.727 25.9323 101.492 26.261 101.205 26.4531C100.919 26.6464 100.58 26.7355 100.19 26.7227C99.7995 26.71 99.3638 26.629 98.8793 26.482L97.9507 29.5501C98.2471 29.6716 98.6233 29.7734 99.0769 29.8544C99.5317 29.9343 100.02 29.9748 100.542 29.9748C101.56 29.9748 102.432 29.8128 103.153 29.4876C103.875 29.1624 104.473 28.7029 104.947 28.1081C105.421 27.5132 105.796 26.8165 106.073 26.0191L111.847 9.12109H109.37C108.254 9.12109 107.276 9.85946 106.97 10.9288Z" fill="#413BA2"/>
+        <path d="M135.86 3.04492H119.593C119.593 4.89895 121.138 6.40114 123.045 6.40114H125.656V23.9634C127.942 23.9634 129.795 22.1615 129.795 19.9395V6.40114H132.406C134.313 6.40114 135.859 4.89895 135.859 3.04492H135.86Z" fill="#413BA2"/>
+        <path d="M145.397 10.0562C144.304 9.43241 143.006 9.12109 141.504 9.12109C140.001 9.12109 138.704 9.43241 137.611 10.0562C136.518 10.68 135.675 11.5515 135.082 12.6694C134.489 13.7886 134.193 15.094 134.193 16.5858C134.193 18.0776 134.489 19.3634 135.082 20.4825C135.675 21.6016 136.518 22.4731 137.611 23.0957C138.704 23.7195 140.001 24.0308 141.504 24.0308C143.006 24.0308 144.304 23.7195 145.397 23.0957C146.49 22.4719 147.333 21.6005 147.925 20.4825C148.518 19.3634 148.815 18.0648 148.815 16.5858C148.815 15.1067 148.518 13.7886 147.925 12.6694C147.333 11.5503 146.49 10.68 145.397 10.0562ZM144.275 18.8044C144.04 19.4629 143.693 19.9814 143.236 20.3598C142.778 20.7394 142.207 20.9281 141.524 20.9281C140.841 20.9281 140.255 20.7383 139.788 20.3598C139.32 19.9802 138.969 19.4617 138.735 18.8044C138.499 18.1459 138.381 17.3971 138.381 16.5569C138.381 15.7166 138.499 14.9679 138.735 14.3094C138.97 13.6508 139.322 13.1312 139.788 12.7493C140.256 12.3674 140.835 12.1753 141.524 12.1753C142.213 12.1753 142.778 12.3662 143.236 12.7493C143.693 13.1312 144.04 13.652 144.275 14.3094C144.511 14.9679 144.629 15.7166 144.629 16.5569C144.629 17.3971 144.511 18.1459 144.275 18.8044Z" fill="#413BA2"/>
+        <path d="M162.108 10.0562C161.015 9.43241 159.717 9.12109 158.215 9.12109C156.712 9.12109 155.415 9.43241 154.322 10.0562C153.229 10.68 152.386 11.5515 151.793 12.6694C151.2 13.7886 150.904 15.094 150.904 16.5858C150.904 18.0776 151.2 19.3634 151.793 20.4825C152.386 21.6016 153.229 22.4731 154.322 23.0957C155.415 23.7195 156.712 24.0308 158.215 24.0308C159.717 24.0308 161.015 23.7195 162.108 23.0957C163.201 22.4719 164.044 21.6005 164.636 20.4825C165.229 19.3634 165.526 18.0648 165.526 16.5858C165.526 15.1067 165.229 13.7886 164.636 12.6694C164.044 11.5503 163.201 10.68 162.108 10.0562ZM160.986 18.8044C160.751 19.4629 160.404 19.9814 159.947 20.3598C159.489 20.7394 158.918 20.9281 158.235 20.9281C157.552 20.9281 156.966 20.7383 156.499 20.3598C156.032 19.9802 155.68 19.4617 155.446 18.8044C155.21 18.1459 155.092 17.3971 155.092 16.5569C155.092 15.7166 155.21 14.9679 155.446 14.3094C155.682 13.6508 156.033 13.1312 156.499 12.7493C156.967 12.3674 157.546 12.1753 158.235 12.1753C158.924 12.1753 159.489 12.3662 159.947 12.7493C160.404 13.1312 160.751 13.652 160.986 14.3094C161.222 14.9679 161.34 15.7166 161.34 16.5569C161.34 17.3971 161.222 18.1459 160.986 14.3094Z" fill="#413BA2"/>
+        <path d="M168.431 7.04924V24.0699C170.706 24.0699 172.55 22.2772 172.55 20.0656V3.04492C170.275 3.04492 168.431 4.83761 168.431 7.04924Z" fill="#413BA2"/>
+        <path d="M181.146 12.7447C181.62 12.409 182.176 12.2412 182.814 12.2412C183.569 12.2412 184.18 12.4623 184.646 12.9044C185.114 13.3465 185.402 13.9274 185.512 14.6484H189.4C189.342 13.5328 189.03 12.5618 188.462 11.7343C187.894 10.9068 187.124 10.2645 186.151 9.80738C185.177 9.35024 184.043 9.12109 182.747 9.12109C181.245 9.12109 179.949 9.43588 178.859 10.0666C177.77 10.6962 176.93 11.5711 176.34 12.6891C175.751 13.8082 175.456 15.1067 175.456 16.5858C175.456 18.0648 176.047 19.3367 176.631 20.4593C177.214 21.5808 178.052 22.4569 179.145 23.0864C180.238 23.716 181.245 24.032 182.767 24.032C184.088 24.032 185.232 23.797 186.2 23.3272C187.167 22.8573 187.926 22.2034 188.477 21.3667C189.029 20.5299 189.337 19.5601 189.401 18.4572H185.513C185.436 18.9652 185.273 19.3992 185.025 19.7592C184.776 20.1191 184.464 20.3934 184.087 20.582C183.709 20.7707 183.286 20.8644 182.815 20.8644C182.177 20.8644 181.619 20.6954 181.143 20.3575C180.665 20.0184 180.296 19.5265 180.036 17.8819C179.775 17.2361 179.644 16.4526 179.644 15.5314C179.644 14.6102 179.776 13.8487 180.04 13.2087C180.305 12.5698 180.674 13.0826 181.147 12.747L181.146 12.7447Z" fill="#413BA2"/>
+        <path d="M203.371 10.0557C202.6 9.62052 201.699 9.40179 200.667 9.40179C199.538 9.40179 198.6 9.64483 197.853 10.1309C197.105 10.617 196.563 11.2859 196.228 12.1377H196.054V3.17773C193.843 3.17773 192.05 4.92066 192.05 7.0698V24.0314H196.169V15.6826C196.176 15.0622 196.3 14.531 196.542 14.0889C196.783 13.6468 197.119 13.3101 197.548 13.0786C197.976 12.8471 198.472 12.7302 199.032 12.7302C199.87 12.7302 200.523 12.9779 200.991 13.4732C201.457 13.9686 201.688 14.6606 201.682 15.5506V24.0303H205.801V14.8354C205.809 13.707 205.597 12.7372 205.168 11.9259C204.74 11.1146 204.14 10.4908 203.369 10.0545L203.371 10.0557Z" fill="#413BA2"/>
+        <path d="M220.622 10.945C219.987 10.3374 219.246 9.88145 218.398 9.57708C217.55 9.2727 216.636 9.12109 215.656 9.12109C214.199 9.12109 212.931 9.43473 211.852 10.0608C210.772 10.6881 209.935 11.5619 209.342 12.6833C208.749 13.8059 208.453 15.1091 208.453 16.5939C208.453 18.0787 208.749 19.4351 209.342 20.5473C209.935 21.6595 210.781 22.5182 211.88 23.1235C212.979 23.7288 214.293 24.0308 215.821 24.0308C217.046 24.0308 218.128 23.848 219.065 23.4811C220.003 23.1142 220.771 21.6004 221.366 20.9395C221.962 20.2787 222.358 19.5033 222.551 19.6133L218.74 19.3691C218.598 19.7325 218.392 20.0392 218.121 20.2904C217.849 20.5415 217.524 20.729 217.144 20.8551C216.764 20.9801 216.346 21.0426 215.887 21.0426C215.198 21.0426 214.602 20.9014 214.098 20.619C213.594 20.3367 213.206 19.9362 212.932 19.4154C212.659 18.8958 212.522 18.2778 212.522 17.5637V17.5545H222.637V16.455C222.637 15.2271 222.46 14.1531 222.105 13.2354C221.751 12.3176 221.255 11.5538 220.621 10.9462L220.622 10.945ZM212.532 15.072C212.557 14.5547 212.69 14.0779 212.94 13.6474C213.21 13.181 213.586 12.8083 214.066 12.5282C214.546 12.2493 215.099 12.1104 215.724 12.1104C216.349 12.1104 216.852 12.2378 217.305 12.4912C217.76 12.7447 218.116 13.0942 218.374 13.5397C218.633 13.9841 218.761 14.4957 218.761 15.072H212.532Z" fill="#413BA2"/>
+        <path d="M237.178 16.7548C236.469 16.1159 235.392 15.6518 233.948 15.3637L231.26 14.8371C230.57 14.6936 230.084 14.5015 229.801 14.2631C229.517 14.0247 229.376 13.7342 229.376 13.3893C229.376 12.9564 229.595 12.6104 230.033 12.35C230.471 12.0896 231.01 11.96 231.648 11.96C232.126 11.96 232.536 12.0364 232.882 12.1903C233.227 12.3442 233.505 12.5479 233.719 12.8014C233.932 13.0548 234.07 13.3384 234.134 13.652L237.906 13.4263C237.725 12.0977 237.095 11.048 236.015 10.2773C234.935 9.50648 233.457 9.12109 231.58 9.12109C230.31 9.12109 229.203 9.30279 228.259 9.66619C227.315 10.0296 226.583 10.5469 226.064 11.217C225.545 11.8882 225.285 12.6868 225.285 13.6138C225.285 14.6924 225.639 15.5789 226.345 16.2745C227.051 16.97 228.129 17.4584 229.579 17.7408L232.152 18.2384C232.796 18.3634 233.273 18.544 233.583 18.7789C233.892 19.0138 234.051 19.3136 234.057 19.677C234.05 20.1098 233.826 20.4617 233.384 20.7348C232.942 21.0079 232.36 21.1433 231.639 21.1433C230.917 21.1433 230.301 20.9917 229.83 20.6873C229.36 20.383 229.064 19.9397 228.941 19.3576L224.889 19.5647C225.089 20.9431 225.77 22.0333 226.934 22.8318C228.097 23.6304 229.663 24.0308 231.629 24.0308C232.919 24.0308 234.058 23.8318 235.048 23.4336C236.038 23.0355 236.819 22.4789 237.389 21.7648C237.959 21.0507 238.245 20.2198 238.245 19.2731C238.245 18.2327 237.89 17.3924 237.181 16.7536L237.178 16.7548Z" fill="#413BA2"/>
+        <path d="M248.582 20.6683C248.478 20.6868 248.331 20.7134 248.137 20.7481C247.944 20.7829 247.75 20.8002 247.557 20.8002C247.28 20.8002 247.036 20.7597 246.827 20.6775C246.618 20.5965 246.455 20.453 246.339 20.2493C246.224 20.0456 246.165 19.7586 246.165 19.3894V12.3946H248.961V9.38559H246.165V3.17773C243.89 3.17773 242.045 4.97042 242.045 7.18321V9.38675H240.014V12.3958H242.045V19.9172C242.039 20.8639 242.241 21.6474 242.655 22.2677C243.068 22.888 243.646 23.3452 244.39 23.6403C245.136 23.9342 246.003 24.0639 246.996 24.0257C247.531 24.0071 247.986 23.9551 248.359 23.8706C248.733 23.7861 249.024 23.712 249.23 23.6495L248.582 20.6694V20.6683Z" fill="#413BA2"/>
+      </g>
+      <defs>
+        <linearGradient id="paint0_linear_14_785" x1="17.1227" y1="4.07397" x2="27.6796" y2="24.323" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#403BA2"/>
+          <stop offset="1" stop-color="#9D98FF"/>
+        </linearGradient>
+        <linearGradient id="paint1_linear_14_785" x1="18.3348" y1="15.5809" x2="25.1987" y2="3.3513" gradientUnits="userSpaceOnUse">
+          <stop offset="0.23" stop-color="#403BA2"/>
+          <stop offset="1" stop-color="#337BE7"/>
+        </linearGradient>
+        <linearGradient id="paint2_linear_14_785" x1="14.4955" y1="10.6369" x2="18.4869" y2="17.748" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#403BA2"/>
+          <stop offset="1" stop-color="#3D48D2"/>
+        </linearGradient>
+        <linearGradient id="paint3_linear_14_785" x1="2.25718" y1="29.4366" x2="12.793" y2="10.665" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#403BA2"/>
+          <stop offset="0.48" stop-color="#3F3FCE"/>
+          <stop offset="1" stop-color="#337BE6"/>
+        </linearGradient>
+        <clipPath id="clip0_14_785">
+          <rect width="249.231" height="30" fill="white"/>
+        </clipPath>
+      </defs>
+    </svg>
+  </a>
+  <div id="hdr-right"></div>
+</header>
+
+<main id="app">
+  <div class="wrap">
+
+    <nav class="stepper" id="stepper" aria-label="Signup steps"></nav>
+
+    <!-- ================= STEP 1 — ACCOUNT ================= -->
+    <section class="stage" id="view-step-1">
+      <div class="step-head" style="margin-top:40px">
+        <h1>Create your new account</h1>
+        <p class="lead">Set up your agency in about two minutes — no sales call required. You'll pick your plan and pay securely on the next step.</p>
+      </div>
+
+      <div class="cols" style="margin-top:22px">
+        <div class="col-left">
+          <section class="card roll" style="padding-top:43px">
+            <form id="account-form" novalidate>
+              <div class="hp" aria-hidden="true">
+                <label>Leave this field empty
+                  <input type="text" name="company_website" id="hp-company_website" tabindex="-1" autocomplete="off">
+                </label>
+              </div>
+
+              <div class="field-row">
+                <div class="field" id="f-name">
+                  <label class="label" for="af-name">First and last name</label>
+                  <input class="input" type="text" id="af-name" autocomplete="name">
+                  <p class="err">Please enter your first and last name.</p>
+                </div>
+                <div class="field" id="f-org">
+                  <label class="label" for="af-org">Organization name</label>
+                  <input class="input" type="text" id="af-org" autocomplete="organization">
+                  <p class="err">Please enter your organization name.</p>
+                </div>
+              </div>
+
+              <div class="field" id="f-carrier">
+                <div class="label-row">
+                  <label class="label" for="af-carrier">Which insurance carrier do you represent?</label>
+                  <span class="label-hint">Used to tailor your setup</span>
+                </div>
+                <select class="input" id="af-carrier">
+                  <option value="allstate" selected>Allstate</option>
+                  <option value="other">Other</option>
+                </select>
+                <p class="err">Please choose a carrier.</p>
+              </div>
+
+              <div class="field" id="f-email">
+                <label class="label" for="af-email">Work email</label>
+                <input class="input" type="email" id="af-email" autocomplete="email">
+                <p class="err">Please enter a valid work email address.</p>
+              </div>
+
+              <div class="field" id="f-password" style="margin-bottom:0">
+                <div class="label-row">
+                  <label class="label" for="af-password">Password</label>
+                  <span class="label-hint">Min. 8 characters</span>
+                </div>
+                <input class="input" type="password" id="af-password" autocomplete="new-password">
+                <p class="err">Password must be at least 8 characters.</p>
+              </div>
+
+              <label class="terms" id="f-terms">
+                <input class="checkbox" type="checkbox" id="af-terms">
+                <span>I accept the <a href="https://agencytoolchest.com/terms" target="_blank" rel="noopener">terms of service</a> &amp; <a href="https://agencytoolchest.com/privacy" target="_blank" rel="noopener">privacy policy</a></span>
+              </label>
+              <p class="err" id="terms-err" style="margin-left:30px">Please accept the terms to continue.</p>
+
+              <button class="subscribe" id="create-btn" type="submit" style="margin-top:18px">
+                Create account &amp; continue
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M14 6l6 6-6 6"/></svg>
+              </button>
+              <div class="btn-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg>
+                We email you a verification link — you can keep going while it's on the way.
+              </div>
+            </form>
+          </section>
+        </div>
+
+        <aside>
+          <div class="col-left">
+            <section class="card roll">
+              <div class="side-title">
+                <svg width="18" height="12" viewBox="1181 281.5 16.5 9.5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1196.5 287.25V282.75H1192M1196.5 282.75L1190.13 289.124L1186.37 285.375L1181.5 290.249" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                What you get
+              </div>
+              <div class="side-list">
+                <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#04AF72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Quotes &amp; sales tracking with the Chrome toolbar</div>
+                <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#04AF72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Coaching and quality dashboards</div>
+                <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#04AF72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Gamified goals &amp; celebratory alerts</div>
+                <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#04AF72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Lead source &amp; zip-code reporting</div>
+              </div>
+            </section>
+
+            <section class="card roll quote-card">
+              <div class="side-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                Agencies love it
+              </div>
+              <blockquote>"With the dashboard data and rankings I was able to spot problems within my agency and fixed them right away — the revenue went up insanely!"</blockquote>
+              <p class="attr">— Marcia Hill, Agency Manager</p>
+            </section>
+
+            <section class="card roll">
+              <div class="side-title">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Questions?
+              </div>
+              <div class="contact">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.9Z"/></svg>
+                <a href="tel:+18179735485">1-817-973-5485</a>
+              </div>
+              <div class="contact">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg>
+                <a href="mailto:support@agencytoolchest.com">support@agencytoolchest.com</a>
+              </div>
+            </section>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ================= STEP 2 — PLAN & AI ================= -->
+    <section class="stage" id="view-step-2">
+      <div class="step-head">
+        <h1>Build your subscription</h1>
+        <p class="lead" id="welcome-line">Welcome, [Name]. Choose your plan, optionally add AI — first 30 days free — then review and pay.</p>
+      </div>
+
+      <div class="strip ok" id="verify-strip"></div>
+
+      <div class="cols" style="margin-top:26px">
+        <div class="col-left">
+          <!-- Billing card -->
+          <section class="card roll" style="padding-top:36px;padding-bottom:32px">
+            <div class="eyebrow">Your Agency Tool Chest</div>
+            <h2 class="bill-title">Choose your ATC billing plan</h2>
+
+            <div class="bill-tiles" role="radiogroup" aria-label="Billing plan">
+              <div class="plan-tile has-pill" data-bill="annual" tabindex="0" role="radio" aria-checked="true">
+                <div class="plan-bar">✦ Best Value</div>
+                <div class="plan-top">
+                  <div class="plan-name">Annual</div>
+                  <input class="radio" type="radio" name="bill-radio" aria-hidden="true" tabindex="-1" checked>
+                </div>
+                <div class="plan-price"><span class="amt big">$3,000.00</span><span class="mo">/year</span></div>
+                <div class="plan-sub">One payment — setup fee waived</div>
+                <div class="plan-divider"></div>
+                <div><span class="save-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="#413BA2"><path d="M12 2l2.9 6.6L22 9.3l-5.4 4.8L18.2 21 12 17.3 5.8 21l1.6-6.9L2 9.3l7.1-.7L12 2Z"/></svg>Save $488 vs monthly</span></div>
+              </div>
+              <div class="plan-tile" data-bill="monthly" tabindex="0" role="radio" aria-checked="false">
+                <div class="plan-top">
+                  <div class="plan-name">Monthly</div>
+                  <input class="radio" type="radio" name="bill-radio" aria-hidden="true" tabindex="-1">
+                </div>
+                <div class="plan-price"><span class="amt big">$249.00</span><span class="mo">/month</span></div>
+                <div class="plan-sub">Month-to-month — cancel anytime</div>
+                <div class="plan-divider"></div>
+                <div><span class="fee-note">+$500.00 one-time setup fee
+                  <span class="info" title="Charged once with your first payment."><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg></span>
+                </span></div>
+              </div>
+            </div>
+
+            <div class="features" id="features">
+              <div class="features-grid">
+                <div class="f-col">
+                  <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Collect quotes data with the Chrome Extension Toolbar</div>
+                  <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Boost morale with gamified targets and celebratory alerts</div>
+                  <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Interoffice messaging: Share Texts &amp; GIFs</div>
+                  <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Oversee agency-wide goals</div>
+                  <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Identify and monitor the most effective lead sources</div>
+                  <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Monitor the effectiveness of your campaigns</div>
+                  <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Zip code competitiveness tracking</div>
+                </div>
+                <div class="f-col">
+                  <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Track the success rate of bundling efforts</div>
+                  <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Access all coaching and quality insights via the Dashboards</div>
+                  <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Set and oversee individual staff goals and activity</div>
+                  <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Retrieve detailed reports on quotes and sales</div>
+                  <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Tailor coaching based on the source of the lead</div>
+                  <div class="feat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Cross-selling tracking</div>
+                </div>
+              </div>
+            </div>
+            <button class="feat-toggle" id="feat-toggle" type="button" aria-expanded="false">
+              <span id="feat-label">Show all features</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+          </section>
+
+          <!-- AI card -->
+          <section class="card roll">
+            <div class="eyebrow">Add AI to Your Agency Tool Chest</div>
+            <h2 class="ai-title">Choose your AI plan</h2>
+            <p class="ai-desc">Unlock a private, hyper-personalized AI Agent trained exclusively on your agency's
+            data to automate your workflow and scale your billable output. Explore AI across your data to uncover
+            insights, connections, and opportunities. Choose the AI plan that best fits your organization's usage.</p>
+
+            <div class="plans" role="radiogroup" aria-label="AI plan">
+              <div class="plan-tile" data-plan="standard" tabindex="0" role="radio" aria-checked="false">
+                <div class="plan-top">
+                  <div class="plan-name">Standard</div>
+                  <input class="radio" type="radio" aria-hidden="true" tabindex="-1">
+                </div>
+                <div class="plan-price"><span class="amt">$49</span><span class="mo">/mo</span></div>
+                <div class="plan-sub">Monthly subscription</div>
+                <div class="plan-divider"></div>
+                <div class="plan-tokens">
+                  <span class="tok-dot"></span>100,000 tokens/month
+                  <span class="info" title="Token usage resets at the start of each billing cycle.">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+                  </span>
+                </div>
+              </div>
+
+              <div class="plan-tile" data-plan="advanced" tabindex="0" role="radio" aria-checked="true">
+                <div class="plan-bar">✦ Best Value</div>
+                <div class="plan-top">
+                  <div class="plan-name">Advanced</div>
+                  <input class="radio" type="radio" aria-hidden="true" tabindex="-1" checked>
+                </div>
+                <div class="plan-price"><span class="amt">$99</span><span class="mo">/mo</span></div>
+                <div class="plan-sub">Monthly subscription</div>
+                <div class="plan-divider"></div>
+                <div class="plan-tokens">
+                  <span class="tok-dot"></span>Unlimited tokens/month
+                  <span class="info" title="No hard token caps; fair-use policy applies.">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bonus" id="bonus-banner">
+              <div class="bonus-row">
+                <div class="bonus-left">
+                  <div class="bonus-header">
+                    <span class="bonus-mark">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="24" height="24" rx="6" fill="url(#bonusStarGrad)"/>
+                        <path d="M12 5L13.3859 10.6141L19 12L13.3859 13.3859L12 19L10.6141 13.3859L5 12L10.6141 10.6141L12 5Z" fill="white"/>
+                        <defs>
+                          <linearGradient id="bonusStarGrad" x1="24" y1="4.50003" x2="1.34444" y2="9.49769" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#046BF2"/>
+                            <stop offset="1" stop-color="#5E35F2"/>
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                    </span>
+                    <div class="bonus-title">Exclusive signup bonus: First 30 days of AI — free</div>
+                  </div>
+                  <div class="bonus-text">Add AI now and explore your selected plan at no cost for 30 days. <b>Signup only, new accounts only.</b></div>
+                </div>
+                <div class="bonus-right">
+                  <div class="zero">$0</div>
+                  <span class="then" id="bonus-then">Then $99 billed monthly</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Billing date card -->
+          <section class="card roll" id="billdate-card">
+            <h2 class="bill-title">Choose your billing date</h2>
+            <p class="billdate-sentence">Charge my card monthly on the
+              <select class="day-select" id="day-select" aria-label="Billing day of month"></select>
+              day of the month</p>
+            <p class="billdate-note">
+              <svg width="15" height="15" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.1985 12.8061C9.62492 11.9602 11.6664 10.5019 11.6664 7.5851V3.50164C11.6664 3.34693 11.6049 3.19855 11.4955 3.08915C11.3862 2.97975 11.2378 2.91829 11.0831 2.91829C9.91656 2.91829 8.4642 2.2241 7.44347 1.33157C7.3199 1.22598 7.16271 1.16797 7.00018 1.16797C6.83766 1.16797 6.68046 1.22598 6.55689 1.33157C5.542 2.21826 4.08381 2.91829 2.91726 2.91829C2.76257 2.91829 2.61421 2.97975 2.50482 3.08915C2.39544 3.19855 2.33398 3.34693 2.33398 3.50164V7.5851C2.33398 10.5019 4.37545 11.9602 6.8077 12.8003C6.93342 12.8471 7.07144 12.8492 7.1985 12.8061Z" stroke="#4F46E5" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <span>Renews monthly on this day. Your AI usage resets on this date too. Your first charge (after the free trial) is prorated to line up with it.</span>
+            </p>
+          </section>
+        </div>
+
+        <!-- Receipt -->
+        <aside>
+          <div class="order-wrap roll">
+            <div class="receipt">
+              <div class="eyebrow">Your Order</div>
+
+              <div id="order-items" style="margin-top:12px"></div>
+
+              <div class="o-divider"></div>
+              <div class="due">
+                <div class="due-label">Due today</div>
+                <div class="due-amount" id="due-amount">$3,000.00</div>
+              </div>
+
+              <div class="consents">
+                <label class="consent">
+                  <input class="checkbox" type="checkbox" id="cb-base">
+                  <span id="cb-base-text"></span>
+                </label>
+                <label class="consent" id="cb-ai-wrap">
+                  <input class="checkbox" type="checkbox" id="cb-ai">
+                  <span id="cb-ai-text"></span>
+                </label>
+              </div>
+
+              <button class="subscribe" id="subscribe-btn" type="button" disabled>
+                <span id="subscribe-label">Tick above agreements</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M14 6l6 6-6 6"/></svg>
+              </button>
+              <div class="renew-note" id="renew-note"></div>
+            </div>
+            <div class="zig" aria-hidden="true"></div>
+
+            <div class="fine">
+              <p>By selecting "Subscribe", you agree to our <a href="https://agencytoolchest.com/terms" target="_blank" rel="noopener">Terms of Service</a> and
+              <a href="https://agencytoolchest.com/privacy" target="_blank" rel="noopener">Privacy Policy</a>.</p>
+              <p>You authorize us to store your payment method and charge it automatically for each scheduled
+              renewal until you cancel. You can manage or cancel your subscriptions at any time via your Account
+              Billing settings. Cancellation prevents future renewals; your access will remain active until the
+              end of your current paid billing period.</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ================= STRIPE PAYMENT (external page, no ATC chrome) ================= -->
+    <section class="stage" id="view-pay">
+      <div class="pay-shell">
+        <div class="stripe-card">
+          <div class="sp-merchant">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            Agency Toolchest
+          </div>
+          <h1 class="sp-amount" id="sp-amount">Pay $3,000.00</h1>
+          <p class="sp-sub" id="sp-sub">Annual plan — renews yearly</p>
+
+          <form id="pay-form" novalidate>
+            <div class="sp-field" id="pf-number">
+              <label class="sp-label" for="pf-number-in">Card number</label>
+              <input class="sp-input" type="text" id="pf-number-in" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" maxlength="19">
+              <p class="sp-err">Your card number is incomplete.</p>
+            </div>
+            <div class="sp-row">
+              <div class="sp-field" id="pf-exp">
+                <label class="sp-label" for="pf-exp-in">Expiry</label>
+                <input class="sp-input" type="text" id="pf-exp-in" inputmode="numeric" autocomplete="cc-exp" placeholder="MM / YY" maxlength="7">
+                <p class="sp-err">Your card's expiry date is incomplete.</p>
+              </div>
+              <div class="sp-field" id="pf-cvc">
+                <label class="sp-label" for="pf-cvc-in">CVC</label>
+                <input class="sp-input" type="text" id="pf-cvc-in" inputmode="numeric" autocomplete="cc-csc" placeholder="CVC" maxlength="4">
+                <p class="sp-err">Your card's security code is incomplete.</p>
+              </div>
+            </div>
+            <div class="sp-field" id="pf-name">
+              <label class="sp-label" for="pf-name-in">Name on card</label>
+              <input class="sp-input" type="text" id="pf-name-in" autocomplete="cc-name" placeholder="Full name on the card">
+              <p class="sp-err">Your name is incomplete.</p>
+            </div>
+
+            <div class="sp-pay-err" id="pay-err"></div>
+
+            <button class="sp-pay" id="pay-btn" type="submit">
+              <span id="pay-btn-label">Pay $3,000.00</span>
+            </button>
+          </form>
+
+          <a class="sp-return" href="#step-2">&larr; Return to Agency Toolchest</a>
+          <div class="sp-powered">Powered by <b>Stripe</b></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= STEP 3 — AUDIT FILE ================= -->
+    <section class="stage" id="view-step-3">
+      <div class="step-head" style="margin-top:46px">
+        <h1>Attach your All Purpose Audit file</h1>
+        <p class="lead">Because your agency is with Allstate, upload your All Purpose Audit file so your dashboards start with your real book of business.</p>
+      </div>
+
+      <div class="strip ok" id="pay-strip" style="margin-top:4px">
+        <span class="dot" id="pay-strip-dot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <span id="pay-strip-text">Payment confirmed — thank you!</span>
+      </div>
+
+      <div class="cols" style="margin-top:15px">
+        <div class="col-left">
+          <section class="card roll">
+            <div class="wiz">
+              <div class="wiz-item">
+                <div class="wiz-num">1</div>
+                <div>
+                  <div class="wiz-title">Find the file in your Allstate system</div>
+                  <div class="wiz-sub">Open the instructions below if you're not sure where it lives.</div>
+                </div>
+              </div>
+              <div class="wiz-item">
+                <div class="wiz-num">2</div>
+                <div>
+                  <div class="wiz-title">Export / download the file</div>
+                  <div class="wiz-sub">to this computer (XLSX or CSV).</div>
+                </div>
+              </div>
+              <div class="wiz-item">
+                <div class="wiz-num">3</div>
+                <div>
+                  <div class="wiz-title">Attach it below</div>
+                  <div class="wiz-sub">— we'll process it and your dashboards light up within minutes.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion" id="acc">
+              <button class="acc-head" type="button" id="acc-head" aria-expanded="false">
+                <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                How to locate the All Purpose Audit in your Allstate system
+              </button>
+              <div class="acc-body">
+                <div class="acc-body-inner">
+                <ol>
+                  <li>In your Allstate system, run the monthly <b>All Purpose Audit</b> report.</li>
+                  <li>Export / download it to this computer (XLSX or CSV).</li>
+                  <li>Attach it below — or later from <b>Dashboard → Quick Imports</b> (drag &amp; drop works too).</li>
+                  <li>You can import history going back up to a year, so a recent monthly export keeps your dashboards accurate.</li>
+                </ol>
+                </div>
+              </div>
+            </div>
+
+            <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Attach your All Purpose Audit file">
+              <input type="file" id="file-input" accept=".xlsx,.xls,.csv" hidden>
+              <div id="dz-empty">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <div class="dz-title">Drag &amp; drop your file here, or click to browse</div>
+                <div class="dz-sub">Accepts .xlsx, .xls, .csv — up to 25 MB</div>
+              </div>
+              <div class="dz-file" id="dz-file" style="display:none">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
+                <span><b id="dz-file-name"></b> · <span id="dz-file-size"></span></span>
+                <button class="rm" id="dz-remove" type="button" title="Remove file" aria-label="Remove file">✕</button>
+              </div>
+            </div>
+            <p class="upload-error" id="upload-error">Attach your All Purpose Audit file first — or choose "I'll do this later" to continue without it.</p>
+
+            <div class="two-btns">
+              <button class="btn-ghost" id="skip-upload" type="button">I'll do this later — continue</button>
+              <button class="subscribe" id="upload-btn" type="button">
+                Upload &amp; continue
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M14 6l6 6-6 6"/></svg>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <aside>
+          <section class="card roll">
+            <div class="side-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#EEF2FF"/><path d="M12 8v5" stroke="#4F46E5" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="16.2" r="1.2" fill="#4F46E5"/></svg>
+              Why this file matters
+            </div>
+            <div class="side-list" style="margin-top:24px">
+              <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Seeds your dashboards with real book data</div>
+              <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Enables accurate staff rankings from day one</div>
+              <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Encrypted in transit and at rest</div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ================= STEP 4 — SET UP & DONE ================= -->
+    <section class="stage" id="view-step-4">
+      <div class="cols" style="grid-template-columns:1fr;margin-top:39px">
+        <section class="card roll done-card">
+          <div class="done-head">
+            <svg class="checkorb" width="80" height="80" viewBox="408 214 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="doneCheckA" x1="466.783" y1="271.919" x2="351.229" y2="249.426" gradientUnits="userSpaceOnUse">
+                  <stop offset="0.0811399" stop-color="#11DA92"/>
+                  <stop offset="0.926421" stop-color="#610BEF"/>
+                </linearGradient>
+              </defs>
+              <path d="M447.353 218.212C448.577 216.987 450.563 216.987 451.788 218.212C453.013 219.437 453.013 221.423 451.788 222.647L428.646 245.789C428.058 246.377 427.26 246.707 426.429 246.707C425.597 246.707 424.799 246.376 424.211 245.788L412.212 233.789C410.987 232.564 410.987 230.578 412.212 229.354C413.437 228.129 415.423 228.129 416.647 229.354L426.075 238.782L426.429 239.136L447.353 218.212Z" fill="url(#doneCheckA)"/>
+            </svg>
+            <div class="head-col">
+              <h1>You're all set, <span id="done-name">[Name]</span> — one last thing</h1>
+              <p class="lead">You're logged in and your subscription is live:</p>
+            </div>
+          </div>
+
+          <div class="done-list" id="done-list"></div>
+
+          <div class="warn-strip">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            <span>Heads up: installing the extension does <b>not</b> log you in. After installing, click the toolbar icon and log in to the extension with the same email and password you just created.</span>
+          </div>
+
+          <div class="setup-cards">
+            <section class="card setup-card">
+              <div class="card-title"><span class="num-badge">1</span>Install the extension</div>
+              <div class="side-list">
+                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Click below — the Chrome Web Store opens in a new tab</div>
+                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Click <b>Add to Chrome</b> → <b>Add extension</b></div>
+                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Pin it to your toolbar for easy access.</div>
+              </div>
+              <a class="subscribe btn" href="https://chrome.google.com/webstore/detail/coaching-tool/anoincpioepaahlggoeiffopdcjjhfjo" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;width:253px;padding:8px 16px;gap:8px">
+                <svg width="20" height="20" viewBox="433 719 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="442" cy="728" r="8.33" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="442" cy="728" r="3.33" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M435.292 723.05L435.309 723.1C436.15 725.508 437.442 727.741 439.117 729.666" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M441.066 736.283C442.783 734.392 444.075 732.158 444.858 729.733L444.883 729.667" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Download Chrome extension
+              </a>
+            </section>
+
+            <section class="card setup-card">
+              <div class="card-title"><span class="num-badge">2</span>Log in to the extension</div>
+              <div class="side-list">
+                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Click the ATC toolbar icon in Chrome</div>
+                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Sign in with <b id="done-email">your email</b> and your new password</div>
+                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Repeat on each invited staff member's computer</div>
+              </div>
+              <a class="btn-ghost btn" href="https://agencytoolchest.com/quick-guide" target="_blank" rel="noopener" style="width:auto;padding:8px 16px;white-space:nowrap;text-decoration:none">View quick guide</a>
+            </section>
+          </div>
+
+          <div class="dash-row">
+            <button class="subscribe" id="dashboard-btn" type="button" style="width:300px;padding:8px 16px;gap:8px">
+              Go to my dashboard
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M14 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+
+          <p class="support-line">Need anything? <b>1-817-973-5485</b> · <a href="mailto:support@agencytoolchest.com">support@agencytoolchest.com</a></p>
+        </section>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>Copyright © 2024–2026 | Agency Tool Chest, LLC | All Rights Reserved</footer>
+
+<div class="toast" id="toast" role="status"></div>
+
+<div class="demo" id="demo" hidden></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================ CONFIG ============================ */
+  var PROTOTYPE = true; // false = production behavior (only completed steps clickable)
+
+  var qs = new URLSearchParams(location.search);
+  var CLEAN = qs.has('clean');          // ?clean  — screenshots: no demo bar, no animations, instant scroll
+  var START_VERIFIED = qs.has('verified'); // ?verified — email already verified
+  var ROUTES = ['step-1', 'step-2', 'pay', 'step-3', 'step-4'];
+  var TITLES = {
+    'step-1': 'Create your account — Agency Toolchest',
+    'step-2': 'Plan & AI — Agency Toolchest',
+    'pay': 'Payment — Agency Toolchest',
+    'step-3': 'Audit file — Agency Toolchest',
+    'step-4': 'Set up & done — Agency Toolchest'
+  };
+  var STEPS = [
+    { route: 'step-1', label: 'Account' },
+    { route: 'step-2', label: 'Plan & AI' },
+    { route: 'step-3', label: 'Audit file', audit: true },
+    { route: 'step-4', label: 'Set up & done' }
+  ];
+
+  var PLANS = {
+    standard: { name: 'Standard', price: 49 },
+    advanced: { name: 'Advanced', price: 99 }
+  };
+  var BILL = {
+    annual: { label: 'Annual', price: 3000, per: 'year', due: 3000 },
+    monthly: { label: 'Monthly', price: 249, per: 'month', due: 749 }
+  };
+
+  /* ============================ STATE ============================ */
+  var state = {
+    route: 'step-1',
+    account: null,            // {name, org, email, password}
+    carrier: 'allstate',      // allstate | other (account default)
+    emailVerified: START_VERIFIED,
+    stripDismissed: false,   // verified strip auto-hides after 3s
+    stripTimer: null,
+    billingPlan: 'annual',    // annual | monthly (one always selected)
+    aiPlan: 'advanced',       // 'advanced' | 'standard' | null
+    billingDay: 13,
+    consents: { base: false, ai: false },
+    payDecline: false,        // demo: arm next payment to decline
+    paymentDone: false,
+    file: null,               // {name, size}
+    auditDone: false,
+    ref: qs.get('ref') || null,
+    utm: qs.get('utm_source') || null
+  };
+  // ?account=Name — prototype/screenshot helper: pretend the account exists ([Name] Agency)
+  var accName = qs.get('account');
+  if (accName) state.account = { name: accName, org: 'Agency', email: 'name@agency.com', carrier: state.carrier };
+  if (state.ref || state.utm) {
+    try { console.log('[ATC signup] referral captured', { ref: state.ref, utm_source: state.utm }); } catch (e) {}
+  }
+
+  /* ============================ HELPERS ============================ */
+  function $(id) { return document.getElementById(id); }
+  function fmt(n) {
+    return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function firstName() { return state.account ? state.account.name.split(' ')[0] : '[Name]'; }
+
+  var toastEl = $('toast'), toastT;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastT);
+    toastT = setTimeout(function () { toastEl.classList.remove('show'); }, 2800);
+  }
+
+  function replayRoll(section) {
+    if (CLEAN) return;
+    section.querySelectorAll('.roll').forEach(function (el) {
+      el.classList.remove('roll');
+      void el.offsetWidth; // reflow to restart animation
+      el.classList.add('roll');
+      el.addEventListener('animationend', function () { el.classList.remove('roll'); }, { once: true });
+    });
+  }
+
+  /* ============================ ROUTER ============================ */
+  function routeFromHash() {
+    var h = (location.hash || '').replace(/^#/, '');
+    return ROUTES.indexOf(h) >= 0 ? h : 'step-1';
+  }
+
+  function canEnter(route) {
+    if (PROTOTYPE) return true;
+    var i = ROUTES.indexOf(route);
+    if (i >= ROUTES.indexOf('step-2')) return !!state.account;
+    if (route === 'pay') return !!state.account;
+    if (route === 'step-3') return state.paymentDone && state.carrier === 'allstate';
+    if (route === 'step-4') return state.paymentDone;
+    return true;
+  }
+
+  function go(route, replace) {
+    if (!canEnter(route)) { route = 'step-1'; }
+    if (replace) {
+      history.replaceState(null, '', '#' + route);
+      apply(route);
+    } else if (('#' + route) !== location.hash) {
+      location.hash = route; // hashchange applies
+    } else {
+      apply(route);
+    }
+  }
+
+  function apply(route) {
+    if (route === 'step-3' && state.carrier !== 'allstate') {
+      route = state.route = 'step-4';
+      history.replaceState(null, '', '#step-4');
+    }
+    state.route = route;
+    document.body.classList.toggle('pay-page', route === 'pay'); // Stripe screen: no ATC chrome
+    render();
+    if (CLEAN) window.scrollTo(0, 0); else window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  window.addEventListener('hashchange', function () {
+    apply(routeFromHash());
+  });
+
+  /* ============================ RENDER ============================ */
+  var prevSection = null;
+
+  function render() {
+    // sections
+    ROUTES.forEach(function (r) {
+      var el = $('view-' + r);
+      if (el) el.classList.toggle('active', r === state.route);
+    });
+    var section = $('view-' + state.route);
+    if (section && section !== prevSection) { replayRoll(section); prevSection = section; }
+
+    document.title = TITLES[state.route] || TITLES['step-1'];
+    renderHeader();
+    renderStepper();
+    renderStep2();
+    renderStep3();
+    renderPayStrip();
+    renderStep4();
+    renderPay();
+    renderDemo();
+  }
+
+  function renderHeader() {
+    var slot = $('hdr-right');
+    if (state.account) {
+      slot.innerHTML =
+        '<div class="user">' +
+        '<div class="avatar" aria-hidden="true">' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="8.2" r="4"/><path d="M4 20c0-4 3.6-6.4 8-6.4s8 2.4 8 6.4v1H4v-1Z"/></svg>' +
+        '</div>' +
+        '<div class="user-meta">' +
+        '<div class="user-name">' + esc(state.account.name) + '</div>' +
+        '<div class="user-sub">' + esc(state.account.org || 'Agency') + '</div>' +
+        '</div></div>';
+    } else {
+      slot.innerHTML = '<div class="login-link">Existing customer? <a href="https://agencytoolchest.com/users/sign_in">Log in</a></div>';
+    }
+  }
+
+  function renderStepper() {
+    var steps = STEPS.filter(function (s) { return !s.audit || state.carrier === 'allstate'; });
+    var order = { 'step-1': 0, 'step-2': 1, 'pay': 1, 'step-3': 2, 'step-4': 3 };
+    var cur = order[state.route];
+    var html = '';
+    steps.forEach(function (s, i) {
+      var cls = 'chip', badge = (i + 1), disabled = false;
+      var done = (s.route === 'step-1' && !!state.account) ||
+                 (s.route === 'step-2' && state.paymentDone) ||
+                 (s.route === 'step-3' && state.auditDone) ||
+                 (s.route === 'step-4' && false);
+      if (done) { cls += ' done'; badge = '✓'; }
+      else if (i === cur) cls += ' current';
+      else disabled = !PROTOTYPE; // future chips: clickable only in prototype
+      var allowed = PROTOTYPE || done || i <= cur;
+      if (allowed) cls += ' allowed';
+      html += '<button type="button" class="' + cls + '" data-route="' + s.route + '"' +
+              (disabled ? ' disabled' : '') + ' aria-current="' + (i === cur ? 'step' : 'false') + '">' +
+              '<span class="badge">' + badge + '</span>' + s.label + '</button>';
+      if (i < steps.length - 1) html += '<span class="sep"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M14 6l6 6-6 6"/></svg></span>';
+    });
+    $('stepper').innerHTML = html;
+    $('stepper').querySelectorAll('.chip').forEach(function (chip) {
+      chip.addEventListener('click', function () { go(chip.dataset.route); });
+    });
+  }
+
+  /* ---------- Step 2 rendering ---------- */
+  function receiptItems() {
+    var b = BILL[state.billingPlan];
+    var items = [];
+    if (state.billingPlan === 'annual') {
+      items.push({ t: 'Agency Tool Chest', s: 'Renews yearly', p: '$3,000/year' });
+    } else {
+      items.push({ t: 'Agency Tool Chest', s: 'Renews monthly', p: '$249/month' });
+      items.push({ t: 'One-time setup fee', s: 'Billed once today', p: '$500.00' });
+    }
+    if (state.aiPlan) {
+      var p = PLANS[state.aiPlan];
+      items.push({ t: p.name + ' AI — first 30 days', s: 'Free trial for 30 days', p: '$0', free: true });
+      items.push({ t: p.name + ' AI', s: 'Renews monthly after 30 days', p: '$' + p.price + '/month' });
+    }
+    return items;
+  }
+
+  function renderStep2() {
+    $('welcome-line').textContent = 'Welcome, ' + firstName() +
+      '. Choose your plan, optionally add AI — first 30 days free — then review and pay.';
+
+    // verification strip (auto-dismisses 3s after turning green)
+    var strip = $('verify-strip');
+    var checkSvg = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+    var clockSvg = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>';
+    if (state.emailVerified && !state.stripDismissed) {
+      strip.className = 'strip ok';
+      strip.style.display = '';
+      strip.innerHTML = '<span class="dot">' + checkSvg + '</span>Email verified — thanks! Payment is unlocked.';
+      if (!state.stripTimer && !CLEAN) {
+        state.stripTimer = setTimeout(function () {
+          state.stripDismissed = true;
+          strip.style.transition = 'opacity .4s ease';
+          strip.style.opacity = '0';
+          setTimeout(function () { strip.style.display = 'none'; strip.style.opacity = ''; }, 420);
+        }, 3000);
+      }
+    } else if (state.emailVerified && state.stripDismissed) {
+      strip.style.display = 'none';
+    } else {
+      var email = state.account ? state.account.email : 'your work email';
+      strip.className = 'strip pending';
+      strip.innerHTML = '<span class="dot">' + clockSvg + '</span>' +
+        '<span>We sent a verification link to <b>' + esc(email) + '</b>. Click it to unlock payment — you can keep setting things up meanwhile.</span>' +
+        '<span class="strip-actions"><a id="resend-link">Resend email</a></span>';
+      $('resend-link').addEventListener('click', function (ev) {
+        ev.preventDefault();
+        toast('Verification email re-sent to ' + email + ' (demo)');
+      });
+    }
+
+    // billing tiles
+    document.querySelectorAll('.bill-tiles .plan-tile').forEach(function (tile) {
+      var active = tile.dataset.bill === state.billingPlan;
+      tile.classList.toggle('has-pill', tile.dataset.bill === 'annual');
+      tile.setAttribute('aria-checked', active);
+      tile.querySelector('.radio').checked = active;
+    });
+
+    // AI tiles
+    document.querySelectorAll('.plans .plan-tile').forEach(function (tile) {
+      var active = tile.dataset.plan === state.aiPlan;
+      tile.classList.toggle('selected', active);
+      tile.setAttribute('aria-checked', active);
+      tile.querySelector('.radio').checked = active;
+      tile.classList.toggle('has-pill', tile.dataset.plan === 'advanced');
+    });
+
+    // bonus banner
+    var bonus = $('bonus-banner');
+    bonus.classList.toggle('dim', !state.aiPlan);
+    $('bonus-then').textContent = state.aiPlan
+      ? 'Then $' + PLANS[state.aiPlan].price + ' billed monthly' : '';
+
+    // billing date card
+    $('billdate-card').style.display = state.aiPlan ? '' : 'none';
+
+    // receipt
+    var items = receiptItems();
+    var html = items.map(function (it) {
+      return '<div class="o-item"><div><div class="o-title">' + it.t + '</div><div class="o-sub">' + it.s +
+        '</div></div><div class="o-price' + (it.free ? ' free' : '') + '">' + it.p + '</div></div>';
+    }).join('');
+    $('order-items').innerHTML = html;
+    $('due-amount').textContent = fmt(BILL[state.billingPlan].due);
+
+    // consents
+    var cbt = $('cb-base-text');
+    if (state.billingPlan === 'annual') {
+      cbt.innerHTML = 'I understand and agree that Agency Tool Chest Yearly is a paid, recurring subscription of <b>$3,000.00/year</b> that will renew automatically every year until I cancel it in my Account Billing settings.';
+    } else {
+      cbt.innerHTML = 'I understand and agree that Agency Tool Chest Monthly is a paid, recurring subscription of <b>$249.00/month</b> that will renew automatically every month until I cancel it in my Account Billing settings, plus a one-time <b>$500.00 setup fee</b> charged today.';
+    }
+    var aiWrap = $('cb-ai-wrap');
+    if (state.aiPlan) {
+      var p = PLANS[state.aiPlan];
+      aiWrap.style.display = '';
+      $('cb-ai-text').innerHTML = 'I understand that my free trial ends after 30 days or 2M tokens, whichever comes first, and that my <b>' + p.name + ' plan ($' + p.price + '/mo)</b> starts and billing begins at that moment — even if that\u2019s before day 30. I can cancel anytime before then and won\u2019t be charged.';
+    } else {
+      aiWrap.style.display = 'none';
+      state.consents.ai = false;
+      $('cb-ai').checked = false;
+    }
+
+    // subscribe button + label (inactive until every agreement above is ticked)
+    var btn = $('subscribe-btn');
+    var ok = state.consents.base && (state.aiPlan ? state.consents.ai : true);
+    btn.disabled = !ok;
+    $('subscribe-label').textContent = ok
+      ? (state.aiPlan ? 'Subscribe & Start AI Trial' : 'Subscribe & continue')
+      : 'Tick above agreements';
+    $('renew-note').innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><g clip-path="url(#rnclip)"><path d="M7.1985 12.8061C9.62492 11.9602 11.6664 10.5019 11.6664 7.5851V3.50164C11.6664 3.34693 11.6049 3.19855 11.4955 3.08915C11.3862 2.97975 11.2378 2.91829 11.0831 2.91829C9.91656 2.91829 8.4642 2.2241 7.44347 1.33157C7.3199 1.22598 7.16271 1.16797 7.00018 1.16797C6.83766 1.16797 6.68046 1.22598 6.55689 1.33157C5.542 2.21826 4.08381 2.91829 2.91726 2.91829C2.76257 2.91829 2.61421 2.97975 2.50482 3.08915C2.39544 3.19855 2.33398 3.34693 2.33398 3.50164V7.5851C2.33398 10.5019 4.37545 11.9602 6.8077 12.8003C6.93342 12.8471 7.07144 12.8492 7.1985 12.8061Z" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/></g><defs><clipPath id="rnclip"><rect width="14" height="14" fill="white"/></clipPath></defs></svg>Manage or cancel future renewals anytime · No hidden fees';
+  }
+
+  function renderStep3() {
+    var dzEmpty = $('dz-empty'), dzFile = $('dz-file');
+    if (state.file) {
+      dzEmpty.style.display = 'none';
+      dzFile.style.display = '';
+      $('dz-file-name').textContent = state.file.name;
+      $('dz-file-size').textContent = (state.file.size / 1024).toFixed(0) + ' KB';
+    } else {
+      dzEmpty.style.display = '';
+      dzFile.style.display = 'none';
+    }
+  }
+
+  function renderStep4() {
+    $('done-name').textContent = firstName();
+    $('done-email').textContent = state.account ? state.account.email : 'your email';
+    var items = [];
+    if (state.billingPlan === 'annual') items.push('Subscription active — Annual, $3,000/yr');
+    else items.push('Subscription active — Monthly, $249/mo');
+    if (state.aiPlan) items.push(PLANS[state.aiPlan].name + ' AI — 30-day free trial started (then $' + PLANS[state.aiPlan].price + '/mo)');
+    items.push('Logged in on this device — email verified');
+    var check = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00AE70" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+    $('done-list').innerHTML = items.map(function (t) {
+      return '<div class="done-item">' + check + '<span>' + t + '</span></div>';
+    }).join('');
+  }
+
+  function renderPay() {
+    var b = BILL[state.billingPlan];
+    var amt = fmt(b.due);
+    $('sp-amount').textContent = 'Pay ' + amt;
+    $('sp-sub').textContent = state.billingPlan === 'annual'
+      ? 'Annual plan — renews yearly'
+      : 'Monthly plan — renews monthly · $500.00 setup fee included';
+    $('pay-btn-label').textContent = 'Pay ' + amt;
+  }
+
+  /* ============================ DEMO BAR ============================ */
+  function renderDemo() {
+    var demo = $('demo');
+    if (!PROTOTYPE || CLEAN) { demo.hidden = true; return; }
+    demo.hidden = false;
+    var jump = ROUTES.map(function (r) {
+      var on = state.route === r;
+      return '<button data-go="' + r + '"' + (on ? ' class="on"' : '') + '>' + r.replace('step-', 'Step ').replace('pay', 'Stripe') + '</button>';
+    }).join('');
+    var emailBtn = state.emailVerified
+      ? '<button class="on" data-act="verify">Email: verified ✓</button>'
+      : '<button data-act="verify">Simulate email link click</button>';
+    var carrier = '<button data-carrier="allstate"' + (state.carrier === 'allstate' ? ' class="on"' : '') + '>Allstate</button>' +
+                  '<button data-carrier="other"' + (state.carrier === 'other' ? ' class="on"' : '') + '>Other</button>';
+    var decline = '<button data-act="decline"' + (state.payDecline ? ' class="on"' : '') + '>' +
+                  (state.payDecline ? 'Decline armed ✓' : 'Arm payment decline') + '</button>';
+    var track = (state.ref || state.utm)
+      ? '<div class="row st">tracked: ' + [state.ref ? 'ref=<b>' + esc(state.ref) + '</b>' : '', state.utm ? 'utm_source=<b>' + esc(state.utm) + '</b>' : ''].filter(Boolean).join(' · ') + '</div>'
+      : '';
+    demo.innerHTML =
+      '<h4>Prototype demo</h4>' +
+      '<div class="row">' + jump + '</div>' +
+      '<div class="row">' + emailBtn + '</div>' +
+      '<div class="row">' + carrier + decline + '</div>' + track;
+    demo.querySelectorAll('[data-go]').forEach(function (b) {
+      b.addEventListener('click', function () { go(b.dataset.go); });
+    });
+    var vBtn = demo.querySelector('[data-act="verify"]');
+    if (vBtn) vBtn.addEventListener('click', function () {
+      state.emailVerified = true;
+      toast('Email verified — payment unlocked.');
+      render();
+    });
+    demo.querySelectorAll('[data-carrier]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        state.carrier = b.dataset.carrier;
+        if (state.account) state.account.carrier = state.carrier;
+        if (state.carrier !== 'allstate' && state.route === 'step-3') { go('step-4'); return; }
+        render();
+      });
+    });
+    var dBtn = demo.querySelector('[data-act="decline"]');
+    if (dBtn) dBtn.addEventListener('click', function () {
+      state.payDecline = !state.payDecline;
+      render();
+    });
+  }
+
+  /* ============================ STEP 1 — ACCOUNT ============================ */
+  function setInvalid(id, on) {
+    var f = $(id);
+    if (f) f.classList.toggle('invalid', !!on);
+  }
+
+  // the Create account button stays inactive until the whole form is valid
+  function formValid() {
+    return $('af-name').value.trim().length >= 2 &&
+           !!$('af-org').value.trim() &&
+           /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($('af-email').value.trim()) &&
+           $('af-password').value.length >= 8 &&
+           $('af-terms').checked;
+  }
+  function updateCreateBtn() {
+    $('create-btn').disabled = !formValid();
+  }
+  ['af-name', 'af-org', 'af-email', 'af-password'].forEach(function (id) {
+    $(id).addEventListener('input', function () {
+      updateCreateBtn();
+      var wrap = $(id).closest('.field');
+      if (wrap && wrap.classList.contains('invalid')) {
+        var v = $(id).value;
+        var good = id === 'af-email' ? /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim())
+          : id === 'af-password' ? v.length >= 8 : v.trim().length >= 2;
+        if (good) wrap.classList.remove('invalid');
+      }
+    });
+  });
+  $('af-terms').addEventListener('change', function () {
+    updateCreateBtn();
+    if (this.checked) $('terms-err').style.display = 'none';
+  });
+  updateCreateBtn();
+
+  $('account-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    // honeypot: silently drop bot submissions
+    if ($('hp-company_website').value) return;
+
+    var name = $('af-name').value.trim();
+    var org = $('af-org').value.trim();
+    var carrier = $('af-carrier').value;
+    var email = $('af-email').value.trim();
+    var pw = $('af-password').value;
+
+    var ok = true;
+    setInvalid('f-name', !(name.length >= 2)); ok = ok && name.length >= 2;
+    setInvalid('f-org', !org); ok = ok && !!org;
+    setInvalid('f-carrier', false);
+    setInvalid('f-email', !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)); ok = ok && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+    setInvalid('f-password', pw.length < 8); ok = ok && pw.length >= 8;
+    var termsOk = $('af-terms').checked;
+    $('terms-err').style.display = termsOk ? 'none' : 'block'; ok = ok && termsOk;
+    if (!ok) return;
+
+    // create account — session stays open, verification email "sent", continue immediately
+    state.account = { name: name, org: org, email: email, password: pw, carrier: carrier };
+    state.carrier = carrier;
+    toast('Account created — verification email sent to ' + email + '. Keep going, we\u2019ll wait.');
+    go('step-2');
+  });
+
+  $('af-carrier').addEventListener('change', function () {
+    state.carrier = this.value; // account default; live-updates stepper
+    render();
+  });
+
+  /* ============================ STEP 2 — PLAN & AI ============================ */
+  document.querySelectorAll('.bill-tiles .plan-tile').forEach(function (tile) {
+    function activate() { state.billingPlan = tile.dataset.bill; render(); }
+    tile.addEventListener('click', activate);
+    tile.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
+    });
+  });
+
+  document.querySelectorAll('.plans .plan-tile').forEach(function (tile) {
+    function activate() {
+      state.aiPlan = (state.aiPlan === tile.dataset.plan) ? null : tile.dataset.plan; // click selected = no plan
+      if (!state.aiPlan) {
+        state.consents.ai = false;
+        $('cb-ai').checked = false;
+      }
+      render();
+    }
+    tile.addEventListener('click', activate);
+    tile.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
+    });
+  });
+
+  // features expand / collapse (expanded by default per SVG)
+  var featState = { expanded: false };
+  $('feat-toggle').addEventListener('click', function () {
+    featState.expanded = !featState.expanded;
+    var f = $('features');
+    f.classList.toggle('expanded', featState.expanded);
+    $('feat-toggle').classList.toggle('open', featState.expanded);
+    $('feat-toggle').setAttribute('aria-expanded', featState.expanded);
+    $('feat-label').textContent = featState.expanded ? 'Hide features' : 'Show all features';
+  });
+
+  // billing day select: 1st–31st, default 13th
+  (function () {
+    var sel = $('day-select');
+    function suffix(n) { var t = n % 10, h = n % 100; if (h === 11 || h === 12 || h === 13) return 'th'; if (t === 1) return 'st'; if (t === 2) return 'nd'; if (t === 3) return 'rd'; return 'th'; }
+    var opts = '';
+    for (var d = 1; d <= 31; d++) opts += '<option value="' + d + '"' + (d === 13 ? ' selected' : '') + '>' + d + suffix(d) + '</option>';
+    sel.innerHTML = opts;
+    sel.addEventListener('change', function () { state.billingDay = +sel.value; });
+  })();
+
+  $('cb-base').addEventListener('change', function () { state.consents.base = this.checked; render(); });
+  $('cb-ai').addEventListener('change', function () { state.consents.ai = this.checked; render(); });
+
+  $('subscribe-btn').addEventListener('click', function () {
+    go('pay');
+  });
+
+  /* ============================ STRIPE PAYMENT ============================ */
+  $('pf-number-in').addEventListener('input', function () {
+    var digits = this.value.replace(/\D/g, '').slice(0, 16);
+    this.value = digits.replace(/(.{4})/g, '$1 ').trim();
+  });
+  $('pf-exp-in').addEventListener('input', function () {
+    var d = this.value.replace(/\D/g, '').slice(0, 4);
+    this.value = d.length >= 3 ? d.slice(0, 2) + ' / ' + d.slice(2) : (d.length === 2 ? d + ' / ' : d);
+  });
+  $('pf-cvc-in').addEventListener('input', function () {
+    this.value = this.value.replace(/\D/g, '').slice(0, 4);
+  });
+
+  $('pay-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var num = $('pf-number-in').value.replace(/\s/g, '');
+    var exp = $('pf-exp-in').value;
+    var cvc = $('pf-cvc-in').value;
+    var nm = $('pf-name-in').value.trim();
+
+    var expOk = false;
+    var m = exp.match(/^(\d{2})\s*\/\s*(\d{2})$/);
+    if (m) {
+      var mm = +m[1], yy = 2000 + +m[2];
+      var now = new Date();
+      expOk = mm >= 1 && mm <= 12 && (yy > now.getFullYear() || (yy === now.getFullYear() && mm >= now.getMonth() + 1));
+    }
+    var numOk = num.length >= 15 && num.length <= 16;
+    var ok = true;
+    setInvalid('pf-number', !numOk); ok = ok && numOk;
+    setInvalid('pf-exp', !expOk); ok = ok && expOk;
+    setInvalid('pf-cvc', !/^\d{3,4}$/.test(cvc)); ok = ok && /^\d{3,4}$/.test(cvc);
+    setInvalid('pf-name', !nm); ok = ok && !!nm;
+    if (!ok) { $('pay-err').classList.remove('show'); return; }
+
+    var declined = state.payDecline || num === '4000000000000002';
+    var err = $('pay-err');
+    if (declined) {
+      err.innerHTML = '<b>Your card was declined.</b> No charge was made — try the card again, or use a different card below.';
+      err.classList.add('show');
+      return;
+    }
+    err.classList.remove('show');
+    state.paymentDone = true;
+    toast('Payment confirmed — thank you!');
+    go(state.carrier === 'allstate' ? 'step-3' : 'step-4');
+  });
+
+  /* ============================ STEP 3 — AUDIT FILE ============================ */
+  // On arrival: "Payment processing" spinner strip → "Payment confirmed" (SVG shows confirmed)
+  var payProc = { shown: false, timer: null };
+  function renderPayStrip() {
+    var strip = $('pay-strip'), dot = $('pay-strip-dot'), txt = $('pay-strip-text');
+    var processing = state.paymentDone && !payProc.shown;
+    if (processing) {
+      strip.className = 'strip processing';
+      strip.style.marginTop = '4px';
+      dot.innerHTML = '<span class="spinner"></span>';
+      txt.textContent = 'Payment processing\u2026';
+      if (payProc.timer) clearTimeout(payProc.timer);
+      payProc.timer = setTimeout(function () {
+        payProc.shown = true;
+        renderPayStrip();
+        toast('Payment confirmed — thank you!');
+      }, CLEAN ? 250 : 1600);
+    } else {
+      strip.className = 'strip ok';
+      strip.style.marginTop = '4px';
+      dot.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+      txt.textContent = 'Payment confirmed — thank you!';
+    }
+  }
+
+  var dz = $('dropzone'), fi = $('file-input'), upErr = $('upload-error');
+
+  function setFile(file) {
+    state.file = file ? { name: file.name, size: file.size } : null;
+    upErr.classList.remove('show');
+    dz.classList.remove('invalid');
+    renderStep3();
+  }
+
+  dz.addEventListener('click', function () { fi.click(); });
+  dz.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fi.click(); }
+  });
+  fi.addEventListener('change', function () { if (fi.files[0]) setFile(fi.files[0]); });
+  $('dz-remove').addEventListener('click', function (e) {
+    e.stopPropagation();
+    fi.value = '';
+    setFile(null);
+  });
+
+  ['dragenter', 'dragover'].forEach(function (ev) {
+    dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.add('drag'); });
+  });
+  ['dragleave', 'drop'].forEach(function (ev) {
+    dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.remove('drag'); });
+  });
+  dz.addEventListener('drop', function (e) {
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+  });
+
+  $('upload-btn').addEventListener('click', function () {
+    if (!state.file) {
+      upErr.classList.add('show');
+      dz.classList.add('invalid');
+      return;
+    }
+    state.auditDone = true;
+    toast('Audit file uploaded — we\u2019ll email you when processing is done.');
+    go('step-4');
+  });
+  $('skip-upload').addEventListener('click', function () {
+    state.auditDone = true;
+    toast('No problem — you can attach the audit file anytime from your dashboard.');
+    go('step-4');
+  });
+
+  $('acc-head').addEventListener('click', function () {
+    var open = $('acc').classList.toggle('open');
+    $('acc-head').setAttribute('aria-expanded', open);
+  });
+
+  /* ============================ STEP 4 ============================ */
+  $('dashboard-btn').addEventListener('click', function () {
+    toast('Opening your dashboard… (demo)');
+  });
+
+  /* ============================ INIT ============================ */
+  if (CLEAN) document.body.classList.add('clean');
+  apply(routeFromHash());
+})();
+</script>
+</body>
+</html>
