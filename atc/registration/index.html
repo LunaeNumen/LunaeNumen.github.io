@@ -1703,7 +1703,11 @@
     var demo = $('demo');
     if (!PROTOTYPE || CLEAN) { demo.hidden = true; return; }
     demo.hidden = false;
-    // no step-jumping: steps follow the intended flow (navigate with the buttons)
+    // preview: jump straight to any step (bypasses the sequential guards)
+    var jump = ROUTES.map(function (r) {
+      var on = state.route === r;
+      return '<button data-go="' + r + '"' + (on ? ' class="on"' : '') + '>' + r.replace('step-', 'Step ').replace('pay', 'Stripe') + '</button>';
+    }).join('');
     var emailBtn = state.emailVerified
       ? '<button class="on" data-act="verify">Email: verified ✓</button>'
       : '<button data-act="verify">Simulate email link click</button>';
@@ -1716,8 +1720,15 @@
       : '';
     demo.innerHTML =
       '<h4>Prototype demo</h4>' +
+      '<div class="row">' + jump + '</div>' +
       '<div class="row">' + emailBtn + '</div>' +
       '<div class="row">' + carrier + decline + '</div>' + track;
+    demo.querySelectorAll('[data-go]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        history.replaceState(null, '', '#' + b.dataset.go);
+        apply(b.dataset.go);
+      });
+    });
     var vBtn = demo.querySelector('[data-act="verify"]');
     if (vBtn) vBtn.addEventListener('click', function () {
       state.emailVerified = true;
