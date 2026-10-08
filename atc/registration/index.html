@@ -722,7 +722,7 @@
 
   /* ---------- Payment: external Stripe-style page (no ATC chrome) ---------- */
   body.pay-page{background:#F6F9FC}
-  body.pay-page header,body.pay-page .stepper,body.pay-page footer,body.pay-page .bg-shape{display:none}
+  body.pay-page header,body.pay-page .stepper,body.pay-page .m-steps,body.pay-page footer,body.pay-page .bg-shape{display:none}
   .pay-shell{min-height:calc(100vh - 96px);display:flex;align-items:flex-start;justify-content:center;padding:56px 16px}
   .stripe-card{
     width:100%;max-width:440px;background:#fff;border:1px solid #E3E8EE;border-radius:12px;
@@ -771,13 +771,21 @@
     font-size:12px;box-shadow:0 14px 34px rgba(20,24,60,.35);
     display:flex;flex-direction:column;gap:8px;min-width:240px;
   }
-  .demo h4{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9AA3B8}
+  .demo h4,.demo-toggle{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9AA3B8}
+  .demo-toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;border:0!important;background:none!important;padding:0!important;cursor:pointer;font:inherit!important;font-size:10.5px!important}
+  .demo-toggle span{font-size:14px;color:#fff}
+  .demo.collapsed{min-width:0;padding:8px 12px}
+  .demo.collapsed>:not(.demo-toggle){display:none}
   .demo .row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
   .demo button{
     border:1px solid #3a415c;background:#2a3046;color:#dfe3f2;border-radius:6px;
     font:inherit;font-size:11.5px;font-weight:600;padding:4px 9px;cursor:pointer;
   }
   .demo button:hover{background:#343c58}
+  .demo .demo-inbox{display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 8px}
+  .demo .demo-inbox svg{color:#A5B4FC}
+  .demo-count{min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;line-height:18px;text-align:center}
+  .demo-sub{font-weight:500;color:#9AA3B8}
   .demo button.on{background:var(--accent);border-color:var(--accent);color:#fff}
   .demo .st{color:#9AA3B8}
   .demo .st b{color:#7EE0B8;font-weight:600}
@@ -1021,6 +1029,161 @@
     .proc-check,.proc-check path{animation:none;opacity:1;stroke-dashoffset:0}
   }
 
+  /* ---------- Email-link landing page (its own tab) ---------- */
+  body.link-page .stepper,body.link-page .m-steps,body.link-page .demo,body.link-page .mail-notes{display:none}
+  .link-shell{display:flex;justify-content:center;padding:96px 0 48px}
+  .link-card{width:100%;max-width:480px;text-align:center}
+  .stage .link-card{padding:48px 32px}
+  .link-icon{width:64px;height:64px;margin:0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center}
+  .link-icon.ok{background:#E7F8F0;color:#00975F}
+  .link-icon.bad{background:#FDECF2;color:#E5126B}
+  .link-icon.info{background:#EEF0FE;color:#4F46E5}
+  .link-card h1{margin-top:24px;font-size:24px;font-weight:700;line-height:32px;color:#111827}
+  .link-card p{margin-top:8px;font-size:15px;line-height:1.55;color:var(--body)}
+  .link-card .subscribe,.link-card .btn-ghost{width:100%;height:48px;margin-top:32px}
+  .link-card .link-sent{margin-top:16px;font-size:13.5px;font-weight:600;color:#00975F}
+  @media (max-width:640px){.link-shell{padding:48px 0 24px}}
+
+  /* ---------- Error states ---------- */
+  .err-taken{display:none;margin-top:8px;font-size:13px;font-weight:600;color:#ED0378}
+  .err-taken a{color:#ED0378;text-decoration:underline;text-underline-offset:2px}
+  .field.taken .err-taken{display:block}
+  .field.taken .input{border-bottom-color:#ED0378}
+  .form-alert{margin-top:24px;padding:12px 16px;border-radius:8px;background:#FEF2F8;border:1px solid #F9B9D8;color:#B4045D;font-size:13.5px;line-height:1.5}
+  .form-alert[hidden]{display:none}
+  .form-alert+#create-btn{margin-top:12px}
+  .sp-3ds{position:fixed;inset:0;z-index:99;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(26,31,54,.5)}
+  .sp-3ds[hidden]{display:none}
+  .sp-3ds-card{width:100%;max-width:400px;padding:24px;border-radius:12px;background:#fff;box-shadow:0 16px 40px rgba(26,31,54,.3);text-align:center;animation:modalIn .3s cubic-bezier(.2,.8,.2,1)}
+  .sp-3ds-bank{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#8792A2}
+  .sp-3ds-card h2{margin-top:8px;font-size:20px;font-weight:700;color:#1A1F36}
+  .sp-3ds-card p{margin-top:8px;font-size:14px;line-height:1.55;color:#6B7280}
+  .sp-3ds-card .sp-pay{margin-top:24px}
+  .sp-3ds-fail{margin-top:12px;border:0;background:none;cursor:pointer;font:inherit;font-size:14px;font-weight:500;color:#DF1B41;padding:8px}
+
+  /* ---------- Phone-only pieces (hidden on larger screens) ---------- */
+  .m-steps,.m-desktop,.dz-tap{display:none}
+  .m-steps{margin:24px 0 0}
+  .m-steps-label{font-size:13px;color:var(--muted)}
+  .m-steps-label span{margin:0 4px}
+  .m-steps-label b{color:#111827;font-weight:600}
+  .m-steps-bar{display:flex;gap:4px;margin-top:8px}
+  .m-steps-bar i{flex:1;height:4px;border-radius:999px;background:#DDE1F0}
+  .m-steps-bar i.done{background:#A5B4FC}
+  .m-steps-bar i.cur{background:var(--accent)}
+  .m-desktop-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+  .m-desktop p{margin-top:8px;font-size:14px;line-height:1.55;color:#535D73}
+  .m-desktop b{color:#111827}
+  .m-desktop .btn-ghost{margin-top:16px}
+  /* touch screens can't drag files in: say "tap" instead */
+  @media (hover:none) and (pointer:coarse){
+    .dz-drag,.dz-browse{display:none}
+    .dz-tap{display:block;font-size:15px;font-weight:500;color:#4F46E5}
+  }
+  .two-btns .btn-ghost{white-space:nowrap}
+
+  /* ---------- PROTOTYPE: email layer (outside the web UI on purpose: OS-style alerts + mail window) ---------- */
+  .mail-notes{position:fixed;top:72px;right:16px;z-index:97;display:flex;flex-direction:column;gap:12px;width:min(360px,calc(100vw - 32px))}
+  .mail-note{
+    display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;
+    padding:12px 12px 12px 16px;border-radius:12px;background:#1d2233;color:#fff;
+    box-shadow:0 14px 34px rgba(20,24,60,.35);animation:noteIn .4s cubic-bezier(.2,.8,.2,1);
+  }
+  @keyframes noteIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+  .mail-note .mn-icon{width:36px;height:36px;border-radius:10px;background:#2a3046;display:flex;align-items:center;justify-content:center;color:#A5B4FC}
+  .mail-note .mn-kind{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9AA3B8}
+  .mail-note .mn-subj{margin-top:2px;font-size:14px;font-weight:600;line-height:1.35}
+  .mail-note .mn-to{margin-top:2px;font-size:12px;color:#9AA3B8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mail-note .mn-actions{display:flex;flex-direction:column;gap:4px;align-items:stretch}
+  .mail-note button{border:0;border-radius:8px;cursor:pointer;font:inherit;font-size:13px;font-weight:600;padding:8px 12px}
+  .mail-note .mn-open{background:var(--accent);color:#fff}
+  .mail-note .mn-open:hover{filter:brightness(1.1)}
+  .mail-note .mn-x{background:none;color:#9AA3B8;padding:4px}
+  .mail-note .mn-x:hover{color:#fff}
+  body.clean .mail-notes{display:none}
+
+  .mail-view{
+    width:min(720px,calc(100vw - 24px));max-height:calc(100vh - 48px);margin:auto;padding:0;border:0;border-radius:14px;
+    background:#fff;color:var(--ink);box-shadow:0 24px 64px rgba(20,24,60,.35);overflow:hidden;
+  }
+  .mail-view[open]{display:flex;flex-direction:column;animation:modalIn .3s cubic-bezier(.2,.8,.2,1)}
+  .mail-view::backdrop{background:rgba(29,34,51,.55);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+  .mv-ribbon{display:flex;align-items:center;gap:8px;padding:8px 48px 8px 16px;background:#FEF3C7;color:#92400E;font-size:12.5px;font-weight:600}
+  .mv-ribbon b{letter-spacing:.06em;text-transform:uppercase;font-size:11.5px}
+  .mv-x{position:absolute;top:4px;right:8px;width:36px;height:36px;border:0;border-radius:8px;background:none;cursor:pointer;color:#92400E;display:flex;align-items:center;justify-content:center}
+  .mv-x:hover{background:rgba(146,64,14,.08)}
+  .mv-head{padding:16px 24px;border-bottom:1px solid #E6E9F5}
+  .mv-subject{font-size:18px;font-weight:700;color:#111827;line-height:1.35}
+  .mv-back{display:inline-flex;align-items:center;min-height:32px;margin:-4px 0 8px -8px;padding:0 8px;border:0;border-radius:6px;background:none;cursor:pointer;font:inherit;font-size:13.5px;font-weight:600;color:var(--accent)}
+  .mv-back:hover{background:#F5F6FE}
+  .mv-got{margin-left:8px;padding:2px 8px;border-radius:999px;background:#E0E4FA;color:#413BA2;font-style:normal;font-size:11.5px;font-weight:600;vertical-align:2px}
+  .mv-meta{margin-top:8px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px;color:var(--muted)}
+  .mv-meta b{color:#374151;font-weight:600}
+  .mv-body{overflow:auto;background:#EBEEFD}
+  /* state switches (prototype): preview the same email for other plan choices */
+  .mv-switch{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:12px 24px;border-bottom:1px solid #E6E9F5;background:#FAFBFF}
+  .mv-switch>span{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .mv-outcome:empty{display:none}
+  .mv-outcome{padding:8px 24px;border-bottom:1px solid #E6E9F5;background:#F5F6FE;font-size:13px;line-height:1.5;color:#413BA2}
+  .mv-outcome b{font-weight:700}
+  .mv-seg{display:inline-flex;padding:2px;border-radius:8px;background:#EEF0F7}
+  .mv-seg button{border:0;background:none;cursor:pointer;font:inherit;font-size:13px;font-weight:500;color:#4B5563;padding:4px 12px;border-radius:6px;min-height:28px}
+  .mv-seg button.on{background:#fff;color:#111827;font-weight:600;box-shadow:0 1px 2px rgba(17,24,39,.12)}
+
+  /* ---- coded emails (600px, email-safe look: card, icon disc, label, title, details box, CTA, footer) ---- */
+  .em{padding:32px 16px;background:#EBEEFD}
+  .em-card{max-width:600px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 16px 40px rgba(78,82,168,.12);overflow:hidden}
+  .em-main{padding:40px 48px 48px;text-align:center}
+  .em-logo svg{width:180px;height:auto}
+  .em-icon{width:64px;height:64px;margin:48px auto 0;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#EEF0FE;color:#4F46E5}
+  .em-kind{margin-top:12px;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#4F46E5}
+  .em.red .em-icon{background:#FDECF2;color:#E5126B}  .em.red .em-kind{color:#E5126B}
+  .em.amber .em-icon{background:#FFF1DE;color:#F59E0B}  .em.amber .em-kind{color:#F59E0B}
+  .em-title{margin-top:32px;font-size:26px;font-weight:700;line-height:1.25;color:#1A1A1A}
+  .em-text{margin-top:12px;font-size:14px;line-height:1.6;color:#6B7280}
+  .em-text a{color:#4F46E5;text-decoration:none}
+  .em-box{position:relative;margin-top:32px;padding:20px 24px 24px;border-radius:8px 8px 0 0;background:#F5F5FA;text-align:left}
+  .em-box::after{
+    content:"";position:absolute;left:0;right:0;bottom:-7px;height:8px;background-repeat:repeat-x;background-size:20px 100%;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8' preserveAspectRatio='none'%3E%3Cpath d='M0 0H20L10 8Z' fill='%23F5F5FA'/%3E%3C/svg%3E");
+  }
+  .em-box h4{font-size:16px;font-weight:700;color:#1A1A1A}
+  .em-box p{margin-top:4px;font-size:13px;color:#6B7280}
+  .em-rows{margin-top:16px;padding-top:12px;border-top:1px solid #E5E5EE;display:grid;gap:8px}
+  .em-row{display:flex;justify-content:space-between;gap:16px;font-size:14px}
+  .em-row span{font-weight:600;color:#1A1A1A}
+  .em-row b{font-weight:400;color:#6B7280;text-align:right}
+  .em-row b.strong{font-weight:700;color:#4F46E5}
+  .em-row b.bad{font-weight:700;color:#E5126B}
+  .em-cta{
+    display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:48px;margin-top:40px;border:0;border-radius:10px;cursor:pointer;
+    background:#4F46E5;color:#fff;font:inherit;font-size:15px;font-weight:600;animation:hotPulse 2s ease-in-out infinite;
+  }
+  .em-cta.narrow{width:min(320px,100%);margin-left:auto;margin-right:auto}
+  .em-cta.grad{width:auto;display:inline-flex;padding:0 24px;background:linear-gradient(257.56deg,#046BF2 3.39%,#5E35F2 84.49%)}
+  .em-cta:hover{filter:brightness(1.06)}
+  .em-cta:focus-visible{outline:3px solid #A5B4FC;outline-offset:2px}
+  @keyframes hotPulse{0%,100%{box-shadow:0 0 0 0 rgba(79,70,229,0)}50%{box-shadow:0 0 0 6px rgba(79,70,229,.22)}}
+  .em-note{margin-top:16px;font-size:13px;color:#6B7280}
+  .em-link{margin-top:8px;font-size:13px;color:#9CA3AF;word-break:break-all}
+  .em-foot{padding:24px;background:#F6F6FA;text-align:center;font-size:12.5px;color:#8A8F98}
+  .em-foot nav{margin-top:8px;line-height:1.8}
+  .em-foot a{color:#4F46E5;text-decoration:none}
+  .em-foot i{font-style:normal;margin:0 8px;color:#B0B4C0}
+  @media (max-width:640px){.em{padding:16px 8px}.em-main{padding:32px 20px 40px}.em-title{font-size:22px}.em-box{padding:16px}.em-row{flex-direction:column;gap:2px}.em-row b{text-align:left}}
+  @media (prefers-reduced-motion:reduce){.em-cta{animation:none}}
+  .mv-foot{padding:12px 24px;border-top:1px solid #E6E9F5;font-size:12.5px;color:var(--muted)}
+  .mv-list{padding:8px 0;overflow:auto}
+  .mv-list h3{padding:12px 24px 4px;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .mv-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;padding:12px 24px;border:0;background:none;text-align:left;cursor:pointer;font:inherit}
+  .mv-item:hover{background:#F5F6FE}
+  .mv-item b{display:block;font-size:14px;font-weight:600;color:#111827}
+  .mv-item span{display:block;margin-top:2px;font-size:12.5px;color:var(--muted)}
+  .mv-item i{font-style:normal;font-size:13px;font-weight:600;color:var(--accent)}
+  .mv-empty{padding:4px 24px 12px;font-size:13px;color:var(--muted)}
+  @media (prefers-reduced-motion:reduce){.mail-note,.mail-view[open]{animation:none}}
+  @media (max-width:640px){.mail-notes{top:auto;bottom:16px;right:16px}}
+
   /* ---------- Responsive ---------- */
   @media (max-width:1240px){
     .wrap{padding:0 24px}
@@ -1050,6 +1213,40 @@
     .setup-btns>*{width:100% !important}
     .onboard-card .onboard-dash,#dashboard-btn{width:100%}
     .tip::after{width:min(252px,calc(100vw - 40px))}
+    .stage .card,.stage .receipt{padding:24px} /* phones: tighter cards so tile headers fit on one line */
+    #view-step-4 .done-card{padding:0}
+    /* header: logo + avatar only */
+    header{padding:0 12px;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+    header.away{transform:translateY(-100%)}
+    .logo svg{width:150px;height:auto}
+    header .user-meta{display:none}
+    /* steps: "Step X of N" + progress instead of the chip row */
+    .stepper{display:none}
+    .m-steps{display:block}
+    .step-head{margin-top:24px}
+    /* plan tiles: never wider than the card; header may wrap under the pill */
+    .stage .plans{grid-template-columns:minmax(0,1fr)}
+    .stage .plan-top{flex-wrap:wrap;row-gap:8px}
+    .stage .plan-tile{padding:16px}
+    .best-pill,.bp-face{padding:0 8px}
+    /* signup bonus: text on top, price line beneath a divider */
+    .bonus{padding:16px}
+    .bonus-header{align-items:flex-start}
+    #bonus-banner .bonus-title{font-size:14px;line-height:20px}
+    .bonus-row{gap:12px}
+    .bonus-right{flex-direction:row;align-items:baseline;gap:8px;width:100%;padding-top:12px;border-top:1px solid #D4DCF8}
+    .bonus-right .zero{font-size:22px;line-height:28px}
+    /* step 3: no side boxes; full-width 48px buttons, 12px apart (WCAG 2.5.5/2.5.8) */
+    #view-step-3 .cols>aside{display:none}
+    .two-btns .subscribe,.two-btns .btn-ghost{width:100% !important;height:48px}
+    .up-act{min-height:44px}
+    /* step 4: no nested card frame, no desktop-only install */
+    #view-step-4 .done-card{padding:0;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+    .done-head{flex-direction:column;align-items:flex-start;gap:16px}
+    .done-head .checkorb{width:48px;height:48px;align-self:center}
+    #view-step-4 .warn-strip,#view-step-4 .setup-btns,#view-step-4 .install-step{display:none}
+    .m-desktop{display:block}
+    .m-desktop .btn-ghost,.onboard-card .onboard-dash{width:100% !important;height:48px}
     .plan-tokens .tip::after{left:-185px} /* keeps the token tooltips inside a phone screen */
     .two-btns{flex-direction:column-reverse;gap:12px}
     .two-btns .subscribe,.two-btns .btn-ghost{width:100%}
@@ -1131,6 +1328,7 @@
   <div class="wrap">
 
     <nav class="stepper" id="stepper" aria-label="Signup steps"></nav>
+    <div class="m-steps" id="m-steps" aria-hidden="true"></div>
 
     <!-- ================= STEP 1 — ACCOUNT ================= -->
     <section class="stage" id="view-step-1">
@@ -1176,6 +1374,7 @@
                 <label class="label" for="af-email">Work email</label>
                 <input class="input" type="email" id="af-email" autocomplete="email">
                 <p class="err">Please enter a valid work email address.</p>
+                <p class="err-taken">An account with this email already exists. <a href="https://agencytoolchest.com/users/sign_in">Log in instead</a> or use another email.</p>
               </div>
 
               <div class="field" id="f-password" style="margin-bottom:0">
@@ -1199,6 +1398,9 @@
               </label>
               <p class="err" id="terms-err">Please accept the terms to continue.</p>
 
+              <div class="form-alert" id="create-alert" role="alert" hidden>
+                <b>We couldn’t create your account.</b> Something went wrong on our side or with your connection — your details are kept, please try again.
+              </div>
               <button class="subscribe" id="create-btn" type="submit">
                 Create account &amp; continue
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M14 6l6 6-6 6"/></svg>
@@ -1333,7 +1535,7 @@
                         </defs>
                       </svg>
                     </span>
-                    <div class="bonus-title">Exclusive signup bonus: First 30 days of AI — free</div>
+                    <div class="bonus-title">Signup bonus: First 30 days of AI — free</div>
                   </div>
                   <div class="bonus-text">Add AI now and explore your selected plan at no cost for 30 days.</div>
                 </div>
@@ -1440,6 +1642,11 @@
     </section>
 
     <!-- ================= STRIPE PAYMENT (external page, no ATC chrome) ================= -->
+    <!-- ================= EMAIL LINK LANDING (opens in a new tab: ?link=valid|expired|used) ================= -->
+    <section class="stage" id="view-link">
+      <div class="link-shell"><div class="card link-card" id="link-card"></div></div>
+    </section>
+
     <section class="stage" id="view-pay">
       <div class="pay-shell">
         <div class="stripe-card">
@@ -1474,7 +1681,7 @@
               <p class="sp-err">Your name is incomplete.</p>
             </div>
 
-            <div class="sp-pay-err" id="pay-err"></div>
+            <div class="sp-pay-err" id="pay-err" role="alert"></div>
 
             <button class="sp-pay" id="pay-btn" type="submit">
               <span id="pay-btn-label">Pay $3,000.00</span>
@@ -1482,6 +1689,15 @@
           </form>
 
           <a class="sp-paid" id="paid-link" href="#step-3">Paid (skip card form)</a>
+          <div class="sp-3ds" id="sp-3ds" hidden>
+            <div class="sp-3ds-card" role="dialog" aria-modal="true" aria-labelledby="sp-3ds-title">
+              <div class="sp-3ds-bank">Your bank · secure check</div>
+              <h2 id="sp-3ds-title">Confirm this payment</h2>
+              <p>Your bank needs you to approve <b id="sp-3ds-amt"></b> to Agency Toolchest. In real life this opens your banking app or asks for a one-time code.</p>
+              <button type="button" class="sp-pay" data-3ds="ok">Approve payment</button>
+              <button type="button" class="sp-3ds-fail" data-3ds="fail">Fail authentication</button>
+            </div>
+          </div>
           <a class="sp-return" href="#step-2">&larr; Return to Agency Toolchest</a>
           <div class="sp-powered">Powered by <b>Stripe</b></div>
         </div>
@@ -1544,6 +1760,7 @@
                 </svg>
                 <div class="dz-drag">Drag&amp;Drop</div>
                 <div class="dz-browse">or browse files</div>
+                <div class="dz-tap">Tap to choose a file</div>
                 <div class="dz-sub">Accepts .xlsx, .xls, .csv · up to 25 MB</div>
               </div>
             </div>
@@ -1560,7 +1777,7 @@
             <p class="upload-error" id="upload-error">Attach your All Purpose Audit file first — or choose "I'll do this later" to continue without it.</p>
 
             <div class="two-btns">
-              <button class="btn-ghost" id="skip-upload" type="button" style="width:auto;white-space:nowrap">I'll do this later</button>
+              <button class="btn-ghost" id="skip-upload" type="button">I'll do this later</button>
               <button class="subscribe" id="upload-btn" type="button">
                 <span id="upload-btn-label">Upload &amp; continue</span>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M14 6l6 6-6 6"/></svg>
@@ -1626,7 +1843,7 @@
                 Install the extension
               </div>
               <div class="side-list">
-                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Click below — the Chrome Web Store opens in a <b>new tab</b></span></div>
+                <div class="side-item install-step"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Click below — the Chrome Web Store opens in a <b>new tab</b></span></div>
                 <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Click <b>Add to Chrome → Add extension</b></span></div>
                 <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Pin it to your toolbar for easy access.</span></div>
               </div>
@@ -1652,6 +1869,11 @@
                   </svg>
                   Download Chrome extension
                 </a>
+              </div>
+              <div class="m-desktop">
+                <div class="m-desktop-label">On your computer</div>
+                <p>The extension works in <b>Chrome on a desktop or laptop</b> — it can't be installed on a phone. The install link is in your <b>payment confirmation email</b>, so just open that email on your computer.</p>
+                <button class="btn-ghost" id="copy-link-btn" type="button">Copy link to extension</button>
               </div>
             </section>
 
@@ -1713,6 +1935,10 @@
 
 <div class="demo" id="demo" hidden></div>
 
+<!-- PROTOTYPE ONLY — emails the user receives. Not part of the web flow; never shown with ?clean or PROTOTYPE=false -->
+<div class="mail-notes" id="mail-notes" aria-live="polite"></div>
+<dialog class="mail-view" id="mail-view" aria-label="Email preview"></dialog>
+
 <script>
 (function () {
   'use strict';
@@ -1759,7 +1985,11 @@
     aiPlan: null,             // 'advanced' | 'standard' | null — nothing pre-selected
     billingDay: 13,
     consents: { base: false, ai: false },
-    payDecline: false,        // demo: arm next payment to decline
+    payOutcome: 'ok',         // demo: next payment → ok | declined | funds | expired | cvc | auth
+    accountOutcome: 'ok',     // demo: next 'Create account' → ok | taken | server
+    linkState: 'valid',       // demo: confirmation link in the email → valid | expired | used
+    retryOutcome: 'ok',       // demo: 'Retry Payment' from the email → ok | fails
+    lastDecline: 'declined',  // reason of the last declined payment (drives the email)
     uploadFail: false,        // demo: arm next upload to fail mid-way
     aiDeclined: false,        // chose "Decide later — trial only" — don't ask again
     upload: { status: 'idle' }, // idle | uploading | failed | invalid | done
@@ -2011,6 +2241,7 @@
       replayRoll(section); prevSection = section;
       if (state.route === 'step-4') celebrate();
       if (state.route === 'step-2') shimmerSave();
+      if (state.route === 'step-2' && !state.emailVerified && inbox.indexOf('welcome') < 0) deliverEmail('welcome', 1400);
     }
 
     document.title = TITLES[state.route] || TITLES['step-1'];
@@ -2117,6 +2348,10 @@
     });
     stepPrevCur = cur;
     $('stepper').innerHTML = html;
+    // phones: "Step 2 of 4 · Plan & AI" + segmented progress (the chip row is hidden there)
+    $('m-steps').innerHTML =
+      '<div class="m-steps-label">Step ' + (cur + 1) + ' of ' + steps.length + ' <span>·</span> <b>' + esc(steps[cur].label) + '</b></div>' +
+      '<div class="m-steps-bar">' + steps.map(function (s, i) { return '<i class="' + (i < cur ? 'done' : i === cur ? 'cur' : '') + '"></i>'; }).join('') + '</div>';
     $('stepper').querySelectorAll('.chip').forEach(function (chip) {
       chip.addEventListener('click', function () { go(chip.dataset.route); });
     });
@@ -2382,6 +2617,7 @@
   }
 
   /* ============================ DEMO BAR ============================ */
+  var demoOpen = false;   // collapsed to a small pill so it never covers the page
   function renderDemo() {
     var demo = $('demo');
     if (!PROTOTYPE || CLEAN) { demo.hidden = true; return; }
@@ -2391,34 +2627,33 @@
       var on = state.route === r;
       return '<button data-go="' + r + '"' + (on ? ' class="on"' : '') + '>' + r.replace('step-', 'Step ').replace('pay', 'Stripe') + '</button>';
     }).join('');
-    var emailBtn = state.emailVerified
-      ? '<button class="on" data-act="verify">Email: verified ✓</button>'
-      : '<button data-act="verify">Simulate email link click</button>';
-    var carrier = '<button data-carrier="allstate"' + (state.carrier === 'allstate' ? ' class="on"' : '') + '>Allstate</button>' +
-                  '<button data-carrier="other"' + (state.carrier === 'other' ? ' class="on"' : '') + '>Other</button>';
-    var decline = '<button data-act="decline"' + (state.payDecline ? ' class="on"' : '') + '>' +
-                  (state.payDecline ? 'Decline armed ✓' : 'Arm payment decline') + '</button>' +
-                  '<button data-act="upfail"' + (state.uploadFail ? ' class="on"' : '') + '>' +
-                  (state.uploadFail ? 'Upload fail armed ✓' : 'Arm upload fail') + '</button>';
+    // only the switches that change what's on this page (email states live in the Inbox)
+    var opt = function (key, val, label) { return '<button data-sim="' + key + '" data-v="' + val + '"' + (state[key] === val ? ' class="on"' : '') + '>' + label + '</button>'; };
+    var row = function (label, btns) { return '<div class="row"><span class="st">' + label + '</span>' + btns + '</div>'; };
+    var r = state.route, pageRows = '';
+    if (r === 'step-1') pageRows += row('Create account:', opt('accountOutcome', 'ok', 'OK') + opt('accountOutcome', 'taken', 'Email taken') + opt('accountOutcome', 'server', 'Server error'));
+    if (r === 'step-2' || r === 'step-3' || r === 'step-4')
+      pageRows += row('Carrier:', '<button data-carrier="allstate"' + (state.carrier === 'allstate' ? ' class="on"' : '') + '>Allstate</button>' +
+                                  '<button data-carrier="other"' + (state.carrier === 'other' ? ' class="on"' : '') + '>Other</button>');
+    if (r === 'pay') pageRows += row('Next payment:', opt('payOutcome', 'ok', 'OK') + opt('payOutcome', 'declined', 'Declined') + opt('payOutcome', 'funds', 'No funds') +
+                                     opt('payOutcome', 'expired', 'Expired') + opt('payOutcome', 'cvc', 'CVC') + opt('payOutcome', 'auth', 'Bank auth'));
+    if (r === 'step-3') pageRows += row('Upload:', '<button data-act="upfail"' + (state.uploadFail ? ' class="on"' : '') + '>' + (state.uploadFail ? 'Next upload fails \u2713' : 'Make next upload fail') + '</button>');
     var track = (state.ref || state.utm)
       ? '<div class="row st">tracked: ' + [state.ref ? 'ref=<b>' + esc(state.ref) + '</b>' : '', state.utm ? 'utm_source=<b>' + esc(state.utm) + '</b>' : ''].filter(Boolean).join(' · ') + '</div>'
       : '';
+    demo.classList.toggle('collapsed', !demoOpen);
     demo.innerHTML =
-      '<h4>Prototype demo</h4>' +
-      '<div class="row">' + jump + '</div>' +
-      '<div class="row">' + emailBtn + '</div>' +
-      '<div class="row">' + carrier + decline + '</div>' + track;
+      '<button type="button" class="demo-toggle" aria-expanded="' + demoOpen + '">Prototype demo <span>' + (demoOpen ? '–' : '+') + '</span></button>' +
+      '<div class="row">' + jump + '</div>' + pageRows +
+      '<div class="row"><button data-act="inbox" class="demo-inbox">' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>' +
+        'Inbox' + (inbox.length ? '<span class="demo-count">' + inbox.length + '</span>' : '') + '<span class="demo-sub">email previews</span></button></div>' + track;
+    demo.querySelector('.demo-toggle').addEventListener('click', function () { demoOpen = !demoOpen; renderDemo(); });
     demo.querySelectorAll('[data-go]').forEach(function (b) {
       b.addEventListener('click', function () {
         history.replaceState(null, '', '#' + b.dataset.go);
         apply(b.dataset.go);
       });
-    });
-    var vBtn = demo.querySelector('[data-act="verify"]');
-    if (vBtn) vBtn.addEventListener('click', function () {
-      state.emailVerified = true;
-      toast('Email verified — thanks!');
-      render();
     });
     demo.querySelectorAll('[data-carrier]').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -2428,12 +2663,11 @@
         render();
       });
     });
+    demo.querySelector('[data-act="inbox"]').addEventListener('click', openInbox);
     var uBtn = demo.querySelector('[data-act="upfail"]');
     if (uBtn) uBtn.addEventListener('click', function () { state.uploadFail = !state.uploadFail; renderDemo(); });
-    var dBtn = demo.querySelector('[data-act="decline"]');
-    if (dBtn) dBtn.addEventListener('click', function () {
-      state.payDecline = !state.payDecline;
-      render();
+    demo.querySelectorAll('[data-sim]').forEach(function (b) {
+      b.addEventListener('click', function () { state[b.dataset.sim] = b.dataset.v; renderDemo(); });
     });
   }
 
@@ -2492,6 +2726,7 @@
     b.disabled = !formValid();
     if (was && !b.disabled) sweep(b);
   }
+  $('af-email').addEventListener('input', function () { $('f-email').classList.remove('taken'); });
   ['af-name', 'af-org', 'af-email', 'af-password'].forEach(function (id) {
     $(id).addEventListener('input', function () {
       updateCreateBtn();
@@ -2542,7 +2777,12 @@
     // create account — session stays open, verification email "sent", continue immediately
     state.account = { name: name, org: org, email: email, password: pw, carrier: carrier };
     state.carrier = carrier;
+    $('create-alert').hidden = true;
+    $('f-email').classList.remove('taken');
+    var outcome = state.accountOutcome;
     busy($('create-btn'), 'Creating your account…', 750, function () {
+      if (outcome === 'taken') { state.account = null; $('f-email').classList.add('taken'); $('af-email').focus(); return; }
+      if (outcome === 'server') { state.account = null; $('create-alert').hidden = false; return; }
       toast('Account created — verification email sent to ' + email + '. Keep going, we\u2019ll wait.');
       go('step-2');
     });
@@ -2721,26 +2961,70 @@
   });
   $('pf-cvc-in').addEventListener('input', function () {
     this.value = this.value.replace(/\D/g, '').slice(0, 4);
+    $('pf-cvc').classList.remove('invalid');
   });
+  $('pf-exp-in').addEventListener('input', function () { $('pf-exp').classList.remove('invalid'); });
 
   $('pay-form').addEventListener('submit', function (e) {
     e.preventDefault();
+    var num = $('pf-number-in').value.replace(/\D/g, '');
+    if (num.length >= 4) state.card = { brand: { 3: 'Amex', 4: 'Visa', 5: 'Mastercard', 6: 'Discover' }[num[0]] || 'Card', last4: num.slice(-4) };
     // External Stripe page — no validation on our side. Only a deliberately
     // armed decline (demo bar) shows the retry flow.
-    if (state.payDecline) {
-      var err = $('pay-err');
-      err.innerHTML = '<b>Your card was declined.</b> No charge was made — try the card again, or use a different card below.';
-      err.classList.add('show');
-      return;
-    }
+    clearPayErrors();
+    var o = state.payOutcome;
+    if (o === 'auth') { open3ds(); return; }
+    if (o !== 'ok') { payFail(o); return; }
+    paySuccess();
+  });
+
+  // Stripe-style outcomes (the real copy Stripe Checkout shows)
+  var PAY_ERR = {
+    declined: '<b>Your card was declined.</b> No charge was made — try again, or use a different card.',
+    funds:    '<b>Your card has insufficient funds.</b> No charge was made — try a different card.',
+    expired:  'Your card has expired.',
+    cvc:      'Your card\u2019s security code is incorrect.',
+    auth:     '<b>We couldn\u2019t authenticate your payment method.</b> Please choose a different payment method and try again.',
+    error:    '<b>Something went wrong while processing your card.</b> No charge was made — please try again in a moment.'
+  };
+  function clearPayErrors() {
     $('pay-err').classList.remove('show');
+    ['pf-exp', 'pf-cvc'].forEach(function (id) { $(id).classList.remove('invalid'); });
+  }
+  function payFail(kind) {
+    if (kind === 'expired' || kind === 'cvc') {        // field-level errors sit under the field
+      var f = $(kind === 'expired' ? 'pf-exp' : 'pf-cvc');
+      f.querySelector('.sp-err').textContent = PAY_ERR[kind];
+      f.classList.add('invalid');
+      f.querySelector('input').focus();
+    } else {
+      $('pay-err').innerHTML = PAY_ERR[kind];
+      $('pay-err').classList.add('show');
+    }
+    state.lastDecline = kind;
+    deliverEmail('failed', 900);
+  }
+  function paySuccess() {
     state.paymentDone = true;
+    deliverEmail('receipt', 2600);
     go(state.carrier === 'allstate' ? 'step-3' : 'step-4');
+  }
+  function open3ds() {
+    $('sp-3ds-amt').textContent = fmt(BILL[state.billingPlan].due);
+    $('sp-3ds').hidden = false;
+    $('sp-3ds').querySelector('[data-3ds="ok"]').focus();
+  }
+  $('sp-3ds').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-3ds]');
+    if (!b) return;
+    $('sp-3ds').hidden = true;
+    if (b.dataset['3ds'] === 'ok') paySuccess(); else payFail('auth');
   });
 
   $('paid-link').addEventListener('click', function (e) {
     e.preventDefault();
     state.paymentDone = true;
+    deliverEmail('receipt', 2600);
     go(state.carrier === 'allstate' ? 'step-3' : 'step-4');
   });
 
@@ -2898,9 +3182,256 @@
     forceGo('step-4');
   });
   /* ============================ STEP 4 ============================ */
+  // phones: copy the Chrome Web Store link (to send to themselves / open on the computer)
+  $('copy-link-btn').addEventListener('click', function () {
+    var url = document.querySelector('.setup-btns a.subscribe').href, btn = this;
+    var done = function () { btn.textContent = 'Link copied ✓'; setTimeout(function () { btn.textContent = 'Copy link to extension'; }, 2000); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, function () { window.prompt('Copy this link:', url); });
+    else window.prompt('Copy this link:', url);
+  });
   $('dashboard-btn').addEventListener('click', function () {
     toast('Opening your dashboard… (demo)');
   });
+
+  /* ============================ PROTOTYPE: EMAILS ============================ */
+  // Emails the user would receive. Shown as OS-style alerts + a mail window so they're
+  // clearly outside the website. Coded templates with the user's real details; switches preview other states.
+  var EMAILS = {
+    welcome: { subject: 'Confirm your email', when: 'Sent right after the account is created', vary: ['link'] },
+    failed:  { subject: 'Your payment could not be processed', when: 'Sent when a payment is declined', vary: ['reason', 'bill', 'retry'] },
+    receipt: { subject: 'Payment received — your receipt', when: 'Sent after a successful payment (includes the extension link)', vary: ['bill', 'ai'] },
+    billing: { subject: 'Your ATC subscription renews in one week', when: '7 days before each renewal (monthly or annual)', later: true, vary: ['bill', 'ai'] },
+    aifirst: { subject: 'Your AI plan will be billed in one week', when: 'Annual plans only — sent once, 7 days before the first AI charge (when the trial ends)', later: true, vary: ['aiplan'] },
+    expired: { subject: 'Action required: your card on file has expired', when: 'When a renewal fails on an expired card', later: true, vary: ['bill', 'ai'] }
+  };
+  var SWITCHES = {
+    bill: { label: 'Billing', opts: [['annual', 'Annual'], ['monthly', 'Monthly']] },
+    ai:   { label: 'AI plan', opts: [['', 'None'], ['standard', 'Standard'], ['advanced', 'Advanced']] },
+    aiplan: { label: 'AI plan', opts: [['standard', 'Standard'], ['advanced', 'Advanced']] },
+    // error states
+    reason: { label: 'Reason', opts: [['declined', 'Declined'], ['funds', 'No funds'], ['auth', 'Bank auth'], ['error', 'Processing error']] },
+    link:   { label: 'On click', opts: [['valid', 'Confirms'], ['expired', 'Link expired'], ['used', 'Already used']] },
+    retry:  { label: 'On click', opts: [['ok', 'Payment succeeds'], ['fails', 'Fails again']] }
+  };
+  var FAIL_COPY = {
+    declined: { kind: 'Payment failed', title: 'Your payment could not be processed.', text: 'Your card was declined, so we couldn\u2019t process the payment for your Agency Tool Chest subscription. Please retry the payment or use a different card to continue uninterrupted access.', status: 'Declined', cta: 'Retry Payment' },
+    funds:    { kind: 'Payment failed', title: 'Your payment could not be processed.', text: 'Your card has insufficient funds. Please retry once funds are available, or use a different card to continue uninterrupted access to Agency Tool Chest.', status: 'Insufficient funds', cta: 'Retry Payment' },
+    auth:     { kind: 'Action required', title: 'Your bank needs to confirm this payment.', text: 'Your bank asked for an extra security check before charging your card. Complete the check to finish your Agency Tool Chest payment — it takes a few seconds.', status: 'Authentication required', cta: 'Complete authentication' },
+    error:    { kind: 'Payment failed', title: 'We couldn\u2019t finish your payment.', text: 'Something went wrong while processing the payment for your Agency Tool Chest subscription. No charge was made — please try again.', status: 'Processing error', cta: 'Try again' }
+  };
+  var EM_ICON = {
+    mail: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>',
+    receipt: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4L6 21z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>',
+    warn: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+    chrome: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="3.8"/><path d="M12 8.2h8.6M8.7 13.9 4.4 6.4M15.3 13.9l-4.3 7.5"/></svg>'
+  };
+  var txnId = String(100000 + Math.floor(Math.random() * 900000));
+  function ymd(d) { return d.toISOString().slice(0, 10); }
+  function inDays(n) { var d = new Date(); d.setDate(d.getDate() + n); return d; }
+  function cardText(expired) { var c = state.card || { brand: 'Visa', last4: '4242' }; return c.brand + ' (**** **** **** ' + c.last4 + ')' + (expired ? ' - Expired' : ''); }
+  function emRow(label, value, cls) { return '<div class="em-row"><span>' + label + '</span><b class="' + (cls || '') + '">' + value + '</b></div>'; }
+  function emBox(title, sub, rows) { return '<div class="em-box"><h4>' + title + '</h4><p>' + sub + '</p><div class="em-rows">' + rows.join('') + '</div></div>'; }
+  function emFoot(full) {
+    var links = full ? ['View this in your browser', 'Update subscription preferences', 'Account settings', 'Help&amp;Support', 'Privacy'] : ['View this in your browser', 'Help&amp;Support', 'Privacy'];
+    return '<div class="em-foot">Agency Tool Chest, LLC<nav>' + links.map(function (l) { return '<a href="#" onclick="return false">' + l + '</a>'; }).join('<i>·</i>') + '</nav></div>';
+  }
+  function emShell(tone, icon, kind, title, text, middle, foot) {
+    // own copy of the logo's gradients/clip ids — the header (and its defs) is hidden on the Stripe page
+    var logo = document.querySelector('header .logo svg').outerHTML.replace(/(id="|url\(#)([\w-]+)/g, '$1$2-em');
+    return '<div class="em ' + tone + '"><div class="em-card"><div class="em-main">' +
+      '<div class="em-logo">' + logo + '</div><div class="em-icon">' + EM_ICON[icon] + '</div><div class="em-kind">' + kind + '</div>' +
+      '<h1 class="em-title">' + title + '</h1>' + (text ? '<p class="em-text">' + text + '</p>' : '') + middle + '</div>' + foot + '</div></div>';
+  }
+  // live content: account email, plan, amounts, card typed on Stripe, dates
+  function emailHTML(id, o) {
+    var annual = o.bill !== 'monthly', plan = annual ? 'Annual' : 'Monthly';
+    var ai = o.ai ? PLANS[o.ai] : null;
+    var subPrice = annual ? 3000 : 275;
+    var bundled = !annual && ai;                                   // monthly renewal = subscription + AI plan in one charge
+    var renewal = subPrice + (bundled ? ai.price : 0);
+    var renewalRows = function (label, cls) {
+      return [emRow(label, fmt(renewal), cls)].concat(bundled ? [emRow('Includes', 'Agency Tool Chest ' + fmt(subPrice) + ' + ' + ai.name + ' AI ' + fmt(ai.price))] : []);
+    };
+    if (id === 'welcome') return emShell('', 'mail', 'Confirm your email', 'Welcome ' + esc(mailTo()) + '!',
+      'Thanks for signing up for Agency Tool Chest. Please confirm your email address by clicking the button below to get started.',
+      '<button type="button" class="em-cta narrow" data-act="verify">Confirm Email</button>' +
+      '<p class="em-note">If the button doesn’t work, copy and paste the following link into your browser:</p>' +
+      '<p class="em-link">https://agencytoolchest.com/confirm-email?token=' + txnId + 'a8f2</p>', emFoot(false));
+    if (id === 'receipt') return emShell('', 'receipt', 'Payment received',
+      'We have received the payment for your subscription.<br>Thank you for your business!', 'Questions? Contact us at <a href="mailto:support@agencytoolchest.com">support@agencytoolchest.com</a>.',
+      emBox('Receipt - Agency Tool Chest subscription', 'A payment confirmation for your new subscription.', [
+        emRow('Amount', fmt(annual ? 3000 : 775), 'strong'),
+        emRow('Plan', 'Agency Tool Chest (' + plan + ')' + (annual ? '' : ' + one-time setup fee $500.00')),
+        emRow('Charged to', cardText()),
+        emRow('Transaction ID', txnId),
+        emRow('Date', ymd(new Date()) + ', ' + new Date().toISOString().slice(11, 19) + ', UTC'),
+        emRow('AI Plan Subscription', ai ? ai.name + ' — $' + ai.price + '/mo after the 30-day trial' : 'Trial only (30 days)')
+      ]) + '<button type="button" class="em-cta grad" data-act="store">' + EM_ICON.chrome + 'Download Chrome extension</button>', emFoot(true));
+    var fc = FAIL_COPY[o.reason] || FAIL_COPY.declined;
+    if (id === 'failed') return emShell(o.reason === 'auth' ? 'amber' : 'red', 'warn', fc.kind, fc.title, fc.text,
+      emBox('Payment details', 'Update your payment method to continue uninterrupted access to Agency Tool Chest.', [
+        emRow('Subscription', 'Agency Tool Chest (' + plan + ')'),
+        emRow('Amount due', fmt(annual ? 3000 : 775), 'strong'),
+        emRow('Card on file', cardText()),
+        emRow('Status', fc.status, 'bad')
+      ]) + '<button type="button" class="em-cta" data-act="retry">' + fc.cta + '</button>', emFoot(true));
+    if (id === 'aifirst') {
+      ai = PLANS[o.aiplan] || PLANS.advanced;
+      var trialEnd = ymd(inDays(30));
+      return emShell('amber', 'warn', 'Upcoming charge', 'Your AI plan will be billed in one week.',
+        'Your 30-day AI trial ends on ' + trialEnd + ' and your ' + ai.name + ' plan starts then. The first charge is prorated to line up with your billing day (the ' + dayLabel(state.billingDay) + '). Want to change or cancel? Do it before ' + trialEnd + '.',
+        emBox('Upcoming charge - ' + ai.name + ' AI plan', 'A one-time heads-up before your first AI charge. Your Agency Tool Chest subscription is already paid for the year.', [
+          emRow('AI plan', ai.name),
+          emRow('Amount', fmt(ai.price) + '/month', 'strong'),
+          emRow('First charge', trialEnd + ' (prorated)'),
+          emRow('Then', 'Monthly on the ' + dayLabel(state.billingDay)),
+          emRow('Payment method', cardText())
+        ]) + '<button type="button" class="em-cta" data-act="billing">Review billing details</button>', emFoot(true));
+    }
+    if (id === 'billing') {
+      var next = ymd(inDays(7)), cycle = annual ? 'annual' : 'monthly';
+      return emShell('amber', 'warn', 'Upcoming charge', 'Your ATC subscription will be billed ' + (annual ? 'annually' : 'monthly') + ' in one week.',
+        'Your ' + cycle + ' subscription renewal is coming up. You will be charged on ' + next + '. If you’d like to make changes to your plan, please do so before the billing date.',
+        emBox('Upcoming charge - Agency Tool Chest ' + cycle + ' subscription', 'A heads-up about your next scheduled renewal.', [].concat(renewalRows('Amount', 'strong'), [
+          emRow('Billing cycle', plan),
+          emRow('Next billing date', next),
+          emRow('Payment method', cardText())
+        ], annual && ai ? [emRow('AI plan', ai.name + ' — $' + ai.price + '/mo, continues monthly on the ' + dayLabel(state.billingDay) + ' (billed separately)')] : [])) +
+        '<button type="button" class="em-cta" data-act="billing">Review billing details</button>', emFoot(true));
+    }
+    if (id === 'expired' && annual && ai) return emShell('red', 'warn', 'Action required', 'Your card on file has expired.',
+      'We couldn’t charge your monthly ' + ai.name + ' AI plan because your card has expired. Your Agency Tool Chest subscription stays active — only AI is paused until you update your payment method.',
+      emBox('Payment details', 'Update your payment method to turn AI back on.', [
+        emRow('Subscription', ai.name + ' AI plan (monthly)'),
+        emRow('Amount due', fmt(ai.price), 'strong'),
+        emRow('Agency Tool Chest', 'Annual — paid, still active'),
+        emRow('Card on file', cardText(true)),
+        emRow('Status', 'Payment failed · AI paused', 'bad')
+      ]) + '<button type="button" class="em-cta" data-act="billing">Update Payment Method</button>', emFoot(true));
+    if (id === 'expired') return emShell('red', 'warn', 'Action required', 'Your card on file has expired.',
+      'We were unable to process the payment for your Agency Tool Chest subscription because your card has expired. Please update your payment method to avoid service interruption.',
+      emBox('Payment details', 'Update your payment method to continue uninterrupted access to Agency Tool Chest.', [
+        emRow('Subscription', 'Agency Tool Chest (' + plan + ')' + (bundled ? ' + ' + ai.name + ' AI' : ''))
+      ].concat(renewalRows('Amount due', 'strong'), [
+        emRow('Card on file', cardText(true)),
+        emRow('Status', 'Payment failed', 'bad')
+      ])) + '<button type="button" class="em-cta" data-act="billing">Update Payment Method</button>', emFoot(true));
+    return '';
+  }
+  var inbox = [];                       // ids received in this session, newest first
+  var mailView = $('mail-view');
+  function mailTo() { return state.account ? state.account.email : 'name@agency.com'; }
+  function emailsOn() { return PROTOTYPE && !CLEAN; }
+
+  function deliverEmail(id, delay) {
+    if (!emailsOn()) return;
+    setTimeout(function () {
+      inbox = [id].concat(inbox.filter(function (x) { return x !== id; }));
+      var e = EMAILS[id], note = document.createElement('div');
+      $('mail-notes').querySelectorAll('[data-mail="' + id + '"]').forEach(function (n) { n.remove(); });   // newest replaces an older alert of the same email
+      note.className = 'mail-note';
+      note.dataset.mail = id;
+      note.innerHTML =
+        '<span class="mn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg></span>' +
+        '<div><div class="mn-kind">Email · prototype preview</div><div class="mn-subj"></div><div class="mn-to"></div></div>' +
+        '<div class="mn-actions"><button type="button" class="mn-open">Open</button><button type="button" class="mn-x" aria-label="Dismiss">Dismiss</button></div>';
+      note.querySelector('.mn-subj').textContent = e.subject;
+      note.querySelector('.mn-to').textContent = 'Agency Toolchest → ' + mailTo();
+      note.querySelector('.mn-open').addEventListener('click', function () { note.remove(); openEmail(id); });
+      note.querySelector('.mn-x').addEventListener('click', function () { note.remove(); });
+      $('mail-notes').prepend(note);
+      renderDemo();
+    }, delay || 0);
+  }
+
+  function mailChrome(inner) {
+    return '<div class="mv-ribbon"><b>Prototype</b> Email preview — this arrives in the user’s inbox; it’s not a page in the signup flow.</div>' +
+           '<button type="button" class="mv-x" data-mv="close" aria-label="Close email preview"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>' + inner;
+  }
+  var mailPreview = { id: null, bill: 'annual', ai: '' };
+  function openEmail(id) {
+    var e = EMAILS[id];
+    mailPreview = { id: id, bill: state.billingPlan, ai: state.aiPlan || '', aiplan: state.aiPlan || 'advanced', reason: { cvc: 'declined', expired: 'declined' }[state.lastDecline] || state.lastDecline,
+                    link: state.linkState, retry: state.retryOutcome };   // start from what the user chose / what happened
+    var sw = (e.vary || []).map(function (k) {
+      return '<span>' + SWITCHES[k].label + '</span><div class="mv-seg" role="group" aria-label="' + SWITCHES[k].label + '">' +
+        SWITCHES[k].opts.map(function (o) { return '<button type="button" data-sw="' + k + '" data-v="' + o[0] + '">' + o[1] + '</button>'; }).join('') + '</div>';
+    }).join('');
+    mailView.innerHTML = mailChrome(
+      '<div class="mv-head"><button type="button" class="mv-back" data-mv="inbox">← Inbox</button><div class="mv-subject"></div><div class="mv-meta"><b>From</b><span>Agency Toolchest &lt;noreply@agencytoolchest.com&gt;</span><b>To</b><span class="mv-to"></span></div></div>' +
+      (sw ? '<div class="mv-switch"><span>Preview state</span></div><div class="mv-outcome" aria-live="polite"></div>' : '') +
+      '<div class="mv-body"></div><div class="mv-foot">' + esc(e.when) + ' · the email’s button works</div>');
+    if (sw) mailView.querySelector('.mv-switch').insertAdjacentHTML('beforeend', sw);
+    mailView.querySelector('.mv-subject').textContent = e.subject;
+    mailView.querySelector('.mv-to').textContent = mailTo();
+    renderEmailBody();
+    if (!mailView.open) mailView.showModal();
+  }
+  // switches that don't change the email's look explain what its button will do
+  var OUTCOME = {
+    link: { valid:   '\u201cConfirm Email\u201d opens a new tab saying \u201cYour email is confirmed\u201d; the signup tab updates to \u201cEmail verified\u201d.',
+            expired: '\u201cConfirm Email\u201d opens a new tab saying \u201cThis confirmation link has expired\u201d, with \u201cSend a new link\u201d (a new email arrives here).',
+            used:    '\u201cConfirm Email\u201d opens a new tab saying \u201cThis link was already used\u201d \u2014 nothing else changes.' },
+    retry: { ok:    'The button opens the payment page and the payment goes through.',
+             fails: 'The button opens the payment page and the payment fails again with the same reason.' }
+  };
+  function renderEmailBody() {
+    mailView.querySelector('.mv-body').innerHTML = emailHTML(mailPreview.id, mailPreview);
+    mailView.querySelectorAll('[data-sw]').forEach(function (b) { b.classList.toggle('on', mailPreview[b.dataset.sw] === b.dataset.v); });
+    var out = mailView.querySelector('.mv-outcome'), key = EMAILS[mailPreview.id].vary && EMAILS[mailPreview.id].vary.filter(function (k) { return OUTCOME[k]; })[0];
+    if (out) out.innerHTML = key ? '<b>On click:</b> ' + OUTCOME[key][mailPreview[key]] : '';
+  }
+  function openInbox() {
+    // every email in the prototype; "Received" marks the ones that arrived in this session
+    var item = function (id) {
+      var e = EMAILS[id], got = inbox.indexOf(id) >= 0;
+      return '<button type="button" class="mv-item" data-open="' + id + '"><div><b>' + esc(e.subject) +
+        (got ? ' <em class="mv-got">Received</em>' : '') + '</b><span>' + esc(e.when) + '</span></div><i>Open</i></button>';
+    };
+    mailView.innerHTML = mailChrome(
+      '<div class="mv-head"><div class="mv-subject">Inbox — ' + esc(mailTo()) + '</div></div><div class="mv-list">' +
+      '<h3>During signup</h3>' + ['welcome', 'failed', 'receipt'].map(item).join('') +
+      '<h3>Later in the subscription</h3>' + ['billing', 'aifirst', 'expired'].map(item).join('') + '</div>');
+    if (!mailView.open) mailView.showModal();
+  }
+  mailView.addEventListener('click', function (ev) {
+    if (ev.target === mailView || ev.target.closest('[data-mv="close"]')) { mailView.close(); return; }
+    if (ev.target.closest('[data-mv="inbox"]')) { openInbox(); return; }
+    var o = ev.target.closest('[data-open]');
+    if (o) { openEmail(o.dataset.open); return; }
+    var sw = ev.target.closest('[data-sw]');
+    if (sw) { mailPreview[sw.dataset.sw] = sw.dataset.v; renderEmailBody(); return; }   // preview only — the order is untouched
+    var hot = ev.target.closest('.em [data-act]');
+    if (!hot) return;
+    var act = hot.dataset.act;
+    mailView.close();
+    if (act === 'verify') {
+      // like a real email link: opens its own page in a new tab; this tab hears back over a channel
+      window.open(location.pathname + '?link=' + (mailPreview.link || 'valid') + '&email=' + encodeURIComponent(mailTo()), '_blank');
+    }
+    else if (act === 'retry') {
+      // link outcome: the retry either goes through or fails with the same reason
+      state.payOutcome = mailPreview.retry === 'fails' ? (mailPreview.reason === 'error' ? 'declined' : mailPreview.reason) : 'ok';
+      if (mailPreview.reason === 'auth' && mailPreview.retry !== 'fails') state.payOutcome = 'auth';
+      if (state.route !== 'pay') forceGo('pay');
+      renderDemo();
+    }
+    else if (act === 'store') { window.open(document.querySelector('.setup-btns a.subscribe').href, '_blank', 'noopener'); }
+    else toast('Would open Account Billing settings (prototype)');
+  });
+
+  /* ============================ PHONE HEADER ============================ */
+  // scroll down → header slides away; scroll up (or near the top) → it comes back
+  (function () {
+    var hdr = document.querySelector('header'), lastY = window.scrollY, phone = window.matchMedia('(max-width:640px)');
+    window.addEventListener('scroll', function () {
+      var y = window.scrollY;
+      if (!phone.matches) { hdr.classList.remove('away'); lastY = y; return; }
+      if (Math.abs(y - lastY) < 6) return;          // ignore jitter
+      hdr.classList.toggle('away', y > lastY && y > 56);
+      lastY = y;
+    }, { passive: true });
+  })();
 
   /* ============================ TOOLTIPS ============================ */
   document.querySelectorAll('.tip').forEach(function (t) { t.setAttribute('aria-label', t.dataset.tip); });
@@ -2913,9 +3444,46 @@
     if (e.key === 'Escape') document.querySelectorAll('.tip.open').forEach(function (o) { o.classList.remove('open'); });
   });
 
+  /* ============================ EMAIL LINK LANDING ============================ */
+  var bc = ('BroadcastChannel' in window) ? new BroadcastChannel('atc-signup-prototype') : null;
+  if (bc) bc.onmessage = function (m) {          // the signup tab reacts to what happened in the link tab
+    if (m.data === 'verified' && !state.emailVerified) { state.emailVerified = true; render(); }   // the green 'Email verified' bar is the only confirmation
+    if (m.data === 'resend') { toast('New confirmation link sent to ' + mailTo()); deliverEmail('welcome', 1200); }
+  };
+  var LINK = qs.get('link');
+  function renderLinkPage(kind) {
+    var email = qs.get('email') || 'your email';
+    var I = {
+      ok:   '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17.5 19 7.5"/></svg>',
+      bad:  '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3 2"/></svg>',
+      info: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>'
+    };
+    var P = {
+      valid:   ['ok',   'Your email is confirmed', '<b>' + esc(email) + '</b> is verified. You can close this tab and continue your signup where you left off.', '<button type="button" class="subscribe" data-link="close">Close this tab</button>'],
+      expired: ['bad',  'This confirmation link has expired', 'Confirmation links are valid for 24 hours. We can send a fresh one to <b>' + esc(email) + '</b>.', '<button type="button" class="subscribe" data-link="resend">Send a new link</button><p class="link-sent" id="link-sent" hidden>New link sent — check your inbox.</p>'],
+      used:    ['info', 'This link was already used', 'Your email is already confirmed — there’s nothing else to do. You can close this tab.', '<button type="button" class="btn-ghost" data-link="close">Close this tab</button>']
+    }[kind] || null;
+    if (!P) return false;
+    document.title = P[1] + ' — Agency Toolchest';
+    $('link-card').innerHTML = '<div class="link-icon ' + P[0] + '">' + I[P[0]] + '</div><h1>' + P[1] + '</h1><p>' + P[2] + '</p>' + P[3];
+    $('link-card').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-link]');
+      if (!b) return;
+      if (b.dataset.link === 'close') { window.close(); return; }
+      if (bc) bc.postMessage('resend');
+      b.disabled = true; $('link-sent').hidden = false;
+    });
+    if (kind === 'valid' && bc) bc.postMessage('verified');
+    return true;
+  }
+
   /* ============================ INIT ============================ */
   if (CLEAN) document.body.classList.add('clean');
-  apply(routeFromHash());
+  if (LINK && renderLinkPage(LINK)) {                 // opened from an email link: only the landing page
+    document.body.classList.add('link-page');
+    document.querySelectorAll('.stage').forEach(function (st) { st.classList.toggle('active', st.id === 'view-link'); });
+    renderHeader();
+  } else apply(routeFromHash());
 })();
 </script>
 </body>
