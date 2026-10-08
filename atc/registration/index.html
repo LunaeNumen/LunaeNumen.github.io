@@ -1466,6 +1466,35 @@
     return 'step-1';
   }
 
+  // explicit flow actions (and the demo bar) navigate directly, guards aside
+  function forceGo(route) {
+    history.replaceState(null, '', '#' + route);
+    apply(route);
+  }
+
+  // smooth exit for status strips: collapse height + margin + border with a fade
+  var REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function dismissStrip(el) {
+    if (REDUCED_MOTION || CLEAN) { el.style.display = 'none'; return; }
+    var h = el.offsetHeight;
+    el.style.height = h + 'px';
+    el.style.overflow = 'hidden';
+    void el.offsetHeight; // reflow so the height transition picks up
+    el.style.transition = 'opacity .4s ease, height .45s cubic-bezier(.4,0,.2,1), margin-top .45s cubic-bezier(.4,0,.2,1), border-width .4s ease, padding .45s cubic-bezier(.4,0,.2,1)';
+    el.style.opacity = '0';
+    el.style.height = '0px';
+    el.style.marginTop = '0px';
+    el.style.borderWidth = '0px';
+    el.style.paddingTop = '0px';
+    el.style.paddingBottom = '0px';
+    setTimeout(function () {
+      el.style.display = 'none';
+      el.style.transition = ''; el.style.opacity = ''; el.style.height = '';
+      el.style.marginTop = ''; el.style.overflow = ''; el.style.borderWidth = '';
+      el.style.paddingTop = ''; el.style.paddingBottom = '';
+    }, 500);
+  }
+
   function go(route, replace) {
     if (!canEnter(route)) { route = furthestReachable(); }
     if (replace) {
@@ -1591,9 +1620,7 @@
       if (!state.stripTimer && !CLEAN) {
         state.stripTimer = setTimeout(function () {
           state.stripDismissed = true;
-          strip.style.transition = 'opacity .4s ease';
-          strip.style.opacity = '0';
-          setTimeout(function () { strip.style.display = 'none'; strip.style.opacity = ''; }, 420);
+          dismissStrip(strip);
         }, 3000);
       }
     } else if (state.emailVerified && state.stripDismissed) {
@@ -2008,9 +2035,7 @@
       if (!payProc.dismissTimer && !CLEAN) {
         payProc.dismissTimer = setTimeout(function () {
           payProc.dismissed = true;
-          strip.style.transition = 'opacity .4s ease';
-          strip.style.opacity = '0';
-          setTimeout(function () { strip.style.display = 'none'; strip.style.opacity = ''; strip.style.transition = ''; }, 420);
+          dismissStrip(strip);
         }, 3000);
       }
     }
@@ -2054,12 +2079,12 @@
     }
     state.auditDone = true;
     toast('Audit file uploaded — we\u2019ll email you when processing is done.');
-    go('step-4');
+    forceGo('step-4');
   });
   $('skip-upload').addEventListener('click', function () {
     state.auditDone = true;
     toast('No problem — you can attach the audit file anytime from your dashboard.');
-    go('step-4');
+    forceGo('step-4');
   });
   /* ============================ STEP 4 ============================ */
   $('dashboard-btn').addEventListener('click', function () {
