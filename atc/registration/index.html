@@ -548,7 +548,7 @@
   .receipt .consents{margin-top:32px;gap:20px}
   .receipt .subscribe{margin-top:40px}
   .stage .bonus{margin-top:20px}
-  /* "Save $488" and "+$500 setup fee" are one pill component (same box = rows align),
+  /* "Save $800" and "+$500 setup fee" are one pill component (same box = rows align),
      tinted by meaning: indigo = saving, amber = extra cost */
   .save-badge,.fee-note{
     display:inline-flex;align-items:center;gap:6px;height:28px;
@@ -1157,7 +1157,7 @@
     <section class="stage" id="view-step-2">
       <div class="step-head">
         <h1>Build your subscription</h1>
-        <p class="lead" id="welcome-line">Welcome, [Name]. Choose your plan, optionally add AI — first 30 days free — then review and pay.</p>
+        <p class="lead" id="welcome-line">Welcome, [Name]. Choose your plan, then review and pay.</p>
       </div>
 
       <div class="strip ok" id="verify-strip"></div>
@@ -1179,14 +1179,14 @@
                 <div class="plan-price"><span class="amt big">$3,000.00</span><span class="mo">/year</span></div>
                 <div class="plan-sub">One payment — setup fee waived</div>
                 <div class="plan-divider"></div>
-                <div><span class="save-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="#413BA2"><path d="M12 2l2.9 6.6L22 9.3l-5.4 4.8L18.2 21 12 17.3 5.8 21l1.6-6.9L2 9.3l7.1-.7L12 2Z"/></svg>Save $488 vs monthly</span></div>
+                <div><span class="save-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="#413BA2"><path d="M12 2l2.9 6.6L22 9.3l-5.4 4.8L18.2 21 12 17.3 5.8 21l1.6-6.9L2 9.3l7.1-.7L12 2Z"/></svg>Save $800 vs monthly</span></div>
               </div>
               <div class="plan-tile" data-bill="monthly" tabindex="0" role="radio" aria-checked="false">
                 <div class="plan-top">
                   <div class="plan-name">Monthly</div>
                   <input class="radio" type="radio" name="bill-radio" aria-hidden="true" tabindex="-1">
                 </div>
-                <div class="plan-price"><span class="amt big">$249.00</span><span class="mo">/month</span></div>
+                <div class="plan-price"><span class="amt big">$275.00</span><span class="mo">/month</span></div>
                 <div class="plan-sub">Month-to-month — cancel anytime</div>
                 <div class="plan-divider"></div>
                 <div><span class="fee-note"><span class="fee-amt">+$500.00</span> one-time setup fee
@@ -1196,7 +1196,7 @@
             </div>
             <div class="nudge" id="annual-nudge" style="display:none">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.9 6.6L22 9.3l-5.4 4.8L18.2 21 12 17.3 5.8 21l1.6-6.9L2 9.3l7.1-.7L12 2Z"/></svg>
-              <span>Annual saves you <b>$488</b> a year and waives the <b>$500</b> setup fee.</span>
+              <span>Annual saves you <b>$300</b> a year and waives the <b>$500</b> setup fee.</span>
               <button type="button" id="nudge-annual">Switch to Annual</button>
             </div>
 
@@ -1229,7 +1229,8 @@
             </button>
           </section>
 
-          <!-- AI card -->
+          <!-- AI HIDDEN FOR NOW — remove this comment wrapper (and set aiPlan back to 'advanced') to restore.
+          AI card
           <section class="card roll">
             <div class="eyebrow">Add AI to Your Agency Tool Chest</div>
             <h2 class="ai-title">Choose your AI plan</h2>
@@ -1298,7 +1299,7 @@
             </div>
           </section>
 
-          <!-- Billing date card -->
+          Billing date card (AI billing only)
           <section class="card roll" id="billdate-card">
             <h2 class="bill-title">Choose your billing date</h2>
             <p class="billdate-sentence">Charge my card monthly on the
@@ -1309,6 +1310,7 @@
               <span>Renews monthly on this day. Your AI usage resets on this date too. Your first charge (after the free trial) is prorated to line up with it.</span>
             </p>
           </section>
+          END AI HIDDEN -->
         </div>
 
         <!-- Receipt -->
@@ -1330,7 +1332,7 @@
                   <input class="checkbox" type="checkbox" id="cb-base">
                   <span id="cb-base-text"></span>
                 </label>
-                <label class="consent" id="cb-ai-wrap">
+                <label class="consent" id="cb-ai-wrap" style="display:none"><!-- AI agreement: hidden while AI is off -->
                   <input class="checkbox" type="checkbox" id="cb-ai">
                   <span id="cb-ai-text"></span>
                 </label>
@@ -1620,14 +1622,14 @@
   var ROUTES = ['step-1', 'step-2', 'pay', 'step-3', 'step-4'];
   var TITLES = {
     'step-1': 'Create your account — Agency Toolchest',
-    'step-2': 'Plan & AI — Agency Toolchest',
+    'step-2': 'Plan — Agency Toolchest', // AI hidden for now — was 'Plan & AI — Agency Toolchest'
     'pay': 'Payment — Agency Toolchest',
     'step-3': 'Audit file — Agency Toolchest',
     'step-4': 'Set up & done — Agency Toolchest'
   };
   var STEPS = [
     { route: 'step-1', label: 'Account' },
-    { route: 'step-2', label: 'Plan & AI' },
+    { route: 'step-2', label: 'Plan' }, // AI hidden for now — was 'Plan & AI'
     { route: 'step-3', label: 'Audit file', audit: true },
     { route: 'step-4', label: 'Set up & done' }
   ];
@@ -1638,7 +1640,7 @@
   };
   var BILL = {
     annual: { label: 'Annual', price: 3000, per: 'year', due: 3000 },
-    monthly: { label: 'Monthly', price: 249, per: 'month', due: 749 }
+    monthly: { label: 'Monthly', price: 275, per: 'month', due: 775 }
   };
 
   /* ============================ STATE ============================ */
@@ -1650,7 +1652,7 @@
     stripDismissed: false,   // verified strip auto-hides after 3s
     stripTimer: null,
     billingPlan: 'annual',    // annual | monthly (one always selected)
-    aiPlan: 'advanced',       // 'advanced' | 'standard' | null
+    aiPlan: null,             // AI hidden for now — was 'advanced' ('advanced' | 'standard' | null)
     billingDay: 13,
     consents: { base: false, ai: false },
     payDecline: false,        // demo: arm next payment to decline
@@ -2084,7 +2086,7 @@
     if (state.billingPlan === 'annual') {
       items.push({ key: 'platform', t: 'Agency Tool Chest', s: 'Renews yearly', p: '$3,000/year' });
     } else {
-      items.push({ key: 'platform', t: 'Agency Tool Chest', s: 'Renews monthly', p: '$249/month' });
+      items.push({ key: 'platform', t: 'Agency Tool Chest', s: 'Renews monthly', p: '$275/month' });
       items.push({ key: 'setup', t: 'One-time setup fee', s: 'Billed once today', p: '$500.00' });
     }
     if (state.aiPlan) {
@@ -2104,7 +2106,7 @@
   }
   function renderStep2() {
     $('welcome-line').textContent = 'Welcome, ' + firstName() +
-      '. Choose your plan, optionally add AI — first 30 days free — then review and pay.';
+      '. Choose your plan, then review and pay.'; // AI hidden for now — was '. Choose your plan, optionally add AI — first 30 days free — then review and pay.'
 
     // verification strip (auto-dismisses 3s after turning green)
     var strip = $('verify-strip');
@@ -2164,7 +2166,7 @@
     // consents
     morphHTML($('cb-base-text'), state.billingPlan === 'annual'
       ? '<b>Platform subscription:</b> I understand and agree that Agency Tool Chest Yearly is a paid, recurring subscription of <b>$3,000.00/year</b> that will renew automatically every year until I cancel it in my Account Billing settings.'
-      : '<b>Platform subscription:</b> I understand and agree that Agency Tool Chest Monthly is a paid, recurring subscription of <b>$249.00/month</b> that will renew automatically every month until I cancel it in my Account Billing settings, plus a one-time <b>$500.00 setup fee</b> charged today.');
+      : '<b>Platform subscription:</b> I understand and agree that Agency Tool Chest Monthly is a paid, recurring subscription of <b>$275.00/month</b> that will renew automatically every month until I cancel it in my Account Billing settings, plus a one-time <b>$500.00 setup fee</b> charged today.');
     var aiWrap = $('cb-ai-wrap');
     if (state.aiPlan) {
       var p = PLANS[state.aiPlan];
@@ -2240,7 +2242,7 @@
     $('done-email').textContent = state.account ? state.account.email : 'your email';
     var items = [];
     if (state.billingPlan === 'annual') items.push('Subscription active — <b>Annual, $3,000/yr</b>');
-    else items.push('Subscription active — <b>Monthly, $249/mo</b>');
+    else items.push('Subscription active — <b>Monthly, $275/mo</b>');
     if (state.aiPlan) items.push(PLANS[state.aiPlan].name + ' AI — 30-day free trial started (then $' + PLANS[state.aiPlan].price + '/mo)');
     items.push('Logged in on this device — email verified');
     var check = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00AE70" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
@@ -2489,7 +2491,7 @@
     function suffix(n) { var t = n % 10, h = n % 100; if (h === 11 || h === 12 || h === 13) return 'th'; if (t === 1) return 'st'; if (t === 2) return 'nd'; if (t === 3) return 'rd'; return 'th'; }
     var dayOpts = [];
     for (var d = 1; d <= 31; d++) dayOpts.push({ v: String(d), l: d + suffix(d) });
-    makeDropdown($('day-dd'), dayOpts, '13', function (v) { state.billingDay = +v; render(); });
+    if ($('day-dd')) makeDropdown($('day-dd'), dayOpts, '13', function (v) { state.billingDay = +v; render(); }); // billing-date card is hidden with AI
   })();
 
   /* ============================ STEP 2 — PLAN & AI ============================ */
