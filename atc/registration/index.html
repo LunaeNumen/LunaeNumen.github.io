@@ -55,7 +55,9 @@
   }
   .user-name{font-size:14px;font-weight:700;line-height:1.2}
   .user-sub{font-size:12px;color:var(--muted);line-height:1.2}
-  .user-meta{min-width:200px}
+    /* signup: name sits left-aligned next to the avatar in one chip */
+  header .user{gap:9px}
+  header .user-meta{min-width:0;text-align:left}
 
   /* ---------- Layout ---------- */
   .page{flex:1;max-width:1440px;margin:0 auto;padding:48px 32px 40px;
@@ -94,7 +96,7 @@
   .features.expanded{max-height:720px}
   .features-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:40px}
   .stage .feat{gap:10px;padding:7px 0;line-height:1.3}
-  .stage .feat svg{width:15px;height:15px;margin-top:3px}
+  .stage .feat svg{width:16px;height:16px;margin-top:1px}
   .feat svg{flex:none;margin-top:2px}
   .feat-toggle{
     display:flex;align-items:center;gap:7px;margin:18px auto 0;
@@ -316,7 +318,7 @@
     transition:background .18s ease;
   }
   .chip.done{color:#ADB2C5}
-  .chip.done .badge{background:transparent;border:1.5px solid #ADB2C5;font-size:13px}
+    .chip.done .badge{background:#ADB2C5;border:0;color:#fff;font-size:13px}
   .chip.current{background:#fff;color:#444356}
   .chip.current .badge{background:#4F46E5}
   .chip[disabled]{cursor:default}
@@ -328,7 +330,7 @@
   /* ---------- Step headings ---------- */
   .step-head{margin-top:32px}
   .step-head h1{font-size:32px;font-weight:700;letter-spacing:-.01em;color:#413BA2}
-  .step-head .lead{margin-top:11px;font-size:15.5px;line-height:1.5;color:var(--body);max-width:none}
+  .step-head .lead{margin-top:6px;font-size:15.5px;line-height:1.5;color:var(--body);max-width:none}
   .backlink{
     display:inline-flex;align-items:center;gap:6px;margin-top:0;
     color:var(--accent);font-size:14px;font-weight:600;text-decoration:none;
@@ -396,7 +398,31 @@
   .terms{display:flex;gap:11px;align-items:flex-start;cursor:pointer;font-size:13.5px;color:var(--body);line-height:1.55;margin:22px 0 0}
   .terms a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
   .btn-note{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;color:var(--muted);font-size:13px}
-.hp{position:absolute;left:-9999px;top:-9999px;height:0;overflow:hidden}
+  .hp{position:absolute;left:-9999px;top:-9999px;height:0;overflow:hidden}
+
+  /* ---------- Custom styled dropdowns (carrier, billing day) ---------- */
+  .dd{position:relative;display:inline-block}
+  .dd-btn{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    height:44px;padding:8px 12px;width:100%;
+    background:#fff;border:0;border-bottom:1px solid #E6E9F5;
+    font:inherit;font-size:14.5px;color:var(--ink);cursor:pointer;text-align:left;
+    transition:border-color .18s ease,box-shadow .18s ease;
+  }
+  .dd-btn .dd-chev{flex:none;color:#555C7A;transition:transform .2s ease}
+  .dd.open .dd-btn{border-bottom-color:var(--accent);box-shadow:0 1px 0 var(--accent)}
+  .dd.open .dd-btn .dd-chev{transform:rotate(180deg)}
+  .dd-list{
+    position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:30;
+    background:#fff;border:1px solid #E6E9F5;border-radius:8px;
+    box-shadow:0 10px 24px rgba(30,34,80,.14);padding:4px;
+    max-height:224px;overflow:auto;display:none;
+  }
+  .dd.open .dd-list{display:block}
+  .dd-item{list-style:none;padding:8px 12px;border-radius:6px;font-size:14px;color:#111827;cursor:pointer}
+  .dd-item:hover{background:#EEF2FF}
+  .dd-item.sel{color:#4F46E5;font-weight:600;background:#EEF2FF}
+  .dd-item.sel::after{content:'✓';float:right;color:#4F46E5;font-weight:700}
   select option{background:#fff;color:#111827;font-family:inherit;font-size:14px;padding:6px 10px}
   select option:checked{background:#EEF2FF;color:#111827}
 
@@ -437,14 +463,14 @@
   .stage .features{margin-top:25px}
   .stage .features-grid{column-gap:30px}
   .stage .feat{gap:9px;padding:5px 0;line-height:1.3;font-size:14px}
-  .stage .feat svg{width:15px;height:15px;margin-top:3px}
+  .stage .feat svg{width:16px;height:16px;margin-top:1px}
   .stage .feat-toggle{margin-top:24px}
   .stage .ai-title{font-size:18px;font-weight:700;color:#111827}
   .stage .ai-desc{max-width:none;font-size:14px;line-height:18px;color:#7F7F89}
   .stage .plans{margin-top:14px;gap:12px}
   .stage .plan-tile{padding:16px 18px;gap:12px;border-radius:12px}
   .stage .plan-tile.has-pill{padding-top:42px}
-  .stage .plan-tile[aria-checked="true"] .plan-name{color:#312E81}
+  .stage .plan-tile[aria-checked="true"] .plan-name{color:#4F46E5}
   .stage .plan-price{margin:0;gap:2px;align-items:flex-end}
   .stage .plan-price .amt{font-size:24px;line-height:30px;letter-spacing:-.01em}
   .stage .plan-price .amt.big{font-size:28px;line-height:34px}
@@ -458,9 +484,10 @@
   .stage .plan-divider{margin:12px 0 10px}
   .stage .plan-tile.has-pill{padding-top:49px}
   .stage .receipt{padding-top:42px}
-  /* SVG: "Best Value" is a full-width accent band across the tile top (28px) */
+  /* SVG/Figma: "Best Value" is a full-width accent band fused with the tile's
+     accent border — it covers the top border so there is no gap */
   .stage .plan-bar{
-    top:0;left:0;right:auto;transform:none;width:100%;height:28px;padding:0;
+    top:-2px;left:-2px;right:auto;transform:none;width:calc(100% + 4px);height:30px;padding:0;
     border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:center;gap:7px;
     background:var(--accent);box-shadow:none;
   }
@@ -489,15 +516,6 @@
           
   /* ---------- Billing date card (Step 2) ---------- */
   .billdate-sentence{margin-top:14px;font-size:15px;color:var(--ink);line-height:1.6}
-  .day-select{
-    appearance:none;-webkit-appearance:none;
-    margin:0 4px;padding:6px 30px 6px 12px;height:38px;
-    border:1.5px solid #C7D2FE;border-radius:8px;background:#fff;cursor:pointer;
-    font:inherit;font-size:14.5px;font-weight:600;color:#111827;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%234F46E5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;background-position:right 10px center;
-  }
-  .day-select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.15)}
   .billdate-note{display:flex;gap:9px;margin-top:4px;font-size:13px;color:var(--muted);line-height:1.55}
   .billdate-note svg{flex:none;margin-top:1px;color:var(--accent)}
 
@@ -622,6 +640,8 @@
   }
   .sp-pay:hover{filter:brightness(1.08)}
   .sp-pay:active{transform:scale(.99)}
+  .sp-paid{display:block;margin-top:10px;text-align:center;font-size:13px;font-weight:500;color:#8792A2;text-decoration:underline;text-underline-offset:2px}
+  .sp-paid:hover{color:#635BFF}
   .sp-return{display:block;margin-top:16px;text-align:center;font-size:13.5px;font-weight:500;color:#635BFF;text-decoration:none}
   .sp-return:hover{text-decoration:underline}
   .sp-powered{margin-top:14px;text-align:center;font-size:12px;color:#8792A2}
@@ -796,10 +816,8 @@
                   <label class="label" for="af-carrier">Which insurance carrier do you represent?</label>
                   <span class="label-hint">Used to tailor your setup</span>
                 </div>
-                <select class="input" id="af-carrier">
-                  <option value="allstate" selected>Allstate</option>
-                  <option value="other">Other</option>
-                </select>
+                <div class="dd" id="carrier-dd" style="width:100%"></div>
+                <input type="hidden" id="af-carrier" value="allstate">
                 <p class="err">Please choose a carrier.</p>
               </div>
 
@@ -812,7 +830,7 @@
               <div class="field" id="f-password" style="margin-bottom:0">
                 <div class="label-row">
                   <label class="label" for="af-password">Password</label>
-                  <span class="label-hint">Min. 8 characters</span>
+                  <span class="label-hint">Minimum 8 characters</span>
                 </div>
                 <input class="input" type="password" id="af-password" autocomplete="new-password">
                 <p class="err">Password must be at least 8 characters.</p>
@@ -1023,7 +1041,7 @@
           <section class="card roll" id="billdate-card">
             <h2 class="bill-title">Choose your billing date</h2>
             <p class="billdate-sentence">Charge my card monthly on the
-              <select class="day-select" id="day-select" aria-label="Billing day of month"></select>
+              <span id="day-dd"></span>
               day of the month</p>
             <p class="billdate-note">
               <svg width="15" height="15" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.1985 12.8061C9.62492 11.9602 11.6664 10.5019 11.6664 7.5851V3.50164C11.6664 3.34693 11.6049 3.19855 11.4955 3.08915C11.3862 2.97975 11.2378 2.91829 11.0831 2.91829C9.91656 2.91829 8.4642 2.2241 7.44347 1.33157C7.3199 1.22598 7.16271 1.16797 7.00018 1.16797C6.83766 1.16797 6.68046 1.22598 6.55689 1.33157C5.542 2.21826 4.08381 2.91829 2.91726 2.91829C2.76257 2.91829 2.61421 2.97975 2.50482 3.08915C2.39544 3.19855 2.33398 3.34693 2.33398 3.50164V7.5851C2.33398 10.5019 4.37545 11.9602 6.8077 12.8003C6.93342 12.8471 7.07144 12.8492 7.1985 12.8061Z" stroke="#4F46E5" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -1120,6 +1138,7 @@
             </button>
           </form>
 
+          <a class="sp-paid" id="paid-link" href="#step-3">Paid (skip card form)</a>
           <a class="sp-return" href="#step-2">&larr; Return to Agency Toolchest</a>
           <div class="sp-powered">Powered by <b>Stripe</b></div>
         </div>
@@ -1146,7 +1165,7 @@
                 <div class="wiz-num">1</div>
                 <div>
                   <div class="wiz-title">Find the file in your Allstate system</div>
-                  <div class="wiz-sub">Open the instructions below if you're not sure where it lives.</div>
+                  <div class="wiz-sub">Open the instructions on the right if you're not sure where it lives.</div>
                 </div>
               </div>
               <div class="wiz-item">
@@ -1161,23 +1180,6 @@
                 <div>
                   <div class="wiz-title">Attach it below</div>
                   <div class="wiz-sub">— we'll process it and your dashboards light up within minutes.</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="accordion" id="acc">
-              <button class="acc-head" type="button" id="acc-head" aria-expanded="false">
-                <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                How to locate the All Purpose Audit in your Allstate system
-              </button>
-              <div class="acc-body">
-                <div class="acc-body-inner">
-                <ol>
-                  <li>In your Allstate system, run the monthly <b>All Purpose Audit</b> report.</li>
-                  <li>Export / download it to this computer (XLSX or CSV).</li>
-                  <li>Attach it below — or later from <b>Dashboard → Quick Imports</b> (drag &amp; drop works too).</li>
-                  <li>You can import history going back up to a year, so a recent monthly export keeps your dashboards accurate.</li>
-                </ol>
                 </div>
               </div>
             </div>
@@ -1198,7 +1200,7 @@
             <p class="upload-error" id="upload-error">Attach your All Purpose Audit file first — or choose "I'll do this later" to continue without it.</p>
 
             <div class="two-btns">
-              <button class="btn-ghost" id="skip-upload" type="button">I'll do this later — continue</button>
+              <button class="btn-ghost" id="skip-upload" type="button" style="width:auto;white-space:nowrap">I'll do this later</button>
               <button class="subscribe" id="upload-btn" type="button">
                 Upload &amp; continue
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M14 6l6 6-6 6"/></svg>
@@ -1210,13 +1212,26 @@
         <aside>
           <section class="card roll">
             <div class="side-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#EEF2FF"/><path d="M12 8v5" stroke="#4F46E5" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="16.2" r="1.2" fill="#4F46E5"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
               Why this file matters
             </div>
             <div class="side-list" style="margin-top:24px">
               <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Seeds your dashboards with real book data</div>
               <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Enables accurate staff rankings from day one</div>
               <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Encrypted in transit and at rest</div>
+            </div>
+          </section>
+
+          <section class="card roll">
+            <div class="side-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              How to locate the All Purpose Audit
+            </div>
+            <div class="side-list" style="margin-top:24px">
+              <div class="side-item">In your Allstate system, run the monthly <b>All Purpose Audit</b> report.</div>
+              <div class="side-item">Export / download it to this computer (XLSX or CSV).</div>
+              <div class="side-item">Attach it below — or later from <b>Dashboard → Quick Imports</b> (drag &amp; drop works too).</div>
+              <div class="side-item">You can import history going back up to a year, so a recent monthly export keeps your dashboards accurate.</div>
             </div>
           </section>
         </aside>
@@ -1378,7 +1393,7 @@
     toastEl.textContent = msg;
     toastEl.classList.add('show');
     clearTimeout(toastT);
-    toastT = setTimeout(function () { toastEl.classList.remove('show'); }, 2800);
+    toastT = setTimeout(function () { toastEl.classList.remove('show'); }, 3000);
   }
 
   function replayRoll(section) {
@@ -1481,10 +1496,8 @@
     var html = '';
     steps.forEach(function (s, i) {
       var cls = 'chip', badge = (i + 1), disabled = false;
-      var done = (s.route === 'step-1' && !!state.account) ||
-                 (s.route === 'step-2' && state.paymentDone) ||
-                 (s.route === 'step-3' && state.auditDone) ||
-                 (s.route === 'step-4' && false);
+      // steps before the current one are always ticked (grey circle, white tick)
+      var done = i < cur;
       if (done) { cls += ' done'; badge = '✓'; }
       else if (i === cur) cls += ' current';
       else disabled = !PROTOTYPE; // future chips: clickable only in prototype
@@ -1572,7 +1585,7 @@
 
     // bonus banner
     var bonus = $('bonus-banner');
-    bonus.classList.toggle('dim', !state.aiPlan);
+    // bonus banner stays fully active even with no AI plan selected
     $('bonus-then').textContent = state.aiPlan
       ? 'Then $' + PLANS[state.aiPlan].price + ' billed monthly' : '';
 
@@ -1729,6 +1742,13 @@
         if (good) wrap.classList.remove('invalid');
       }
     });
+    // leaving a wrongly filled (or emptied) field shows its inline error
+    $(id).addEventListener('blur', function () {
+      var v = $(id).value;
+      var good = id === 'af-email' ? /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim())
+        : id === 'af-password' ? v.length >= 8 : v.trim().length >= 2;
+      $(id).closest('.field').classList.toggle('invalid', !good);
+    });
   });
   $('af-terms').addEventListener('change', function () {
     updateCreateBtn();
@@ -1764,11 +1784,72 @@
     toast('Account created — verification email sent to ' + email + '. Keep going, we\u2019ll wait.');
     go('step-2');
   });
+  /* ============================ CUSTOM DROPDOWNS ============================ */
+  var dropdowns = [];
+  function closeDropdowns(except) {
+    dropdowns.forEach(function (d) { if (d.host !== except) d.host.classList.remove('open'); });
+  }
+  function makeDropdown(host, opts, selected, onChange) {
+    var value = selected;
+    host.classList.add('dd');
+    host.innerHTML =
+      '<button type="button" class="dd-btn"><span class="dd-val"></span>' +
+      '<svg class="dd-chev" width="16" height="10" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l6 6 6-6"/></svg></button>' +
+      '<ul class="dd-list" role="listbox"></ul>';
+    var btn = host.querySelector('.dd-btn');
+    var list = host.querySelector('.dd-list');
+    var val = host.querySelector('.dd-val');
+    function labelFor(v) {
+      for (var j = 0; j < opts.length; j++) if (opts[j].v === v) return opts[j].l;
+      return '';
+    }
+    function draw() {
+      val.textContent = labelFor(value);
+      var html = '';
+      for (var j = 0; j < opts.length; j++) {
+        html += '<li class="dd-item' + (opts[j].v === value ? ' sel' : '') + '" data-v="' + opts[j].v + '" role="option">' + opts[j].l + '</li>';
+      }
+      list.innerHTML = html;
+    }
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var willOpen = !host.classList.contains('open');
+      closeDropdowns(host);
+      host.classList.toggle('open', willOpen);
+    });
+    btn.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') host.classList.remove('open');
+    });
+    list.addEventListener('click', function (e) {
+      var li = e.target.closest('.dd-item');
+      if (!li) return;
+      e.stopPropagation();
+      value = li.getAttribute('data-v');
+      host.classList.remove('open');
+      draw();
+      onChange(value);
+    });
+    document.addEventListener('click', function () { host.classList.remove('open'); });
+    draw();
+    var api = { host: host, set: function (v) { value = v; draw(); }, get: function () { return value; } };
+    dropdowns.push(api);
+    return api;
+  }
 
-  $('af-carrier').addEventListener('change', function () {
-    state.carrier = this.value; // account default; live-updates stepper
-    render();
-  });
+  var carrierDD = makeDropdown($('carrier-dd'),
+    [{ v: 'allstate', l: 'Allstate' }, { v: 'other', l: 'Other' }],
+    'allstate', function (v) {
+      $('af-carrier').value = v;
+      state.carrier = v;
+      render();
+    });
+
+  (function () {
+    function suffix(n) { var t = n % 10, h = n % 100; if (h === 11 || h === 12 || h === 13) return 'th'; if (t === 1) return 'st'; if (t === 2) return 'nd'; if (t === 3) return 'rd'; return 'th'; }
+    var dayOpts = [];
+    for (var d = 1; d <= 31; d++) dayOpts.push({ v: String(d), l: d + suffix(d) });
+    makeDropdown($('day-dd'), dayOpts, '13', function (v) { state.billingDay = +v; });
+  })();
 
   /* ============================ STEP 2 — PLAN & AI ============================ */
   document.querySelectorAll('.bill-tiles .plan-tile').forEach(function (tile) {
@@ -1805,16 +1886,6 @@
     $('feat-label').textContent = featState.expanded ? 'Hide features' : 'Show all features';
   });
 
-  // billing day select: 1st–31st, default 13th
-  (function () {
-    var sel = $('day-select');
-    function suffix(n) { var t = n % 10, h = n % 100; if (h === 11 || h === 12 || h === 13) return 'th'; if (t === 1) return 'st'; if (t === 2) return 'nd'; if (t === 3) return 'rd'; return 'th'; }
-    var opts = '';
-    for (var d = 1; d <= 31; d++) opts += '<option value="' + d + '"' + (d === 13 ? ' selected' : '') + '>' + d + suffix(d) + '</option>';
-    sel.innerHTML = opts;
-    sel.addEventListener('change', function () { state.billingDay = +sel.value; });
-  })();
-
   $('cb-base').addEventListener('change', function () { state.consents.base = this.checked; render(); });
   $('cb-ai').addEventListener('change', function () { state.consents.ai = this.checked; render(); });
 
@@ -1837,34 +1908,22 @@
 
   $('pay-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    var num = $('pf-number-in').value.replace(/\s/g, '');
-    var exp = $('pf-exp-in').value;
-    var cvc = $('pf-cvc-in').value;
-    var nm = $('pf-name-in').value.trim();
-
-    var expOk = false;
-    var m = exp.match(/^(\d{2})\s*\/\s*(\d{2})$/);
-    if (m) {
-      var mm = +m[1], yy = 2000 + +m[2];
-      var now = new Date();
-      expOk = mm >= 1 && mm <= 12 && (yy > now.getFullYear() || (yy === now.getFullYear() && mm >= now.getMonth() + 1));
-    }
-    var numOk = num.length >= 15 && num.length <= 16;
-    var ok = true;
-    setInvalid('pf-number', !numOk); ok = ok && numOk;
-    setInvalid('pf-exp', !expOk); ok = ok && expOk;
-    setInvalid('pf-cvc', !/^\d{3,4}$/.test(cvc)); ok = ok && /^\d{3,4}$/.test(cvc);
-    setInvalid('pf-name', !nm); ok = ok && !!nm;
-    if (!ok) { $('pay-err').classList.remove('show'); return; }
-
-    var declined = state.payDecline || num === '4000000000000002';
-    var err = $('pay-err');
-    if (declined) {
+    // External Stripe page — no validation on our side. Only a deliberately
+    // armed decline (demo bar) shows the retry flow.
+    if (state.payDecline) {
+      var err = $('pay-err');
       err.innerHTML = '<b>Your card was declined.</b> No charge was made — try the card again, or use a different card below.';
       err.classList.add('show');
       return;
     }
-    err.classList.remove('show');
+    $('pay-err').classList.remove('show');
+    state.paymentDone = true;
+    toast('Payment confirmed — thank you!');
+    go(state.carrier === 'allstate' ? 'step-3' : 'step-4');
+  });
+
+  $('paid-link').addEventListener('click', function (e) {
+    e.preventDefault();
     state.paymentDone = true;
     toast('Payment confirmed — thank you!');
     go(state.carrier === 'allstate' ? 'step-3' : 'step-4');
@@ -1940,12 +1999,6 @@
     toast('No problem — you can attach the audit file anytime from your dashboard.');
     go('step-4');
   });
-
-  $('acc-head').addEventListener('click', function () {
-    var open = $('acc').classList.toggle('open');
-    $('acc-head').setAttribute('aria-expanded', open);
-  });
-
   /* ============================ STEP 4 ============================ */
   $('dashboard-btn').addEventListener('click', function () {
     toast('Opening your dashboard… (demo)');
