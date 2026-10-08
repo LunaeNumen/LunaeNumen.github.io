@@ -1226,7 +1226,6 @@
             <div class="side-list" style="margin-top:24px">
               <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Automatically creates the account settings for the policies you sell</div>
               <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Provides accuracy of Policy changes and Terminations</div>
-              <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Encrypted in transit and at rest</div>
             </div>
           </section>
         </aside>
@@ -1942,6 +1941,7 @@
     var processing = state.paymentDone && !payProc.shown;
     if (processing) {
       strip.className = 'strip processing';
+      strip.style.display = '';
       strip.style.marginTop = '4px';
       dot.innerHTML = '<span class="spinner"></span>';
       txt.textContent = 'Payment processing\u2026';
@@ -1951,11 +1951,23 @@
         renderPayStrip();
         toast('Payment confirmed — thank you!');
       }, CLEAN ? 250 : 1600);
+    } else if (state.paymentDone && payProc.dismissed) {
+      strip.style.display = 'none';
     } else {
       strip.className = 'strip ok';
+      strip.style.display = '';
       strip.style.marginTop = '4px';
       dot.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
       txt.textContent = 'Payment confirmed — thank you!';
+      // like the email-verified strip, it disappears after 3 seconds
+      if (!payProc.dismissTimer && !CLEAN) {
+        payProc.dismissTimer = setTimeout(function () {
+          payProc.dismissed = true;
+          strip.style.transition = 'opacity .4s ease';
+          strip.style.opacity = '0';
+          setTimeout(function () { strip.style.display = 'none'; strip.style.opacity = ''; strip.style.transition = ''; }, 420);
+        }, 3000);
+      }
     }
   }
 
