@@ -140,6 +140,20 @@
   .plan-tokens{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--ink)}
   .tok-dot{width:6px;height:6px;background:var(--accent);border-radius:2px;flex:none}
   .info{color:var(--muted);display:inline-flex;cursor:help}
+  /* styled tooltip (setup fee explanation) */
+  .tip{position:relative;color:var(--muted);display:inline-flex;cursor:help}
+  .tip::after{
+    content:attr(data-tip);position:absolute;bottom:calc(100% + 9px);right:-6px;
+    width:252px;background:#1d2233;color:#fff;font-size:12px;font-weight:400;line-height:1.55;
+    padding:9px 12px;border-radius:8px;box-shadow:0 10px 24px rgba(20,24,60,.35);
+    opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:40;
+  }
+  .tip::before{
+    content:"";position:absolute;bottom:calc(100% + 3px);right:2px;
+    border:6px solid transparent;border-top-color:#1d2233;
+    opacity:0;transition:opacity .18s ease;z-index:40;
+  }
+  .tip:hover::after,.tip:focus-visible::after,.tip:hover::before,.tip:focus-visible::before{opacity:1}
 
   /* radios */
   .radio{
@@ -916,7 +930,7 @@
                 <div class="plan-sub">Month-to-month — cancel anytime</div>
                 <div class="plan-divider"></div>
                 <div><span class="fee-note">+$500.00 one-time setup fee
-                  <span class="info" title="Charged once with your first payment."><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg></span>
+                  <span class="tip" tabindex="0" data-tip="Uploading 6 months of data is costly in server usage. This fee covers the server costs up front we incur to help you get immediate answers."><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg></span>
                 </span></div>
               </div>
             </div>
