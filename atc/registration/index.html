@@ -1367,6 +1367,14 @@
     });
   }
   function firstName() { return state.account ? state.account.name.split(' ')[0] : '[Name]'; }
+  function dayLabel(n) {
+    var t = n % 10, h = n % 100;
+    if (h === 11 || h === 12 || h === 13) return n + 'th';
+    if (t === 1) return n + 'st';
+    if (t === 2) return n + 'nd';
+    if (t === 3) return n + 'rd';
+    return n + 'th';
+  }
 
   var toastEl = $('toast'), toastT;
   function toast(msg) {
@@ -1584,15 +1592,15 @@
     // consents
     var cbt = $('cb-base-text');
     if (state.billingPlan === 'annual') {
-      cbt.innerHTML = 'I understand and agree that Agency Tool Chest Yearly is a paid, recurring subscription of <b>$3,000.00/year</b> that will renew automatically every year until I cancel it in my Account Billing settings.';
+      cbt.innerHTML = '<b>Platform subscription:</b> I understand and agree that Agency Tool Chest Yearly is a paid, recurring subscription of <b>$3,000.00/year</b> that will renew automatically every year until I cancel it in my Account Billing settings.';
     } else {
-      cbt.innerHTML = 'I understand and agree that Agency Tool Chest Monthly is a paid, recurring subscription of <b>$249.00/month</b> that will renew automatically every month until I cancel it in my Account Billing settings, plus a one-time <b>$500.00 setup fee</b> charged today.';
+      cbt.innerHTML = '<b>Platform subscription:</b> I understand and agree that Agency Tool Chest Monthly is a paid, recurring subscription of <b>$249.00/month</b> that will renew automatically every month until I cancel it in my Account Billing settings, plus a one-time <b>$500.00 setup fee</b> charged today.';
     }
     var aiWrap = $('cb-ai-wrap');
     if (state.aiPlan) {
       var p = PLANS[state.aiPlan];
       aiWrap.style.display = '';
-      $('cb-ai-text').innerHTML = 'I understand that my free trial ends after 30 days or 2M tokens, whichever comes first, and that my <b>' + p.name + ' plan ($' + p.price + '/mo)</b> starts and billing begins at that moment — even if that\u2019s before day 30. I can cancel anytime before then and won\u2019t be charged.';
+      $('cb-ai-text').innerHTML = '<b>AI subscription:</b> I understand that my free trial runs for 30 days from today or until 2M tokens are used, whichever comes first, and that my <b>' + p.name + ' plan ($' + p.price + '/mo)</b> starts automatically on the day the trial ends. My first charge is prorated — it covers only the days between the end of the trial and my chosen billing day (the <b>' + dayLabel(state.billingDay) + '</b>), and every later charge of $' + p.price + ' lands on that day monthly. I can cancel anytime before the trial ends and I won\u2019t be charged at all.';
     } else {
       aiWrap.style.display = 'none';
       state.consents.ai = false;
