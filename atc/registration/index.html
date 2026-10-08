@@ -583,6 +583,12 @@
   .dz-file .rm{border:0;background:none;color:var(--muted);cursor:pointer;font:inherit;font-size:15px;line-height:1;padding:2px 4px}
   .dz-file .rm:hover{color:#ED0378}
   .upload-error{display:none;margin-top:12px;font-size:13px;font-weight:600;color:#ED0378}
+  .warn-frame{
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    margin-top:18px;padding:11px 14px;border-radius:8px;
+    background:#FEF2F8;border:1px solid #F9B9D8;
+    font-size:13.5px;font-weight:700;color:#ED0378;
+  }
   .upload-error.show{display:block}
   .two-btns{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px}
   .two-btns .btn-ghost{width:209px}
@@ -615,6 +621,9 @@
   .setup-card .side-item{gap:8px;font-size:14px;line-height:150%;color:#535D73}
   .setup-card .side-item svg{margin-top:3px;width:16px;height:16px}
   .setup-card .btn{margin-top:0}
+  .onboard-copy{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+  .onboard-copy p{font-size:14px;line-height:160%;color:#535D73;max-width:44ch}
+  .onboard-copy b{color:var(--ink)}
   .dash-row{display:flex;justify-content:center}
   #dashboard-btn{width:300px;font-size:15px;font-weight:600}
   .support-line{margin-top:0;text-align:center;font-size:13px;line-height:150%;color:#6B7280}
@@ -1159,23 +1168,28 @@
                 <div class="wiz-num">1</div>
                 <div>
                   <div class="wiz-title">Find the file in your Allstate system</div>
-                  <div class="wiz-sub">Open the instructions on the right if you're not sure where it lives.</div>
+                  <div class="wiz-sub">Go to your All Purpose Audit in Dash.</div>
                 </div>
               </div>
               <div class="wiz-item">
                 <div class="wiz-num">2</div>
                 <div>
                   <div class="wiz-title">Export / download the file</div>
-                  <div class="wiz-sub">to this computer (XLSX or CSV).</div>
+                  <div class="wiz-sub">Click on the Extended Version on the right side and export.</div>
                 </div>
               </div>
               <div class="wiz-item">
                 <div class="wiz-num">3</div>
                 <div>
                   <div class="wiz-title">Attach it below</div>
-                  <div class="wiz-sub">— we'll process it and your dashboards light up within minutes.</div>
+                  <div class="wiz-sub">Attach the file here and click Upload &amp; Continue.</div>
                 </div>
               </div>
+            </div>
+
+            <div class="warn-frame">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+              Do not Edit or Alter the file
             </div>
 
             <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Attach your All Purpose Audit file">
@@ -1210,23 +1224,10 @@
               Why this file matters
             </div>
             <div class="side-list" style="margin-top:24px">
-              <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Seeds your dashboards with real book data</div>
-              <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Enables accurate staff rankings from day one</div>
+              <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Automatically creates the account settings for the policies you sell</div>
+              <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Provides accuracy of Policy changes and Terminations</div>
               <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Encrypted in transit and at rest</div>
             </div>
-          </section>
-
-          <section class="card roll">
-            <div class="side-title">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              How to locate the All Purpose Audit
-            </div>
-            <ol class="howto-list">
-              <li><span class="howto-n">1.</span>In your Allstate system, run the monthly <b>All Purpose Audit</b> report.</li>
-              <li><span class="howto-n">2.</span>Export / download it to this computer (XLSX or CSV).</li>
-              <li><span class="howto-n">3.</span>Attach it below — or later from <b>Dashboard → Quick Imports</b> (drag &amp; drop works too).</li>
-              <li><span class="howto-n">4.</span>You can import history going back up to a year, so a recent export keeps your dashboards accurate.</li>
-            </ol>
           </section>
         </aside>
       </div>
@@ -1261,11 +1262,11 @@
 
           <div class="setup-cards">
             <section class="card setup-card">
-              <div class="card-title"><span class="num-badge">1</span>Install the extension</div>
+              <div class="card-title"><span class="num-badge">1</span>Install &amp; log in</div>
               <div class="side-list">
                 <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Click below — the Chrome Web Store opens in a new tab</div>
-                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Click <b>Add to Chrome</b> → <b>Add extension</b></div>
-                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Pin it to your toolbar for easy access.</div>
+                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Click <b>Add to Chrome</b> → <b>Add extension</b>, then pin it to your toolbar</div>
+                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Click the ATC toolbar icon and sign in with <b id="done-email">your email</b> and your new password</div>
               </div>
               <a class="subscribe btn" href="https://chrome.google.com/webstore/detail/coaching-tool/anoincpioepaahlggoeiffopdcjjhfjo" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;width:253px;padding:8px 16px;gap:8px">
                 <svg width="20" height="20" viewBox="433 719 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1279,13 +1280,15 @@
             </section>
 
             <section class="card setup-card">
-              <div class="card-title"><span class="num-badge">2</span>Log in to the extension</div>
-              <div class="side-list">
-                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Click the ATC toolbar icon in Chrome</div>
-                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Sign in with <b id="done-email">your email</b> and your new password</div>
-                <div class="side-item"><svg viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Repeat on each invited staff member's computer</div>
+              <div class="card-title"><span class="num-badge">2</span>Onboarding</div>
+              <div class="onboard-copy">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="24" height="24" rx="7" fill="#EEF2FF"/>
+                  <rect x="4" y="6" width="16" height="12" rx="2" stroke="#4F46E5" stroke-width="1.7"/>
+                  <path d="m4.8 7.4 7.2 5.4 7.2-5.4" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <p>Your dedicated support rep will be emailing you shortly to schedule your <b>Account Setup</b> and <b>Staff Training</b>.</p>
               </div>
-              <a class="btn-ghost btn" href="https://agencytoolchest.com/quick-guide" target="_blank" rel="noopener" style="width:auto;padding:8px 16px;white-space:nowrap;text-decoration:none">View quick guide</a>
             </section>
           </div>
 
