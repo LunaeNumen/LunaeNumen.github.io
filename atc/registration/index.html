@@ -295,7 +295,7 @@
   .cols{display:grid;grid-template-columns:766px 406px;gap:26px;align-items:start}
   /* SVG/PROMPT: the receipt column is sticky in the viewport at all times —
      stretch the aside to the full row height so sticky has room to travel */
-  .cols>aside{align-self:stretch}
+  .cols>aside{align-self:stretch;display:flex;flex-direction:column;gap:22px}
   .col-left{gap:26px}
 
   /* ---------- Stepper ---------- */
@@ -435,7 +435,7 @@
     transition:filter .15s ease,transform .15s ease;
   }
   .btn-ghost:hover{filter:brightness(.96)}
-  .stage .subscribe{background:linear-gradient(257.56deg,#046BF2 3.39%,#5E35F2 84.49%);border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.05);font-size:14px;font-weight:500}
+  .stage .subscribe{background:linear-gradient(257.56deg,#046BF2 3.39%,#5E35F2 84.49%);border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.05);height:44px;padding:8px 16px;font-size:14px;font-weight:500}
   .stage .subscribe:disabled{background:linear-gradient(90deg,#b7bcf2,#c3cff7)}
   #subscribe-btn svg{display:none}
   #subscribe-btn:not(:disabled) svg{display:inline-block}
@@ -446,7 +446,11 @@
   .side-title{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:700;color:var(--ink)}
   .side-title svg{flex:none}
   .side-list{margin-top:20px;display:flex;flex-direction:column;gap:14px}
-  .side-item{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--body);line-height:1.45}
+  .side-item{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:#535D73;line-height:1.5}
+  .howto-list{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:12px}
+  .howto-list li{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;color:#535D73;line-height:1.5}
+  .howto-list li b{color:var(--ink)}
+  .howto-n{flex:none;font-size:13.5px;font-weight:700;color:#4F46E5}
   .side-item svg{flex:none;margin-top:2px}
   
   blockquote{margin-top:16px;font-size:15.5px;line-height:1.6;color:var(--ink);font-style:italic}
@@ -858,38 +862,16 @@
           <div class="col-left">
             <section class="card roll">
               <div class="side-title">
-                <svg width="18" height="12" viewBox="1181 281.5 16.5 9.5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1196.5 287.25V282.75H1192M1196.5 282.75L1190.13 289.124L1186.37 285.375L1181.5 290.249" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                What you get
-              </div>
-              <div class="side-list">
-                <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#04AF72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Quotes &amp; sales tracking with the Chrome toolbar</div>
-                <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#04AF72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Coaching and quality dashboards</div>
-                <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#04AF72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Gamified goals &amp; celebratory alerts</div>
-                <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#04AF72" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Lead source &amp; zip-code reporting</div>
-              </div>
-            </section>
-
-            <section class="card roll quote-card">
-              <div class="side-title">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                Agencies love it
-              </div>
-              <blockquote>"With the dashboard data and rankings I was able to spot problems within my agency and fixed them right away — the revenue went up insanely!"</blockquote>
-              <p class="attr">— Marcia Hill, Agency Manager</p>
-            </section>
-
-            <section class="card roll">
-              <div class="side-title">
                 <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 Questions?
               </div>
               <div class="contact">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.9Z"/></svg>
-                <a href="tel:+18179735485">1-817-973-5485</a>
+                <a href="tel:+18177335324">817-733-5324</a>
               </div>
               <div class="contact">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></svg>
-                <a href="mailto:support@agencytoolchest.com">support@agencytoolchest.com</a>
+                <a href="mailto:Todd@InsureTechVentures.com">Todd@InsureTechVentures.com</a>
               </div>
             </section>
           </div>
@@ -970,9 +952,7 @@
           <section class="card roll">
             <div class="eyebrow">Add AI to Your Agency Tool Chest</div>
             <h2 class="ai-title">Choose your AI plan</h2>
-            <p class="ai-desc">Unlock a private, hyper-personalized AI Agent trained exclusively on your agency's
-            data to automate your workflow and scale your billable output. Explore AI across your data to uncover
-            insights, connections, and opportunities. Choose the AI plan that best fits your organization's usage.</p>
+            <p class="ai-desc">Supercharge your agency data with AI. Ask any question, calculate what matters, uncover hidden opportunities, and get to the answer without digging through dashboards.</p>
 
             <div class="plans" role="radiogroup" aria-label="AI plan">
               <div class="plan-tile" data-plan="standard" tabindex="0" role="radio" aria-checked="false">
@@ -1227,12 +1207,12 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
               How to locate the All Purpose Audit
             </div>
-            <div class="side-list" style="margin-top:24px">
-              <div class="side-item">In your Allstate system, run the monthly <b>All Purpose Audit</b> report.</div>
-              <div class="side-item">Export / download it to this computer (XLSX or CSV).</div>
-              <div class="side-item">Attach it below — or later from <b>Dashboard → Quick Imports</b> (drag &amp; drop works too).</div>
-              <div class="side-item">You can import history going back up to a year, so a recent monthly export keeps your dashboards accurate.</div>
-            </div>
+            <ol class="howto-list">
+              <li><span class="howto-n">1.</span>In your Allstate system, run the monthly <b>All Purpose Audit</b> report.</li>
+              <li><span class="howto-n">2.</span>Export / download it to this computer (XLSX or CSV).</li>
+              <li><span class="howto-n">3.</span>Attach it below — or later from <b>Dashboard → Quick Imports</b> (drag &amp; drop works too).</li>
+              <li><span class="howto-n">4.</span>You can import history going back up to a year, so a recent export keeps your dashboards accurate.</li>
+            </ol>
           </section>
         </aside>
       </div>
@@ -1302,7 +1282,7 @@
             </button>
           </div>
 
-          <p class="support-line">Need anything? <b>1-817-973-5485</b> · <a href="mailto:support@agencytoolchest.com">support@agencytoolchest.com</a></p>
+          <p class="support-line">Need anything? <b>817-733-5324</b> · <a href="mailto:Todd@InsureTechVentures.com">Todd@InsureTechVentures.com</a></p>
         </section>
       </div>
     </section>
@@ -1543,7 +1523,7 @@
     if (state.emailVerified && !state.stripDismissed) {
       strip.className = 'strip ok';
       strip.style.display = '';
-      strip.innerHTML = '<span class="dot">' + checkSvg + '</span>Email verified — thanks! Payment is unlocked.';
+      strip.innerHTML = '<span class="dot">' + checkSvg + '</span>Email verified — thanks!';
       if (!state.stripTimer && !CLEAN) {
         state.stripTimer = setTimeout(function () {
           state.stripDismissed = true;
