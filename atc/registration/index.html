@@ -87,8 +87,9 @@
   .sub-price .per{display:block;color:var(--muted);font-size:14px;margin-top:2px}
 
   /* features */
-  /* features */
-  .features{position:relative;margin-top:22px;overflow:hidden;max-height:92px;transition:max-height .35s ease}
+  .features-divider{height:1px;background:#E2E6F0;margin:30px 0 20px}
+  .features-head{margin:0;color:#111827;font-size:18px;font-weight:500;line-height:1.25}
+  .features{position:relative;margin-top:14px;overflow:hidden;max-height:92px;transition:max-height .35s ease}
   .features:not(.expanded){
     -webkit-mask-image:linear-gradient(180deg,#000 42%,transparent 96%);
             mask-image:linear-gradient(180deg,#000 42%,transparent 96%);
@@ -305,7 +306,12 @@
   main{flex:1}
   .stage{display:none}
   .stage.active{display:block}
-  .stage .card{border-radius:16px;padding:32px;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+  .stage .card{border-radius:16px;padding:28px 32px 32px;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+  /* one card-title style everywhere (billing, AI, billing date, sidebars, step 4) */
+  .bill-title,.stage .ai-title,.side-title,.setup-card .card-title{
+    font-size:18px;font-weight:700;line-height:24px;color:#111827;letter-spacing:0}
+  .eyebrow+.bill-title,.eyebrow+.ai-title{margin-top:16px}
+  .side-title svg,.setup-card .card-title svg{width:18px;height:18px;stroke:#4F46E5}
   .cols{display:grid;grid-template-columns:766px 406px;gap:26px;align-items:start}
   /* SVG/PROMPT: the receipt column is sticky in the viewport at all times —
      stretch the aside to the full row height so sticky has room to travel */
@@ -341,10 +347,14 @@
   .stepper .sep{flex:none;display:inline-flex;color:#ADB2C5}
   .stepper .sep.hidden{display:none}
 
-  /* ---------- Step headings ---------- */
-  .step-head{margin-top:32px}
-  .step-head h1{font-size:32px;font-weight:700;letter-spacing:-.01em;color:#413BA2}
-  .step-head .lead{margin-top:6px;font-size:15.5px;line-height:1.5;color:var(--body);max-width:none}
+  /* ---------- Step headings — ONE rhythm on every step ----------
+     stepper → 40px → H1 (32/40) → 8px → lead (15.5/1.5) → 20px → strip → 24px → cards
+     (no strip: lead → 24px → cards). Step 4 keeps its in-card head with the same type. */
+  .step-head{margin-top:40px}
+  .step-head h1,.done-head h1{font-size:32px;font-weight:700;line-height:40px;letter-spacing:-.01em;color:#413BA2}
+  .step-head .lead,.done-head .lead{margin-top:8px;font-size:15.5px;line-height:1.5;color:var(--body);max-width:none}
+  .stage>.strip{margin-top:20px}
+  .stage>.cols{margin-top:24px}
   .backlink{
     display:inline-flex;align-items:center;gap:6px;margin-top:0;
     color:var(--accent);font-size:14px;font-weight:600;text-decoration:none;
@@ -361,6 +371,9 @@
     transition:background .3s ease,border-color .3s ease,color .3s ease;
   }
   .strip .strip-note{font-weight:400;opacity:.85}
+  .strip .dot{transition:background .3s ease}
+  /* step 4 has no page heading: bar sits 40px under the stepper, card 24px under the bar */
+  .stage>.strip.on-done{margin-top:40px;margin-bottom:-16px}
   .strip .strip-actions{margin-left:auto;display:flex;gap:14px;align-items:center}
   .strip a{color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
   .strip.ok{background:var(--ok-bg);border:1px solid var(--ok-line);color:var(--ok-text)}
@@ -457,7 +470,7 @@
 
   /* ---------- Sidebar cards (Step 1 / 3) ---------- */
   aside .col-left{gap:22px}
-  .side-title{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:700;color:var(--ink)}
+  .side-title{display:flex;align-items:center;gap:10px}
   .side-title svg{flex:none}
   .side-list{margin-top:20px;display:flex;flex-direction:column;gap:14px}
   .side-item{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:#535D73;line-height:1.5}
@@ -475,16 +488,15 @@
   .contact a:hover{color:var(--accent)}
 
   /* ---------- Billing plan tiles (Step 2) ---------- */
-  .bill-title{font-size:18px;font-weight:700;margin-top:24px;color:#111827}
+  .bill-title{margin-top:16px}
   .bill-tiles{display:flex;gap:12px;align-items:flex-end;margin-top:21px}
   /* step-2 fine-tuning measured from SVG 2 */
-  .stage .features{margin-top:25px}
+  .stage .features{margin-top:14px}
   .stage .features-grid{column-gap:30px}
   .stage .feat{gap:9px;padding:5px 0;line-height:1.3;font-size:14px}
   .stage .feat svg{width:16px;height:16px;margin-top:4px}
   .stage .feat-toggle{margin-top:24px}
-  .stage .ai-title{font-size:18px;font-weight:700;color:#111827}
-  .stage .ai-desc{max-width:none;font-size:14px;line-height:18px;color:#7F7F89}
+    .stage .ai-desc{max-width:none;font-size:14px;line-height:18px;color:#7F7F89}
   .stage .plans{margin-top:14px;gap:12px;align-items:end}
   .stage .plan-tile{padding:16px 18px;gap:12px;border-radius:12px}
   .stage .plan-tile.has-pill{padding-top:46px}
@@ -501,9 +513,10 @@
   .stage .plan-sub{margin-top:2px}
   .stage .plan-divider{margin:12px 0 10px}
   .stage .plan-tile.has-pill{padding-top:49px}
-  `.stage .receipt{padding-top:42px}
-  .receipt .consents{margin-top:26px}
-  .receipt .subscribe{margin-top:32px}
+  .stage .receipt{padding:28px 28px 24px}
+  /* breathing room: Due today → agreements → button */
+  .receipt .consents{margin-top:32px;gap:20px}
+  .receipt .subscribe{margin-top:40px}
   /* SVG/Figma: "Best Value" is a full-width accent band fused with the tile's
      accent border — it covers the top border so there is no gap */
   .stage .plan-bar{
@@ -516,12 +529,19 @@
   .bill-tiles .plan-tile.has-pill{min-height:217px}
   .plan-tile[data-bill="annual"]{border-color:var(--accent);box-shadow:0 10px 28px rgba(79,70,229,.16)}
   .plan-price .amt.big{font-size:42px;letter-spacing:-.025em}
-  .save-badge{
-    display:inline-flex;align-items:center;gap:6px;
-    background:#EEF2FF;border-radius:999px;padding:5px 12px;
-    color:#413BA2;font-size:12.5px;font-weight:700;
+  /* "Save $488" and "+$500 setup fee" are one pill component (same box = rows align),
+     tinted by meaning: indigo = saving, amber = extra cost */
+  .save-badge,.fee-note{
+    display:inline-flex;align-items:center;gap:6px;height:28px;
+    border-radius:999px;padding:0 12px;border:1px solid transparent;
+    font-size:12.5px;font-weight:700;line-height:1;white-space:nowrap;
   }
-  .fee-note{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--body)}
+  .save-badge{background:#EEF2FF;border-color:#E0E7FF;color:#413BA2}
+  .fee-note{background:#FFF7ED;border-color:#FED7AA;color:#9A3412}
+  .fee-note .fee-amt{font-weight:800}
+  .fee-note .tip{color:#C2410C}
+  /* the pill is nowrap/bold/line-height:1 — keep the tooltip exactly as before (wrapping, regular weight) */
+  .fee-note .tip::after{white-space:normal;font-weight:400;line-height:1.55;text-align:left;letter-spacing:0}
   .bonus.dim{opacity:.45;filter:saturate(.35)}
   .bonus{transition:opacity .25s ease,filter .25s ease;flex-direction:column;gap:16px;padding:24px;border-radius:12px}
     .bonus-mark{flex:none;display:inline-flex}
@@ -535,12 +555,16 @@
   .bonus-right .then{margin-top:0;font-size:12px;font-style:italic;line-height:22px;color:#413BA2;text-align:right;white-space:nowrap}
           
   /* ---------- Billing date card (Step 2) ---------- */
+  #billdate-card .bill-title{margin-top:0}
+  /* no eyebrow here: lift the title so its cap line sits where the eyebrows sit in the cards above */
+  #billdate-card{padding-top:25px}
+  .stage .card>:first-child{margin-top:0}
   .billdate-sentence{margin-top:14px;font-size:15px;color:var(--ink);line-height:1.6}
   .billdate-note{display:flex;gap:9px;margin-top:4px;font-size:13px;color:var(--muted);line-height:1.55}
   .billdate-note svg{flex:none;margin-top:1px;color:var(--accent)}
 
   /* ---------- Wizard (Step 3) ---------- */
-  .wiz{display:flex;flex-direction:column;gap:20px;margin-top:24px}
+  .wiz{display:flex;flex-direction:column;gap:20px;margin-top:4px}
   .wiz-item{display:flex;gap:16px;align-items:flex-start}
   .wiz-num{
     flex:none;width:28px;height:28px;border-radius:50%;
@@ -600,9 +624,7 @@
   .done-card{display:flex;flex-direction:column;align-items:stretch;gap:24px}
   .done-head{display:flex;align-items:center;gap:20px}
   .done-head .checkorb{flex:none}
-  .done-head h1{font-size:32px;font-weight:700;line-height:40px;color:#413BA2;letter-spacing:0}
-  .done-head .lead{margin-top:8px;font-size:15px;line-height:150%;color:#535D73}
-  .done-list{display:flex;flex-direction:column;gap:12px;padding-left:84px}
+      .done-list{display:flex;flex-direction:column;gap:12px;padding-left:84px}
   .done-item{display:flex;align-items:flex-start;gap:8px;font-size:14px;line-height:150%;color:#535D73}
   .done-item svg{flex:none;margin-top:3px}
   .warn-strip{
@@ -613,7 +635,7 @@
   .warn-strip svg{flex:none;margin-top:2px}
   .setup-cards{display:grid;grid-template-columns:1fr 1fr;gap:24px}
   .setup-card{padding:24px;gap:24px;display:flex;flex-direction:column;align-items:flex-start}
-  .setup-card .card-title{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;color:#413BA2}
+  .setup-card .card-title{display:flex;align-items:center;gap:10px}
   .num-badge{
     flex:none;width:28px;height:28px;border-radius:999px;
     background:#4F46E5;color:#fff;font-size:14px;font-weight:700;
@@ -711,8 +733,11 @@
   .stage.active{animation:stageIn .38s cubic-bezier(.22,.61,.36,1) both}
   @keyframes stageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   body.clean .stage.active{animation:none}
-  /* receipt lines already fade in (checkout fadeIn) */
-  .o-item{animation:fadeIn .3s ease}
+  /* receipt lines are morphed from JS (fold / count / settle) — no CSS pop-in */
+  .o-item{animation:none}
+  .o-price{font-variant-numeric:tabular-nums}
+  .due-amount{font-variant-numeric:tabular-nums}
+  .stage .plan-name{transition:color .25s ease}
   /* subtle strip swap */
   .strip .dot svg{transition:transform .2s ease}
   /* button press feedback */
@@ -820,14 +845,14 @@
 
     <!-- ================= STEP 1 — ACCOUNT ================= -->
     <section class="stage" id="view-step-1">
-      <div class="step-head" style="margin-top:40px">
+      <div class="step-head">
         <h1>Create your new account</h1>
         <p class="lead">Set up your agency in about two minutes — no sales call required. You'll pick your plan and pay securely on the next step.</p>
       </div>
 
-      <div class="cols" style="margin-top:22px">
+      <div class="cols">
         <div class="col-left">
-          <section class="card roll" style="padding-top:43px">
+          <section class="card roll">
             <form id="account-form" novalidate>
               <div class="hp" aria-hidden="true">
                 <label>Leave this field empty
@@ -921,10 +946,10 @@
 
       <div class="strip ok" id="verify-strip"></div>
 
-      <div class="cols" style="margin-top:26px">
+      <div class="cols">
         <div class="col-left">
           <!-- Billing card -->
-          <section class="card roll" style="padding-top:36px;padding-bottom:32px">
+          <section class="card roll">
             <div class="eyebrow">Your Agency Tool Chest</div>
             <h2 class="bill-title">Choose your ATC billing plan</h2>
 
@@ -948,12 +973,13 @@
                 <div class="plan-price"><span class="amt big">$249.00</span><span class="mo">/month</span></div>
                 <div class="plan-sub">Month-to-month — cancel anytime</div>
                 <div class="plan-divider"></div>
-                <div><span class="fee-note">+$500.00 one-time setup fee
+                <div><span class="fee-note"><span class="fee-amt">+$500.00</span> one-time setup fee
                   <span class="tip" tabindex="0" data-tip="Uploading 6 months of data is costly in server usage. This fee covers the server costs up front we incur to help you get immediate answers."><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg></span>
                 </span></div>
               </div>
             </div>
 
+            <div class="features-divider" aria-hidden="true"></div>
             <h3 class="features-head">Features:</h3>
             <div class="features" id="features">
               <div class="features-grid">
@@ -1161,17 +1187,17 @@
 
     <!-- ================= STEP 3 — AUDIT FILE ================= -->
     <section class="stage" id="view-step-3">
-      <div class="step-head" style="margin-top:46px">
+      <div class="step-head">
         <h1>Attach your All Purpose Audit file</h1>
         <p class="lead">Because you're an Allstate Agent, we built automations to create account settings for the policies you sell. Please upload your Extended Version All Purpose Audit.</p>
       </div>
 
-      <div class="strip ok" id="pay-strip" style="margin-top:4px">
+      <div class="strip ok" id="pay-strip">
         <span class="dot" id="pay-strip-dot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
         <span id="pay-strip-text">Payment confirmed — thank you!</span>
       </div>
 
-      <div class="cols" style="margin-top:15px">
+      <div class="cols">
         <div class="col-left">
           <section class="card roll">
             <div class="wiz">
@@ -1235,7 +1261,7 @@
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#413BA2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
                 Why this file matters
               </div>
-              <div class="side-list" style="margin-top:22px">
+              <div class="side-list">
                 <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Automatically creates the account settings for the policies you sell</div>
                 <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Provides accuracy of Policy changes and Terminations</div>
               </div>
@@ -1246,7 +1272,7 @@
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#413BA2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 How it works?
               </div>
-              <div class="side-list" style="margin-top:22px">
+              <div class="side-list">
                 <div class="side-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15C21 16.65 19.65 18 18 18H8L3 22V6C3 4.34 4.34 3 6 3H18C19.65 3 21 4.34 21 6V15Z"/><path d="M7 8H17"/><path d="M7 12H14"/></svg>You can continue the setup, while the file is uploaded in the background. We will take care of it, and notify you by email when the processing of the file is done.</div>
               </div>
             </section>
@@ -1257,7 +1283,7 @@
 
     <!-- ================= STEP 4 — SET UP & DONE ================= -->
     <section class="stage" id="view-step-4">
-      <div class="cols" style="grid-template-columns:1fr;margin-top:39px">
+      <div class="cols" style="grid-template-columns:1fr;margin-top:40px">
         <section class="card roll done-card">
           <div class="done-head">
             <svg class="checkorb" width="80" height="80" viewBox="408 214 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1478,73 +1504,128 @@
   // smooth exit for status strips: collapse height + margin + border with a fade
   var REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ANIM_OFF = function () { return REDUCED_MOTION || CLEAN || window.__animOff === true; };
-  // dissolve toggles: fade content out/in without sliding the layout around
-  function fadeToggle(el, show) {
+  /* ---------- Motion kit: one easing, one duration family, interruptible ----------
+     Everything goes through the Web Animations API so a rapid second click
+     cancels the in-flight animation and starts from where it visually is. */
+  var EASE = 'cubic-bezier(.2,.8,.2,1)';
+  var DUR = 340;
+
+  // grow/shrink a block's box (height, paddings, borders, the flex gap above it)
+  // so whatever sits below glides instead of jumping
+  function collapseToggle(el, show) {
     if (!el) return;
+    var target = el._anim ? !el._collapsing : el.style.display !== 'none';
+    if (show === target) return; // already there / already heading there
     if (ANIM_OFF()) { el.style.display = show ? '' : 'none'; return; }
-    if (show) {
-      el.style.display = '';
-      el.style.opacity = '0';
-      void el.offsetHeight;
-      el.style.transition = 'opacity .3s ease';
-      el.style.opacity = '1';
-      setTimeout(function () { el.style.transition = ''; el.style.opacity = ''; }, 350);
-    } else {
-      el.style.transition = 'opacity .25s ease';
-      el.style.opacity = '0';
-      setTimeout(function () {
-        el.style.display = 'none';
-        el.style.transition = ''; el.style.opacity = '';
-      }, 270);
+    var cs, from, gap;
+    if (el._anim) { // interrupted: start from the current visual state
+      cs = getComputedStyle(el);
+      from = { height: cs.height, paddingTop: cs.paddingTop, paddingBottom: cs.paddingBottom,
+               borderTopWidth: cs.borderTopWidth, borderBottomWidth: cs.borderBottomWidth,
+               marginTop: cs.marginTop, opacity: cs.opacity };
+      el._anim.cancel();
     }
+    el.style.display = '';
+    var parent = el.parentElement;
+    gap = parseFloat(getComputedStyle(parent).rowGap) || 0;
+    cs = getComputedStyle(el);
+    var full = { height: el.offsetHeight + 'px', paddingTop: cs.paddingTop, paddingBottom: cs.paddingBottom,
+                 borderTopWidth: cs.borderTopWidth, borderBottomWidth: cs.borderBottomWidth,
+                 marginTop: cs.marginTop, opacity: 1 };
+    var none = { height: '0px', paddingTop: '0px', paddingBottom: '0px',
+                 borderTopWidth: '0px', borderBottomWidth: '0px',
+                 marginTop: (el.previousElementSibling ? -gap : 0) + 'px', opacity: 0 };
+    el.style.overflow = 'hidden';
+    el._collapsing = !show;
+    var a = el.animate([from || (show ? none : full), show ? full : none],
+                       { duration: DUR, easing: EASE });
+    el._anim = a;
+    a.onfinish = function () {
+      el._anim = null; el._collapsing = false;
+      el.style.overflow = '';
+      if (!show) el.style.display = 'none';
+    };
+    a.oncancel = function () { el.style.overflow = ''; };
   }
-  // crossfade a container's content across a change (no height rolling)
-  function fadeSwap(el, mutate) {
-    if (!el || ANIM_OFF()) { mutate(); return; }
-    el.style.transition = 'opacity .22s ease';
-    el.style.opacity = '0';
-    setTimeout(function () {
-      mutate();
-      void el.offsetHeight;
-      el.style.transition = 'opacity .3s ease';
-      el.style.opacity = '1';
-      setTimeout(function () { el.style.transition = ''; el.style.opacity = ''; }, 340);
-    }, 240);
+
+  // swap an element's content; its box eases to the new height while the
+  // new text settles in (no blank frame, no flash)
+  function morphHTML(el, html) {
+    if (!el || el._morphHtml === html) return;
+    var first = el._morphHtml === undefined;
+    el._morphHtml = html;
+    if (first || ANIM_OFF() || el.offsetParent === null) { el.innerHTML = html; return; }
+    if (el._anim) el._anim.cancel();
+    var h0 = el.offsetHeight;
+    el.innerHTML = html;
+    var h1 = el.offsetHeight;
+    el.style.overflow = 'hidden';
+    var a = el.animate(
+      [{ height: h0 + 'px', opacity: .35, filter: 'blur(1.5px)' },
+       { height: h1 + 'px', opacity: 1, filter: 'blur(0)' }],
+      { duration: DUR, easing: EASE });
+    el._anim = a;
+    a.onfinish = a.oncancel = function () { el._anim = null; el.style.overflow = ''; };
   }
-  // fade the bonus "Then $99 billed monthly" line in/out on text change
-  function fadeText(el, text) {
-    if (!el) return;
-    if (ANIM_OFF()) { el.textContent = text; return; }
-    var changing = el.textContent !== text;
-    if (!changing) return;
-    el.style.transition = 'opacity .3s ease';
-    el.style.opacity = '0';
-    setTimeout(function () {
-      el.textContent = text;
-      void el.offsetHeight;
-      el.style.opacity = '1';
-      setTimeout(function () { el.style.transition = ''; el.style.opacity = ''; }, 350);
-    }, 300);
+
+  // prices: count from the old number to the new one, keeping the template ("$…/month")
+  function parseMoney(t) {
+    var m = /^(.*?\$)([\d,]+(?:\.\d+)?)(.*)$/.exec(t);
+    if (!m) return null;
+    var raw = m[2], dec = (raw.split('.')[1] || '').length;
+    return { pre: m[1], n: parseFloat(raw.replace(/,/g, '')), dec: dec, post: m[3] };
   }
-  function dismissStrip(el) {
+  function moneyStr(o, n) {
+    return o.pre + n.toFixed(o.dec).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + o.post;
+  }
+  function morphText(el, text) {
+    if (!el || el._target === text || (el._target === undefined && el.textContent === text)) return;
+    el._target = text;
+    cancelAnimationFrame(el._raf);
+    if (ANIM_OFF() || el.offsetParent === null) { el.textContent = text; return; }
+    var a = parseMoney(el.textContent), b = parseMoney(text);
+    if (a && b && a.n !== b.n && a.pre === b.pre && a.post === b.post) {
+      var t0 = performance.now(), dur = 420;
+      var tick = function (now) {
+        var k = Math.min(1, (now - t0) / dur);
+        var e = 1 - Math.pow(1 - k, 3); // ease-out cubic
+        el.textContent = k < 1 ? moneyStr(b, a.n + (b.n - a.n) * e) : text;
+        if (k < 1) el._raf = requestAnimationFrame(tick);
+      };
+      el._raf = requestAnimationFrame(tick);
+      return;
+    }
+    el.textContent = text;
+    el.animate([{ opacity: .2, transform: 'translateY(3px)' }, { opacity: 1, transform: 'none' }],
+               { duration: 260, easing: EASE });
+  }
+  // kept for the bonus "Then $99 billed monthly" line
+  function fadeText(el, text) { morphText(el, text); }
+  function dismissStrip(el, slow) {
     if (ANIM_OFF()) { el.style.display = 'none'; return; }
+    var T = slow ? 1.1 : .45; // seconds
     var h = el.offsetHeight;
     el.style.height = h + 'px';
     el.style.overflow = 'hidden';
     void el.offsetHeight; // reflow so the height transition picks up
-    el.style.transition = 'opacity .4s ease, height .45s cubic-bezier(.4,0,.2,1), margin-top .45s cubic-bezier(.4,0,.2,1), border-width .4s ease, padding .45s cubic-bezier(.4,0,.2,1)';
+    // fade first, then fold the space away
+    var fold = 'cubic-bezier(.4,0,.2,1) ' + (T * .35) + 's';
+    el.style.transition = 'opacity ' + (T * .6) + 's ease, height ' + (T * .65) + 's ' + fold +
+      ', margin-top ' + (T * .65) + 's ' + fold + ', margin-bottom ' + (T * .65) + 's ' + fold +
+      ', border-width ' + (T * .65) + 's ' + fold + ', padding ' + (T * .65) + 's ' + fold;
     el.style.opacity = '0';
     el.style.height = '0px';
     el.style.marginTop = '0px';
+    el.style.marginBottom = '0px';
     el.style.borderWidth = '0px';
     el.style.paddingTop = '0px';
     el.style.paddingBottom = '0px';
     setTimeout(function () {
       el.style.display = 'none';
       el.style.transition = ''; el.style.opacity = ''; el.style.height = '';
-      el.style.marginTop = ''; el.style.overflow = ''; el.style.borderWidth = '';
+      el.style.marginTop = ''; el.style.marginBottom = ''; el.style.overflow = ''; el.style.borderWidth = '';
       el.style.paddingTop = ''; el.style.paddingBottom = '';
-    }, 500);
+    }, T * 1000 + 60);
   }
 
   function go(route, replace) {
@@ -1616,8 +1697,9 @@
 
   function renderStepper() {
     var steps = STEPS.filter(function (s) { return !s.audit || state.carrier === 'allstate'; });
-    var order = { 'step-1': 0, 'step-2': 1, 'pay': 1, 'step-3': 2, 'step-4': 3 };
-    var cur = order[state.route];
+    // position within the VISIBLE chips (the Audit chip is hidden for non-Allstate)
+    var curRoute = state.route === 'pay' ? 'step-2' : state.route;
+    var cur = steps.map(function (s) { return s.route; }).indexOf(curRoute);
     var html = '';
     steps.forEach(function (s, i) {
       var cls = 'chip', badge = (i + 1), disabled = false;
@@ -1641,19 +1723,81 @@
 
   /* ---------- Step 2 rendering ---------- */
   var lastAiPlan = state.aiPlan; // detects AI-plan changes to drive the smooth animations
+  // Receipt rows morph instead of re-rendering:
+  //  • a kept row only changes the field that differs (prices count, words settle in)
+  //  • a new row unfolds from 0 height, a removed row folds away — the
+  //    total, agreements and button below glide with it (no jump, no blink)
+  function renderOrderItems(items) {
+    var box = $('order-items');
+    var byKey = {};
+    Array.prototype.slice.call(box.children).forEach(function (el) {
+      var key = el.getAttribute('data-key');
+      if (key) byKey[key] = el;
+    });
+    var keep = {};
+    items.forEach(function (it) { keep[it.key] = true; });
+    // removals — fold away
+    Object.keys(byKey).forEach(function (k) {
+      if (keep[k] || byKey[k]._leaving) return;
+      var el = byKey[k];
+      if (ANIM_OFF()) { el.remove(); return; }
+      el._leaving = true;
+      foldRow(el, false, function () { if (el._leaving) el.remove(); });
+    });
+    // updates in place + insertions in the right position
+    items.forEach(function (it, idx) {
+      var el = byKey[it.key];
+      if (el) {
+        if (el._leaving) { el._leaving = false; foldRow(el, true); } // came back mid-exit
+        morphText(el.querySelector('.o-title'), it.t);
+        morphText(el.querySelector('.o-sub'), it.s);
+        var pr = el.querySelector('.o-price');
+        pr.classList.toggle('free', !!it.free);
+        morphText(pr, it.p);
+        return;
+      }
+      var div = document.createElement('div');
+      div.className = 'o-item';
+      div.setAttribute('data-key', it.key);
+      div.innerHTML = '<div><div class="o-title"></div><div class="o-sub"></div></div><div class="o-price' + (it.free ? ' free' : '') + '"></div>';
+      div.querySelector('.o-title').textContent = it.t;
+      div.querySelector('.o-sub').textContent = it.s;
+      div.querySelector('.o-price').textContent = it.p;
+      var ref = null;
+      for (var j = idx + 1; j < items.length && !ref; j++) ref = byKey[items[j].key] || null;
+      box.insertBefore(div, ref);
+      byKey[it.key] = div;
+      if (!ANIM_OFF() && box.offsetParent !== null && box.dataset.orderReady) foldRow(div, true);
+    });
+    box.dataset.orderReady = 'true';
+  }
+  function foldRow(el, open, done) {
+    var cs = getComputedStyle(el); // read the live (mid-animation) box first
+    var cur = { height: cs.height, paddingTop: cs.paddingTop, paddingBottom: cs.paddingBottom, opacity: cs.opacity, transform: 'none' };
+    if (el._anim) el._anim.cancel();
+    var full = { height: el.scrollHeight + 'px', paddingTop: '13px', paddingBottom: '13px', opacity: 1, transform: 'none' };
+    var zero = { height: '0px', paddingTop: '0px', paddingBottom: '0px', opacity: 0, transform: 'translateY(-4px)' };
+    el.style.overflow = 'hidden';
+    var a = el.animate([el._wasAnimating ? cur : (open ? zero : full), open ? full : zero],
+                       { duration: DUR, easing: EASE, fill: open ? 'none' : 'forwards' });
+    el._anim = a; el._wasAnimating = true;
+    a.onfinish = function () {
+      el._anim = null; el._wasAnimating = false; el.style.overflow = '';
+      if (done) done();
+    };
+  }
   function receiptItems() {
-    var b = BILL[state.billingPlan];
     var items = [];
     if (state.billingPlan === 'annual') {
-      items.push({ t: 'Agency Tool Chest', s: 'Renews yearly', p: '$3,000/year' });
+      items.push({ key: 'platform', t: 'Agency Tool Chest', s: 'Renews yearly', p: '$3,000/year' });
     } else {
-      items.push({ t: 'Agency Tool Chest', s: 'Renews monthly', p: '$249/month' });
-      items.push({ t: 'One-time setup fee', s: 'Billed once today', p: '$500.00' });
+      items.push({ key: 'platform', t: 'Agency Tool Chest', s: 'Renews monthly', p: '$249/month' });
+      items.push({ key: 'setup', t: 'One-time setup fee', s: 'Billed once today', p: '$500.00' });
     }
     if (state.aiPlan) {
       var p = PLANS[state.aiPlan];
-      items.push({ t: p.name + ' AI — first 30 days', s: 'Free trial for 30 days', p: '$0', free: true });
-      items.push({ t: p.name + ' AI', s: 'Renews monthly after 30 days', p: '$' + p.price + '/month' });
+      items.push({ key: 'ai-trial', t: p.name + ' AI — first 30 days', s: 'Free trial for 30 days', p: '$0', free: true });
+      items.push({ key: 'ai-renewal', t: p.name + ' AI', s: 'Renews monthly after 30 days', p: '$' + p.price + '/month' });
     }
     return items;
   }
@@ -1709,43 +1853,26 @@
 
     // bonus banner stays fully active even with no AI plan selected
     var aiChanged = state.aiPlan !== lastAiPlan;
-    if (aiChanged) {
-      fadeText($('bonus-then'), state.aiPlan ? 'Then $' + PLANS[state.aiPlan].price + ' billed monthly' : '');
-    } else {
-      $('bonus-then').textContent = state.aiPlan
-        ? 'Then $' + PLANS[state.aiPlan].price + ' billed monthly' : '';
-    }
+    morphText($('bonus-then'), state.aiPlan ? 'Then $' + PLANS[state.aiPlan].price + ' billed monthly' : '');
 
-    // billing date card (dissolves away smoothly when the AI plan is removed)
-    if (aiChanged) fadeToggle($('billdate-card'), !!state.aiPlan);
-    else $('billdate-card').style.display = state.aiPlan ? '' : 'none';
+    // billing date card folds away / unfolds with the AI plan (cards below glide)
+    collapseToggle($('billdate-card'), !!state.aiPlan);
 
-    // receipt (rows animate in/out as the plan changes)
-    var items = receiptItems();
-    var html = items.map(function (it) {
-      return '<div class="o-item"><div><div class="o-title">' + it.t + '</div><div class="o-sub">' + it.s +
-        '</div></div><div class="o-price' + (it.free ? ' free' : '') + '">' + it.p + '</div></div>';
-    }).join('');
-    if (aiChanged) fadeSwap($('order-items'), function () { $('order-items').innerHTML = html; });
-    else $('order-items').innerHTML = html;
-    $('due-amount').textContent = fmt(BILL[state.billingPlan].due);
+    // receipt: rows morph in place; only added/removed rows fold in/out
+    renderOrderItems(receiptItems());
+    morphText($('due-amount'), fmt(BILL[state.billingPlan].due));
 
     // consents
-    var cbt = $('cb-base-text');
-    if (state.billingPlan === 'annual') {
-      cbt.innerHTML = '<b>Platform subscription:</b> I understand and agree that Agency Tool Chest Yearly is a paid, recurring subscription of <b>$3,000.00/year</b> that will renew automatically every year until I cancel it in my Account Billing settings.';
-    } else {
-      cbt.innerHTML = '<b>Platform subscription:</b> I understand and agree that Agency Tool Chest Monthly is a paid, recurring subscription of <b>$249.00/month</b> that will renew automatically every month until I cancel it in my Account Billing settings, plus a one-time <b>$500.00 setup fee</b> charged today.';
-    }
+    morphHTML($('cb-base-text'), state.billingPlan === 'annual'
+      ? '<b>Platform subscription:</b> I understand and agree that Agency Tool Chest Yearly is a paid, recurring subscription of <b>$3,000.00/year</b> that will renew automatically every year until I cancel it in my Account Billing settings.'
+      : '<b>Platform subscription:</b> I understand and agree that Agency Tool Chest Monthly is a paid, recurring subscription of <b>$249.00/month</b> that will renew automatically every month until I cancel it in my Account Billing settings, plus a one-time <b>$500.00 setup fee</b> charged today.');
     var aiWrap = $('cb-ai-wrap');
     if (state.aiPlan) {
       var p = PLANS[state.aiPlan];
-      if (aiChanged) fadeToggle(aiWrap, true);
-      else aiWrap.style.display = '';
-      $('cb-ai-text').innerHTML = '<b>AI subscription:</b> I understand that my free trial runs for 30 days from today or until 2M tokens are used, whichever comes first, and that my <b>' + p.name + ' plan ($' + p.price + '/mo)</b> starts automatically on the day the trial ends. My first charge is prorated — it covers only the days between the end of the trial and my chosen billing day (the <b>' + dayLabel(state.billingDay) + '</b>), and every later charge of $' + p.price + ' lands on that day monthly. I can cancel anytime before the trial ends and I won\u2019t be charged at all.';
+      morphHTML($('cb-ai-text'), '<b>AI subscription:</b> I understand that my free trial runs for 30 days from today or until 2M tokens are used, whichever comes first, and that my <b>' + p.name + ' plan ($' + p.price + '/mo)</b> starts automatically on the day the trial ends. My first charge is prorated — it covers only the days between the end of the trial and my chosen billing day (the <b>' + dayLabel(state.billingDay) + '</b>), and every later charge of $' + p.price + ' lands on that day monthly. I can cancel anytime before the trial ends and I won\u2019t be charged at all.');
+      collapseToggle(aiWrap, true);
     } else {
-      if (aiChanged) fadeToggle(aiWrap, false);
-      else aiWrap.style.display = 'none';
+      collapseToggle(aiWrap, false);
       state.consents.ai = false;
       $('cb-ai').checked = false;
     }
@@ -2055,50 +2182,59 @@
     }
     $('pay-err').classList.remove('show');
     state.paymentDone = true;
-    toast('Payment confirmed — thank you!');
     go(state.carrier === 'allstate' ? 'step-3' : 'step-4');
   });
 
   $('paid-link').addEventListener('click', function (e) {
     e.preventDefault();
     state.paymentDone = true;
-    toast('Payment confirmed — thank you!');
     go(state.carrier === 'allstate' ? 'step-3' : 'step-4');
   });
 
   /* ============================ STEP 3 — AUDIT FILE ============================ */
-  // On arrival: "Payment processing" spinner strip → "Payment confirmed" (SVG shows confirmed)
-  var payProc = { shown: false, timer: null };
+  // Payment notification bar — shown on whichever step the user lands on after
+  // Stripe (step 3 for Allstate, step 4 otherwise):
+  //   "Payment processing…" (spinner) → "Payment confirmed — thank you!" (green)
+  //   → stays readable for several seconds → fades and folds away slowly.
+  // In-page bar only; no toast.
+  var PAY_PROCESSING_MS = 2200, PAY_VISIBLE_MS = 6000;
+  var payProc = { shown: false, timer: null, dismissTimer: null, dismissed: false };
   function renderPayStrip() {
     var strip = $('pay-strip'), dot = $('pay-strip-dot'), txt = $('pay-strip-text');
-    var processing = state.paymentDone && !payProc.shown;
-    if (processing) {
-      strip.className = 'strip processing';
-      strip.style.display = '';
-      strip.style.marginTop = '4px';
+    var onStep = state.route === 'step-3' || state.route === 'step-4';
+    // dock the bar into the current step (under the heading on 3, above the card on 4)
+    if (state.route === 'step-3') {
+      var head3 = $('view-step-3').querySelector('.step-head');
+      if (head3.nextElementSibling !== strip) head3.after(strip);
+      strip.classList.remove('on-done');
+    } else if (state.route === 'step-4') {
+      var cols4 = $('view-step-4').querySelector('.cols');
+      if (cols4.previousElementSibling !== strip) cols4.before(strip);
+      strip.classList.add('on-done');
+    }
+    if (!state.paymentDone || payProc.dismissed) { strip.style.display = 'none'; return; }
+    if (!onStep) return; // timers only run while the bar is actually on screen
+    strip.style.display = '';
+    if (!payProc.shown) {
+      strip.className = 'strip processing' + (state.route === 'step-4' ? ' on-done' : '');
       dot.innerHTML = '<span class="spinner"></span>';
       txt.textContent = 'Payment processing\u2026';
-      if (payProc.timer) clearTimeout(payProc.timer);
-      payProc.timer = setTimeout(function () {
-        payProc.shown = true;
-        renderPayStrip();
-        toast('Payment confirmed — thank you!');
-      }, CLEAN ? 250 : 1600);
-    } else if (state.paymentDone && payProc.dismissed) {
-      strip.style.display = 'none';
-    } else {
-      strip.className = 'strip ok';
-      strip.style.display = '';
-      strip.style.marginTop = '4px';
-      dot.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
-      txt.textContent = 'Payment confirmed — thank you!';
-      // like the email-verified strip, it disappears after 3 seconds
-      if (!payProc.dismissTimer && !CLEAN) {
-        payProc.dismissTimer = setTimeout(function () {
-          payProc.dismissed = true;
-          dismissStrip(strip);
-        }, 3000);
+      if (!payProc.timer) {
+        payProc.timer = setTimeout(function () {
+          payProc.shown = true;
+          renderPayStrip();
+        }, CLEAN ? 0 : PAY_PROCESSING_MS);
       }
+      return;
+    }
+    strip.className = 'strip ok' + (state.route === 'step-4' ? ' on-done' : '');
+    dot.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+    txt.textContent = 'Payment confirmed \u2014 thank you!';
+    if (!payProc.dismissTimer && !CLEAN) {
+      payProc.dismissTimer = setTimeout(function () {
+        payProc.dismissed = true;
+        dismissStrip(strip, true);
+      }, PAY_VISIBLE_MS);
     }
   }
 
