@@ -449,7 +449,7 @@
     transition:filter .15s ease,transform .15s ease;
   }
   .btn-ghost:hover{filter:brightness(.96)}
-  .stage .subscribe{background:linear-gradient(257.56deg,#046BF2 3.39%,#5E35F2 84.49%);border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.05);height:44px;padding:8px 16px;font-size:14px;font-weight:500}
+  .stage .subscribe{background:linear-gradient(257.56deg,#046BF2 3.39%,#5E35F2 84.49%);border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.05);height:44px;padding:8px 16px;margin-top:0;font-size:14px;font-weight:500}
   .stage .subscribe:disabled{background:linear-gradient(90deg,#b7bcf2,#c3cff7)}
   #subscribe-btn svg{display:none}
   #subscribe-btn:not(:disabled) svg{display:inline-block}
@@ -485,9 +485,9 @@
   .stage .feat-toggle{margin-top:24px}
   .stage .ai-title{font-size:18px;font-weight:700;color:#111827}
   .stage .ai-desc{max-width:none;font-size:14px;line-height:18px;color:#7F7F89}
-  .stage .plans{margin-top:14px;gap:12px}
+  .stage .plans{margin-top:14px;gap:12px;align-items:end}
   .stage .plan-tile{padding:16px 18px;gap:12px;border-radius:12px}
-  .stage .plan-tile.has-pill{padding-top:42px}
+  .stage .plan-tile.has-pill{padding-top:46px}
   .stage .plan-tile[aria-checked="true"] .plan-name{color:#4F46E5}
   .stage .plan-price{margin:0;gap:2px;align-items:flex-end}
   .stage .plan-price .amt{font-size:24px;line-height:30px;letter-spacing:-.01em}
@@ -1474,8 +1474,78 @@
 
   // smooth exit for status strips: collapse height + margin + border with a fade
   var REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ANIM_OFF = function () { return REDUCED_MOTION || CLEAN || window.__animOff === true; };
+  var EASE = 'cubic-bezier(.4,0,.2,1)';
+  function slideToggle(el, show, gap) {
+    if (!el) return;
+    if (ANIM_OFF()) { el.style.display = show ? '' : 'none'; el.style.cssText = el.style.cssText.replace(/height:[^;]*;?/g, ''); return; }
+    var pad = el.offsetHeight ? parseFloat(getComputedStyle(el).paddingTop) : 0;
+    if (show) {
+      el.style.display = '';
+      var h = el.offsetHeight;
+      el.style.overflow = 'hidden';
+      el.style.height = '0px';
+      el.style.paddingTop = '0px';
+      el.style.paddingBottom = '0px';
+      if (gap) el.style.marginTop = '-' + gap + 'px';
+      el.style.opacity = '0';
+      void el.offsetHeight;
+      el.style.transition = 'height .45s ' + EASE + ', padding .45s ' + EASE + ', margin-top .45s ' + EASE + ', opacity .35s ease .08s';
+      el.style.height = h + 'px';
+      el.style.paddingTop = pad + 'px';
+      el.style.paddingBottom = pad + 'px';
+      if (gap) el.style.marginTop = '0px';
+      el.style.opacity = '1';
+      setTimeout(function () { el.style.height = ''; el.style.overflow = ''; el.style.transition = ''; el.style.opacity = ''; el.style.paddingTop = ''; el.style.paddingBottom = ''; el.style.marginTop = ''; }, 500);
+    } else {
+      var h0 = el.offsetHeight;
+      el.style.overflow = 'hidden';
+      el.style.height = h0 + 'px';
+      void el.offsetHeight;
+      el.style.transition = 'height .45s ' + EASE + ', padding .45s ' + EASE + ', margin-top .45s ' + EASE + ', opacity .3s ease';
+      el.style.height = '0px';
+      el.style.paddingTop = '0px';
+      el.style.paddingBottom = '0px';
+      if (gap) el.style.marginTop = '-' + gap + 'px';
+      el.style.opacity = '0';
+      setTimeout(function () {
+        el.style.display = 'none';
+        el.style.height = ''; el.style.overflow = ''; el.style.transition = '';
+        el.style.opacity = ''; el.style.paddingTop = ''; el.style.paddingBottom = ''; el.style.marginTop = '';
+      }, 500);
+    }
+  }
+  // animate a container's height across a content change (receipt rows)
+  function animateHeight(el, mutate) {
+    if (!el || ANIM_OFF()) { mutate(); return; }
+    var h0 = el.offsetHeight;
+    mutate();
+    var h1 = el.offsetHeight;
+    if (h0 === h1) return;
+    el.style.height = h0 + 'px';
+    el.style.overflow = 'hidden';
+    void el.offsetHeight;
+    el.style.transition = 'height .45s ' + EASE;
+    el.style.height = h1 + 'px';
+    setTimeout(function () { el.style.height = ''; el.style.overflow = ''; el.style.transition = ''; }, 500);
+  }
+  // fade the bonus "Then $99 billed monthly" line in/out on text change
+  function fadeText(el, text) {
+    if (!el) return;
+    if (ANIM_OFF()) { el.textContent = text; return; }
+    var changing = el.textContent !== text;
+    if (!changing) return;
+    el.style.transition = 'opacity .3s ease';
+    el.style.opacity = '0';
+    setTimeout(function () {
+      el.textContent = text;
+      void el.offsetHeight;
+      el.style.opacity = '1';
+      setTimeout(function () { el.style.transition = ''; el.style.opacity = ''; }, 350);
+    }, 300);
+  }
   function dismissStrip(el) {
-    if (REDUCED_MOTION || CLEAN) { el.style.display = 'none'; return; }
+    if (ANIM_OFF()) { el.style.display = 'none'; return; }
     var h = el.offsetHeight;
     el.style.height = h + 'px';
     el.style.overflow = 'hidden';
@@ -1588,6 +1658,7 @@
   }
 
   /* ---------- Step 2 rendering ---------- */
+  var lastAiPlan = state.aiPlan; // detects AI-plan changes to drive the smooth animations
   function receiptItems() {
     var b = BILL[state.billingPlan];
     var items = [];
@@ -1654,22 +1725,27 @@
       tile.classList.toggle('has-pill', tile.dataset.plan === 'advanced');
     });
 
-    // bonus banner
-    var bonus = $('bonus-banner');
     // bonus banner stays fully active even with no AI plan selected
-    $('bonus-then').textContent = state.aiPlan
-      ? 'Then $' + PLANS[state.aiPlan].price + ' billed monthly' : '';
+    var aiChanged = state.aiPlan !== lastAiPlan;
+    if (aiChanged) {
+      fadeText($('bonus-then'), state.aiPlan ? 'Then $' + PLANS[state.aiPlan].price + ' billed monthly' : '');
+    } else {
+      $('bonus-then').textContent = state.aiPlan
+        ? 'Then $' + PLANS[state.aiPlan].price + ' billed monthly' : '';
+    }
 
-    // billing date card
-    $('billdate-card').style.display = state.aiPlan ? '' : 'none';
+    // billing date card (slides away smoothly when the AI plan is removed)
+    if (aiChanged) slideToggle($('billdate-card'), !!state.aiPlan, 26);
+    else $('billdate-card').style.display = state.aiPlan ? '' : 'none';
 
-    // receipt
+    // receipt (rows animate in/out as the plan changes)
     var items = receiptItems();
     var html = items.map(function (it) {
       return '<div class="o-item"><div><div class="o-title">' + it.t + '</div><div class="o-sub">' + it.s +
         '</div></div><div class="o-price' + (it.free ? ' free' : '') + '">' + it.p + '</div></div>';
     }).join('');
-    $('order-items').innerHTML = html;
+    if (aiChanged) animateHeight($('order-items'), function () { $('order-items').innerHTML = html; });
+    else $('order-items').innerHTML = html;
     $('due-amount').textContent = fmt(BILL[state.billingPlan].due);
 
     // consents
@@ -1682,10 +1758,12 @@
     var aiWrap = $('cb-ai-wrap');
     if (state.aiPlan) {
       var p = PLANS[state.aiPlan];
-      aiWrap.style.display = '';
+      if (aiChanged) slideToggle(aiWrap, true, 16);
+      else aiWrap.style.display = '';
       $('cb-ai-text').innerHTML = '<b>AI subscription:</b> I understand that my free trial runs for 30 days from today or until 2M tokens are used, whichever comes first, and that my <b>' + p.name + ' plan ($' + p.price + '/mo)</b> starts automatically on the day the trial ends. My first charge is prorated — it covers only the days between the end of the trial and my chosen billing day (the <b>' + dayLabel(state.billingDay) + '</b>), and every later charge of $' + p.price + ' lands on that day monthly. I can cancel anytime before the trial ends and I won\u2019t be charged at all.';
     } else {
-      aiWrap.style.display = 'none';
+      if (aiChanged) slideToggle(aiWrap, false, 16);
+      else aiWrap.style.display = 'none';
       state.consents.ai = false;
       $('cb-ai').checked = false;
     }
@@ -1698,6 +1776,7 @@
       ? (state.aiPlan ? 'Subscribe & Start AI Trial' : 'Subscribe & continue')
       : 'Tick above agreements';
     $('renew-note').innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><g clip-path="url(#rnclip)"><path d="M7.1985 12.8061C9.62492 11.9602 11.6664 10.5019 11.6664 7.5851V3.50164C11.6664 3.34693 11.6049 3.19855 11.4955 3.08915C11.3862 2.97975 11.2378 2.91829 11.0831 2.91829C9.91656 2.91829 8.4642 2.2241 7.44347 1.33157C7.3199 1.22598 7.16271 1.16797 7.00018 1.16797C6.83766 1.16797 6.68046 1.22598 6.55689 1.33157C5.542 2.21826 4.08381 2.91829 2.91726 2.91829C2.76257 2.91829 2.61421 2.97975 2.50482 3.08915C2.39544 3.19855 2.33398 3.34693 2.33398 3.50164V7.5851C2.33398 10.5019 4.37545 11.9602 6.8077 12.8003C6.93342 12.8471 7.07144 12.8492 7.1985 12.8061Z" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/></g><defs><clipPath id="rnclip"><rect width="14" height="14" fill="white"/></clipPath></defs></svg>Manage or cancel future renewals anytime · No hidden fees';
+    lastAiPlan = state.aiPlan;
   }
 
   function renderStep3() {
