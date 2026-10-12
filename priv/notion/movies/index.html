@@ -30,7 +30,8 @@
 
   #constLabel { position:absolute; top:56px; left:50%; transform:translateX(-50%);
     font-family:"Pirata One",Georgia,serif; font-size:20px; letter-spacing:.08em;
-    display:none; pointer-events:none; white-space:nowrap; text-shadow:0 0 14px currentColor; }
+    display:none; pointer-events:auto; cursor:pointer; white-space:nowrap; text-shadow:0 0 14px currentColor; }
+  #constLabel:hover::after { content:"  ✕"; opacity:.7; }
 
   #controls { position:absolute; top:70px; left:16px; width:248px; display:flex; flex-direction:column; gap:10px; z-index:2; }
   .card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:10px 12px; backdrop-filter:blur(8px); }
@@ -39,7 +40,6 @@
   #search { width:100%; background:#070912; border:1px solid var(--line); color:var(--txt);
     border-radius:7px; padding:7px 10px; font-size:13px; outline:none; }
   #search:focus { border-color:#3a4160; }
-  #hits { margin-top:6px; display:flex; flex-direction:column; gap:1px; max-height:200px; overflow:auto; }
   #hits .hit { padding:4px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; display:flex; justify-content:space-between; gap:8px; }
   #hits .hit:hover { background:#171b2c; }
   #hits .hit .r { color:var(--dim); }
@@ -47,15 +47,23 @@
   .ratings { display:flex; gap:6px; }
   .ratings label { flex:1; text-align:center; padding:4px 0; border:1px solid var(--line); border-radius:7px; cursor:pointer; font-size:12.5px; color:var(--dim); }
   .ratings label.on { border-color:#4a5378; color:#e8e4f6; background:rgba(155,93,229,.08); }
-  #legend { display:flex; flex-direction:column; gap:1px; max-height:44vh; overflow:auto; }
-  .leg { display:flex; align-items:center; gap:8px; padding:3.5px 6px; border-radius:6px; cursor:pointer; font-size:12.5px; transition:opacity .2s; }
+  #legend { display:flex; flex-direction:column; gap:1px; max-height:46vh; overflow:auto;
+    scrollbar-width:none; -ms-overflow-style:none; }
+  #legend::-webkit-scrollbar { display:none; }
+  #hits { margin-top:6px; display:flex; flex-direction:column; gap:1px; max-height:200px; overflow:auto;
+    scrollbar-width:none; -ms-overflow-style:none; }
+  #hits::-webkit-scrollbar { display:none; }
+  .leg { display:flex; align-items:center; gap:8px; padding:3.5px 6px; border-radius:6px; cursor:pointer; font-size:12.5px; transition:opacity .2s, background .15s; }
   .leg:hover { background:#171b2c; }
-  .leg .dot { width:9px; height:9px; border-radius:50%; flex:none; box-shadow:0 0 6px currentColor; }
+  .leg .dot { width:9px; height:9px; border-radius:50%; flex:none; box-shadow:0 0 6px currentColor; transition:transform .15s; }
   .leg .cnt { margin-left:auto; color:var(--dim); font-size:10.5px; }
+  .leg.on { background:#171b2c; }
+  .leg.on .dot { transform:scale(1.5); }
   .leg.off { opacity:.28; }
   #resetLeg { margin-top:8px; font-size:11px; color:var(--dim); cursor:pointer; text-align:center;
     border:1px solid var(--line); border-radius:7px; padding:4px; letter-spacing:.08em; }
   #resetLeg:hover { color:var(--txt); border-color:#3a4160; }
+  #resetLeg.idle { opacity:.35; pointer-events:none; }
 
   #panel { position:absolute; top:70px; right:16px; width:330px; max-height:calc(100vh - 100px); overflow:auto;
     background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px;
@@ -63,6 +71,10 @@
   #panel.show { display:block; }
   #panel .close { position:absolute; top:9px; right:13px; color:var(--dim); cursor:pointer; font-size:15px; }
   #panel .close:hover { color:#fff; }
+  #panel .navrow { display:flex; align-items:center; gap:8px; }
+  #panel .navrow h2 { flex:1; }
+  #panel .navbtn { color:var(--dim); cursor:pointer; font-size:15px; padding:4px 6px; border:1px solid var(--line); border-radius:7px; }
+  #panel .navbtn:hover { color:#fff; border-color:#3a4160; background:#171b2c; }
   #panel .kicker { font-size:10px; letter-spacing:.3em;
     text-transform:uppercase; margin-bottom:6px; color:var(--dim); }
   #panel h2 { font-family:"Pirata One",Georgia,serif; font-weight:400; font-size:22px;
@@ -112,9 +124,9 @@
     <div class="ratings" id="ratings"></div>
   </div>
   <div class="card">
-    <h3>Motifs</h3>
+    <h3 id="motifsH3">Motifs</h3>
     <div id="legend"></div>
-    <div id="resetLeg">show all</div>
+    <div id="resetLeg">clear selection</div>
   </div>
 </div>
 
@@ -349,8 +361,8 @@ function openMotifPanel(id){
   selected = null; motifPanel = id; renderConstLabel();
   var M = MOTIFS[id];
   var html = '<span class="close" id="pclose">✕</span>';
-  html += '<div class="kicker" style="color:'+M.c+'">constellation</div>';
-  html += '<h2>'+M.en+'</h2>';
+  html += '<div class="kicker" style="color:'+M.c+'">constellation '+(motifOrder.indexOf(id)+1)+' / '+motifOrder.length+'</div>';
+  html += '<div class="navrow"><span class="navbtn" id="mPrev">◀</span><h2>'+M.en+'</h2><span class="navbtn" id="mNext">▶</span></div>';
   html += '<div class="def" style="border-left-color:'+M.c+'66">'+M.def+'</div>';
   html += '<div class="src">'+M.src+' · also: '+M.pl+'</div>';
   html += '<div class="meta">'+counts[id]+' films · co-travels most with '+relatedMotifs(id).map(function(r){ return MOTIFS[r].en; }).join(", ")+'</div>';
@@ -358,6 +370,12 @@ function openMotifPanel(id){
   html += '<h4>Highest rated</h4>';
   topFilms[id].slice(0,10).forEach(function(n){ html += filmRow(n, id); });
   setPanel(html);
+  document.getElementById("pclose").onclick = clearAll;
+  document.getElementById("mPrev").onclick = function(){ var i=motifOrder.indexOf(motifPanel); selectMotif(motifOrder[(i-1+motifOrder.length)%motifOrder.length], true); };
+  document.getElementById("mNext").onclick = function(){ var i=motifOrder.indexOf(motifPanel); selectMotif(motifOrder[(i+1)%motifOrder.length], true); };
+}
+function clearAll(){
+  motifFilter={}; closePanel(); renderLegend(); draw(performance.now());
 }
 function setPanel(html){
   panel.innerHTML = html; panel.classList.add("show"); hideTip();
@@ -374,11 +392,9 @@ function closePanel(){ selected=null; motifPanel=null; panel.classList.remove("s
 // motif selection
 var constLabel = document.getElementById("constLabel");
 function selectMotif(id, openP){
-  var act = activeMotifs();
-  motifFilter[id] = !(act && act.length===1 && act[0]===id && motifFilter[id] === true && true) ? true : !motifFilter[id];
-  if (act && act.length===1 && act[0]===id) { motifFilter[id] = !motifFilter[id]; } // toggle off if solo
-  if (!motifFilter[id]) { delete motifFilter[id]; }
-  if (motifFilter[id]) { if (openP) openMotifPanel(id); } else { closePanel(); }
+  if (motifFilter[id]) { clearAll(); return; }
+  motifFilter = {}; motifFilter[id] = true;
+  if (openP) openMotifPanel(id);
   renderLegend(); renderConstLabel(); draw(performance.now());
 }
 function renderConstLabel(){
@@ -423,7 +439,7 @@ canvas.addEventListener("wheel", function(ev){
   view.x += w.x-w2.x; view.y += w.y-w2.y;
 }, {passive:false});
 window.addEventListener("keydown", function(ev){
-  if (ev.key==="Escape"){ motifFilter={}; closePanel(); renderLegend(); draw(performance.now()); }
+  if (ev.key==="Escape"){ clearAll(); }
 });
 
 // search
@@ -465,7 +481,8 @@ var ratEl = document.getElementById("ratings");
 // legend
 var legEl = document.getElementById("legend");
 var legRows = {};
-MOTIF_IDS.slice().sort(function(a,b){ return counts[b]-counts[a]; }).forEach(function(id){
+var motifOrder = MOTIF_IDS.slice().sort(function(a,b){ return counts[b]-counts[a]; });
+motifOrder.forEach(function(id){
   var row = document.createElement("div"); row.className="leg"; legRows[id]=row;
   row.innerHTML = '<span class="dot" style="background:'+MOTIFS[id].c+';color:'+MOTIFS[id].c+'"></span><span title="'+MOTIFS[id].src+'">'+MOTIFS[id].en+'</span><span class="cnt">'+(counts[id]||0)+'</span>';
   row.onclick = function(){ selectMotif(id,true); };
@@ -473,15 +490,18 @@ MOTIF_IDS.slice().sort(function(a,b){ return counts[b]-counts[a]; }).forEach(fun
   row.onmouseleave = function(){ hoverMotif=null; };
   legEl.appendChild(row);
 });
+document.getElementById("motifsH3").textContent = "Motifs · " + motifOrder.length;
 function renderLegend(){
   var act = activeMotifs();
-  MOTIF_IDS.forEach(function(id){
+  motifOrder.forEach(function(id){
     legRows[id].classList.toggle("off", !!act && !motifFilter[id]);
+    legRows[id].classList.toggle("on", !!motifFilter[id]);
   });
+  document.getElementById("resetLeg").classList.toggle("idle", !act);
 }
-document.getElementById("resetLeg").onclick = function(){
-  motifFilter={}; closePanel(); renderLegend(); draw(performance.now());
-};
+var resetBtn = document.getElementById("resetLeg");
+resetBtn.onclick = clearAll;
+document.getElementById("constLabel").onclick = clearAll;
 
 resize(); fit();
 for (var t0=0;t0<140;t0++) tick();
