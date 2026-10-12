@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motif Constellation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Piazzolla:ital,opsz,wght@0,8..30,300;0,8..30,400;0,8..30,600;1,8..30,400&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#05060d; --panel:rgba(10,12,22,.92); --line:#1c2133; --txt:#cfd4e6; --dim:#78809b; --acc:#00f5d4; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html,body { height:100%; overflow:hidden; }
+  body { background:
+      radial-gradient(1200px 800px at 18% 12%, rgba(155,93,229,.07), transparent 60%),
+      radial-gradient(1000px 700px at 82% 85%, rgba(0,245,212,.05), transparent 60%),
+      radial-gradient(900px 900px at 60% 40%, rgba(255,77,216,.03), transparent 65%),
+      #05060d;
+    color:var(--txt); font:13px/1.55 "Piazzolla","Segoe UI",system-ui,sans-serif; }
+  body::after { content:""; position:fixed; inset:0; pointer-events:none;
+    background:radial-gradient(ellipse at center, transparent 55%, rgba(2,3,8,.55) 100%); }
+  #sky { position:absolute; inset:0; display:block; cursor:grab; }
+  #sky.grabbing { cursor:grabbing; }
+
+  header { position:absolute; top:0; left:0; right:0; padding:14px 22px 10px; text-align:center; pointer-events:none;
+    background:linear-gradient(180deg, rgba(5,6,13,.85) 0%, rgba(5,6,13,0) 100%); }
+  header h1 { font-family:"Pirata One","Palatino Linotype",Georgia,serif; font-weight:400;
+    font-size:26px; letter-spacing:.06em; color:#e8e4f6; text-shadow:0 0 18px rgba(155,93,229,.35); }
+  header h1 .moon { color:#cbb8ff; }
+
+  #constLabel { position:absolute; top:56px; left:50%; transform:translateX(-50%);
+    font-family:"Pirata One",Georgia,serif; font-size:20px; letter-spacing:.08em;
+    display:none; pointer-events:none; white-space:nowrap; text-shadow:0 0 14px currentColor; }
+
+  #controls { position:absolute; top:70px; left:16px; width:248px; display:flex; flex-direction:column; gap:10px; z-index:2; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:10px 12px; backdrop-filter:blur(8px); }
+  .card h3 { font-weight:300; font-size:10.5px;
+    text-transform:uppercase; letter-spacing:.3em; color:var(--dim); margin-bottom:8px; }
+  #search { width:100%; background:#070912; border:1px solid var(--line); color:var(--txt);
+    border-radius:7px; padding:7px 10px; font-size:13px; outline:none; }
+  #search:focus { border-color:#3a4160; }
+  #hits { margin-top:6px; display:flex; flex-direction:column; gap:1px; max-height:200px; overflow:auto; }
+  #hits .hit { padding:4px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; display:flex; justify-content:space-between; gap:8px; }
+  #hits .hit:hover { background:#171b2c; }
+  #hits .hit .r { color:var(--dim); }
+  #hits .hit.motifHit { color:#cbb8ff; font-family:"Palatino Linotype",Palatino,Georgia,serif; letter-spacing:.06em; }
+  .ratings { display:flex; gap:6px; }
+  .ratings label { flex:1; text-align:center; padding:4px 0; border:1px solid var(--line); border-radius:7px; cursor:pointer; font-size:12.5px; color:var(--dim); }
+  .ratings label.on { border-color:#4a5378; color:#e8e4f6; background:rgba(155,93,229,.08); }
+  #legend { display:flex; flex-direction:column; gap:1px; max-height:44vh; overflow:auto; }
+  .leg { display:flex; align-items:center; gap:8px; padding:3.5px 6px; border-radius:6px; cursor:pointer; font-size:12.5px; transition:opacity .2s; }
+  .leg:hover { background:#171b2c; }
+  .leg .dot { width:9px; height:9px; border-radius:50%; flex:none; box-shadow:0 0 6px currentColor; }
+  .leg .cnt { margin-left:auto; color:var(--dim); font-size:10.5px; }
+  .leg.off { opacity:.28; }
+  #resetLeg { margin-top:8px; font-size:11px; color:var(--dim); cursor:pointer; text-align:center;
+    border:1px solid var(--line); border-radius:7px; padding:4px; letter-spacing:.08em; }
+  #resetLeg:hover { color:var(--txt); border-color:#3a4160; }
+
+  #panel { position:absolute; top:70px; right:16px; width:330px; max-height:calc(100vh - 100px); overflow:auto;
+    background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px;
+    backdrop-filter:blur(10px); display:none; z-index:2; }
+  #panel.show { display:block; }
+  #panel .close { position:absolute; top:9px; right:13px; color:var(--dim); cursor:pointer; font-size:15px; }
+  #panel .close:hover { color:#fff; }
+  #panel .kicker { font-size:10px; letter-spacing:.3em;
+    text-transform:uppercase; margin-bottom:6px; color:var(--dim); }
+  #panel h2 { font-family:"Pirata One",Georgia,serif; font-weight:400; font-size:22px;
+    color:#eeeafc; padding-right:22px; line-height:1.2; }
+  #panel .def { font-size:13px; color:#a8b0cc; margin:10px 0 4px; padding:2px 0 2px 10px;
+    line-height:1.6; border-left:2px solid; font-weight:300; }
+  #panel .src { color:var(--dim); font-size:12px; margin-top:5px; font-style:italic; }
+  #panel .meta { color:var(--dim); font-size:12px; margin:6px 0 10px; }
+  #panel .meta b { color:#d7fbe8; font-weight:600; }
+  #panel .chips { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px; }
+  #panel .chip { font-size:10.5px; padding:3px 10px; border-radius:20px; border:1px solid; cursor:pointer; letter-spacing:.04em; }
+  #panel .syn { font-size:12.5px; color:#9aa2bd; margin-bottom:12px; font-style:italic; }
+  #panel h4 { font-size:10px; text-transform:uppercase; letter-spacing:.25em; color:var(--dim); margin:12px 0 6px; }
+  #panel .conn { display:flex; justify-content:space-between; gap:8px; padding:5px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; }
+  #panel .conn:hover { background:#171b2c; }
+  #panel .conn .why { color:var(--dim); font-size:10.5px; text-align:right; }
+  #panel .filmrow { display:flex; justify-content:space-between; gap:8px; padding:5px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; }
+  #panel .filmrow:hover { background:#171b2c; }
+  #panel .filmrow .stars { color:var(--dim); font-size:11px; letter-spacing:2px; }
+  #panel .filmitem { margin-bottom:5px; }
+  #panel .why2 { font-size:11.5px; color:#8d95b2; padding:0 10px 2px; line-height:1.5; font-weight:300; border-left:1px solid #232838; margin-left:8px; }
+
+  #tip { position:absolute; pointer-events:none; background:rgba(8,10,18,.95); border:1px solid var(--line);
+    padding:6px 10px; border-radius:8px; font-size:12px; display:none; z-index:5; max-width:250px; }
+  #tip .t { font-weight:600; color:#e8e4f6; }
+  #tip .m { color:var(--dim); font-size:11px; margin-top:2px; }
+
+  footer { position:absolute; bottom:0; left:0; right:0; padding:8px 18px; color:#4d5470; font-size:10.5px;
+    text-align:center; letter-spacing:.05em;
+    background:linear-gradient(0deg, rgba(5,6,13,.85), rgba(5,6,13,0)); pointer-events:none; }
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+
+<header><h1><span class="moon">☾</span>&nbsp; Motif Constellation</h1></header>
+<div id="constLabel"></div>
+
+<div id="controls">
+  <div class="card">
+    <h3>Search</h3>
+    <input id="search" type="text" placeholder="title or motif…" autocomplete="off">
+    <div id="hits"></div>
+  </div>
+  <div class="card">
+    <h3>Ratings</h3>
+    <div class="ratings" id="ratings"></div>
+  </div>
+  <div class="card">
+    <h3>Motifs</h3>
+    <div id="legend"></div>
+    <div id="resetLeg">show all</div>
+  </div>
+</div>
+
+<div id="panel"></div>
+<div id="tip"></div>
+<footer>Notion “Movies” · personal ratings 7+ · motifs after Jung, Freud, Kristeva, Foucault, Baudrillard, Eliade, Heidegger, Bergson, Beauvoir, Turner, Laing, Kant, Sartre · star size = rating</footer>
+
+<script src="data.js"></script>
+<script>
+(function(){
+"use strict";
+var canvas = document.getElementById("sky"), ctx = canvas.getContext("2d");
+var W=0, H=0, DPR = Math.min(window.devicePixelRatio||1, 2);
+function resize(){ W=innerWidth; H=innerHeight; canvas.width=W*DPR; canvas.height=H*DPR; canvas.style.width=W+"px"; canvas.style.height=H+"px"; }
+window.addEventListener("resize", resize);
+
+var MOTIF_IDS = Object.keys(MOTIFS);
+var nodes = MOVIES.map(function(m,i){
+  var ang = MOTIF_IDS.indexOf(m.m[0])/MOTIF_IDS.length*Math.PI*2;
+  var rad = 300 + Math.random()*150;
+  return { i:i, m:m, x:Math.cos(ang)*rad+(Math.random()-.5)*90, y:Math.sin(ang)*rad+(Math.random()-.5)*90,
+           vx:0, vy:0, ph:Math.random()*Math.PI*2, sp:0.4+Math.random()*0.8,
+           r: m.r>=10?9 : m.r>=9?6.5 : m.r>=8?4.5 : 3 };
+});
+var byName = {};
+nodes.forEach(function(n){ byName[n.m.n.toLowerCase()] = n; });
+
+var nbr = nodes.map(function(){ return {}; });
+for (var a=0; a<nodes.length; a++) for (var b=a+1; b<nodes.length; b++){
+  var sh = 0;
+  for (var x=0;x<nodes[a].m.m.length;x++) if (nodes[b].m.m.indexOf(nodes[a].m.m[x])>=0) sh++;
+  if (sh>0){ nbr[a][b]=sh; nbr[b][a]=sh; }
+}
+var edges = [];
+nodes.forEach(function(n){
+  var keys = Object.keys(nbr[n.i]).map(Number)
+    .sort(function(p,q){ return nbr[n.i][q]-nbr[n.i][p]; }).slice(0,8);
+  keys.forEach(function(k){ if (k>n.i) edges.push({a:n.i, b:k, w:nbr[n.i][k]}); });
+});
+nodes.forEach(function(n){
+  n.links = Object.keys(nbr[n.i]).map(Number)
+    .sort(function(p,q){ return nbr[n.i][q]-nbr[n.i][p]; })
+    .map(function(k){ return { n:nodes[k], shared:nbr[n.i][k] }; });
+});
+
+// motif stats: counts, top films, co-occurrence
+var counts = {}, topFilms = {}, cooc = {};
+nodes.forEach(function(n){ n.m.m.forEach(function(id){
+  counts[id]=(counts[id]||0)+1;
+  (topFilms[id]=topFilms[id]||[]).push(n);
+  n.m.m.forEach(function(id2){ if(id!==id2){ cooc[id]=cooc[id]||{}; cooc[id][id2]=(cooc[id][id2]||0)+1; } });
+});});
+Object.keys(topFilms).forEach(function(id){
+  topFilms[id].sort(function(p,q){ return q.m.r-p.m.r || p.m.n.localeCompare(q.m.n); });
+});
+function relatedMotifs(id){
+  return Object.keys(cooc[id]||{}).sort(function(a,b){ return cooc[id][b]-cooc[id][a]; }).slice(0,4);
+}
+
+var anchors = {};
+MOTIF_IDS.forEach(function(id, idx){
+  var ang = idx/MOTIF_IDS.length*Math.PI*2;
+  anchors[id] = { x:Math.cos(ang)*300, y:Math.sin(ang)*300 };
+});
+
+// physics
+var alpha = 1, draggingNode=null, panning=false, lastMX=0, lastMY=0, moved=false;
+function tick(){
+  var i,j,dx,dy,d2,fz,inv,n;
+  for (i=0;i<nodes.length;i++){ n=nodes[i];
+    var an = anchors[n.m.m[0]];
+    n.vx += (an.x-n.x)*0.012; n.vy += (an.y-n.y)*0.012;
+    n.vx -= n.x*0.0022; n.vy -= n.y*0.0022;
+  }
+  for (i=0;i<nodes.length;i++) for (j=i+1;j<nodes.length;j++){
+    dx = nodes[i].x-nodes[j].x; dy = nodes[i].y-nodes[j].y; d2 = dx*dx+dy*dy;
+    if (d2<1) d2=1;
+    fz = 900/(d2*0.55); inv = 1/Math.sqrt(d2); dx*=inv; dy*=inv;
+    nodes[i].vx += dx*fz; nodes[i].vy += dy*fz;
+    nodes[j].vx -= dx*fz; nodes[j].vy -= dy*fz;
+  }
+  for (i=0;i<edges.length;i++){ var e=edges[i], A=nodes[e.a], B=nodes[e.b];
+    dx = B.x-A.x; dy = B.y-A.y; d2 = dx*dx+dy*dy; if(d2<1) d2=1;
+    var d = Math.sqrt(d2), want = Math.max(26, 62-e.w*10), k = (d-want)/d * 0.028 * e.w;
+    dx*=k; dy*=k;
+    A.vx += dx; A.vy += dy; B.vx -= dx; B.vy -= dy;
+  }
+  for (i=0;i<nodes.length;i++){ n=nodes[i];
+    if (n===draggingNode){ n.vx=0; n.vy=0; continue; }
+    n.vx*=0.82; n.vy*=0.82;
+    n.vx = Math.max(-14, Math.min(14, n.vx)); n.vy = Math.max(-14, Math.min(14, n.vy));
+    n.x += n.vx*alpha; n.y += n.vy*alpha;
+  }
+  alpha *= 0.986;
+}
+
+// view
+var view = { x:0, y:0, s:1 };
+function world(mx,my){ return { x:(mx-W/2)/view.s+view.x, y:(my-H/2)/view.s+view.y }; }
+function fit(){
+  var minx=1e9,miny=1e9,maxx=-1e9,maxy=-1e9;
+  nodes.forEach(function(n){ minx=Math.min(minx,n.x); maxx=Math.max(maxx,n.x); miny=Math.min(miny,n.y); maxy=Math.max(maxy,n.y); });
+  view.s = Math.min(1.15, Math.min(W/(maxx-minx+160), H/(maxy-miny+160)));
+  view.x = (minx+maxx)/2; view.y = (miny+maxy)/2 - 14;
+}
+function toScreen(n,t){ return { x:(n.x + Math.sin(t*0.0004*n.sp + n.ph)*1.4 -view.x)*view.s+W/2,
+                                 y:(n.y + Math.cos(t*0.0004*n.sp + n.ph)*1.4 -view.y)*view.s+H/2 }; }
+
+// filters & selection
+var ratingOn = {7:true,8:true,9:true,10:true};
+var motifFilter = {}, hoverMotif = null, selected = null, motifPanel = null;
+function activeMotifs(){
+  var act = Object.keys(motifFilter).filter(function(k){ return motifFilter[k]; });
+  return act.length ? act : null;
+}
+function nodeVisible(n){
+  if (!ratingOn[n.m.r]) return false;
+  var act = activeMotifs();
+  if (act && !n.m.m.some(function(id){ return motifFilter[id]; })) return false;
+  return true;
+}
+
+// twinkling background stars
+var bgStars = [];
+for (var s=0;s<90;s++) bgStars.push({ x:Math.random(), y:Math.random(), ph:Math.random()*7, sp:0.5+Math.random()*1.5, sz:Math.random()<0.12?1.6:0.9 });
+
+// draw
+function hexA(hex, a){
+  var r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  return "rgba("+r+","+g+","+b+","+a+")";
+}
+function draw(t){
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.clearRect(0,0,W,H);
+  bgStars.forEach(function(s){
+    var tw = 0.25 + 0.55*(0.5+0.5*Math.sin(t*0.001*s.sp+s.ph));
+    ctx.fillStyle = "rgba(220,225,255,"+tw*0.5+")";
+    ctx.fillRect(s.x*W, s.y*H, s.sz, s.sz);
+  });
+
+  var act = activeMotifs();
+  var selSet = {};
+  if (selected){ selSet[selected.i]=1; selected.links.forEach(function(l){ selSet[l.n.i]=1; }); }
+
+  edges.forEach(function(e){
+    var A=nodes[e.a], B=nodes[e.b];
+    if (!nodeVisible(A)||!nodeVisible(B)) return;
+    var p=toScreen(A,t), q=toScreen(B,t);
+    var sharedAct = null;
+    if (act){ for (var k=0;k<A.m.m.length;k++) if (motifFilter[A.m.m[k]] && B.m.m.indexOf(A.m.m[k])>=0){ sharedAct=A.m.m[k]; break; } }
+    var hl = selected && selSet[e.a] && selSet[e.b] && (e.a===selected.i||e.b===selected.i);
+    if (hl){ ctx.strokeStyle="rgba(0,245,212,0.45)"; ctx.lineWidth=1.2; }
+    else if (sharedAct){ ctx.strokeStyle=hexA(MOTIFS[sharedAct].c, 0.28); ctx.lineWidth=1; }
+    else if (act || selected){ ctx.strokeStyle="rgba(200,210,255,0.03)"; ctx.lineWidth=1; }
+    else { ctx.strokeStyle="rgba(200,210,255,"+Math.min(0.15, 0.04+e.w*0.035)+")"; ctx.lineWidth=1; }
+    ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke();
+  });
+
+  nodes.forEach(function(n){
+    if (!nodeVisible(n)) return;
+    var p = toScreen(n,t);
+    if (p.x<-30||p.x>W+30||p.y<-30||p.y>H+30) return;
+    var inAct = act && n.m.m.some(function(id){ return motifFilter[id]; });
+    var col = act ? (inAct ? MOTIFS[n.m.m.filter(function(id){return motifFilter[id];})[0]].c : null) : MOTIFS[n.m.m[0]].c;
+    if (!col){ ctx.fillStyle="rgba(120,128,155,0.14)"; ctx.beginPath(); ctx.arc(p.x,p.y,1.6,0,7); ctx.fill(); return; }
+    var dim = selected ? (selSet[n.i]?1:0.22) : (hoverMotif ? (n.m.m.indexOf(hoverMotif)>=0?1:0.22) : 1);
+    var tw = 0.75 + 0.25*Math.sin(t*0.001*n.sp+n.ph);
+    ctx.globalAlpha = dim*tw;
+    var R = n.r*Math.max(1,view.s*0.8);
+    if (n.m.r>=9 || n===selected){ ctx.shadowBlur = n===selected?18:(n.m.r>=10?14:9); ctx.shadowColor = col; }
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, 7); ctx.fill();
+    ctx.shadowBlur = 0;
+    if (n.m.r>=10){ // diffraction spikes
+      ctx.strokeStyle = hexA(col.startsWith("#")?col:"#ffffff", 0.5); ctx.lineWidth=0.8;
+      var L=R*3.2;
+      ctx.beginPath(); ctx.moveTo(p.x-L,p.y); ctx.lineTo(p.x+L,p.y); ctx.moveTo(p.x,p.y-L); ctx.lineTo(p.x,p.y+L); ctx.stroke();
+    }
+    if (n===selected){ ctx.strokeStyle="rgba(255,255,255,0.85)"; ctx.lineWidth=1.2;
+      ctx.beginPath(); ctx.arc(p.x,p.y,R+4,0,7); ctx.stroke(); }
+    if (n.m.r>=10 || (view.s>1.7 && n.m.r>=8)){
+      ctx.font = "600 10.5px 'Piazzolla','Segoe UI',sans-serif"; ctx.fillStyle = "rgba(207,212,230,0.85)";
+      ctx.fillText(n.m.n, p.x+R+4, p.y+3.5);
+    }
+    ctx.globalAlpha = 1;
+  });
+}
+function loop(t){ if (alpha>0.02 || draggingNode) { tick(); tick(); } draw(t||0); requestAnimationFrame(loop); }
+
+// tooltip
+var tip = document.getElementById("tip");
+function showTip(n, x, y){
+  tip.innerHTML = '<div class="t">'+n.m.n+' <span style="color:var(--dim)">('+(n.m.y||"?")+')</span></div><div class="m">'+n.m.m.map(function(id){return MOTIFS[id].en;}).join(" · ")+'</div>';
+  tip.style.display="block";
+  tip.style.left = Math.min(x+14, W-260)+"px"; tip.style.top = Math.max(10,y-40)+"px";
+}
+function hideTip(){ tip.style.display="none"; }
+
+// panel
+var panel = document.getElementById("panel");
+function chipHTML(id, clickable){
+  var M = MOTIFS[id];
+  var inner = M.en;
+  return '<span class="chip" data-motif="'+id+'" title="'+M.src+'" style="color:'+M.c+';border-color:'+M.c+'66">'+inner+'</span>';
+}
+function filmRow(n, mid){
+  var key = n.m.n.toLowerCase() + "|" + mid;
+  var why = (typeof WHY !== "undefined") ? WHY[key] : null;
+  var stars = '<span>'+"★".repeat(n.m.r-6)+'</span><span style="opacity:.22">'+"★".repeat(10-n.m.r)+'</span>';
+  return '<div class="filmitem"><div class="filmrow" data-name="'+n.m.n.toLowerCase().replace(/"/g,"")+'"><span>'+n.m.n+'</span><span class="stars">'+stars+'</span></div>'+(why?'<div class="why2">'+why+'</div>':'')+'</div>';
+}
+function openFilmPanel(n){
+  selected = n; motifPanel = null; renderConstLabel();
+  var m = n.m;
+  var html = '<span class="close" id="pclose">✕</span>';
+  html += '<div class="kicker" style="color:'+MOTIFS[m.m[0]].c+'">'+(m.t||"")+(m.y?" · "+m.y:"")+'</div>';
+  html += '<h2>'+m.n+'</h2>';
+  html += '<div class="meta">'+(m.d?"directed by "+m.d+" · ":"")+'rating <b>'+m.r+'</b>/10'+(m.g?" · "+m.g:"")+'</div>';
+  html += '<div class="chips">'+m.m.map(function(id){ return chipHTML(id,true); }).join("")+'</div>';
+  if (m.s) html += '<div class="syn">'+m.s+'</div>';
+  html += '<h4>Nearest stars</h4>';
+  var cnt=0;
+  n.links.forEach(function(l){
+    if (cnt>=8 || !nodeVisible(l.n)) return;
+    var names = m.m.filter(function(id){ return l.n.m.m.indexOf(id)>=0; }).map(function(id){ return MOTIFS[id].en; }).join(" · ");
+    html += '<div class="conn" data-name="'+l.n.m.n.toLowerCase().replace(/"/g,"")+'"><span>'+l.n.m.n+'</span><span class="why">'+names+'</span></div>';
+    cnt++;
+  });
+  setPanel(html);
+}
+function openMotifPanel(id){
+  selected = null; motifPanel = id; renderConstLabel();
+  var M = MOTIFS[id];
+  var html = '<span class="close" id="pclose">✕</span>';
+  html += '<div class="kicker" style="color:'+M.c+'">constellation</div>';
+  html += '<h2>'+M.en+'</h2>';
+  html += '<div class="def" style="border-left-color:'+M.c+'66">'+M.def+'</div>';
+  html += '<div class="src">'+M.src+' · also: '+M.pl+'</div>';
+  html += '<div class="meta">'+counts[id]+' films · co-travels most with '+relatedMotifs(id).map(function(r){ return MOTIFS[r].en; }).join(", ")+'</div>';
+  html += '<div class="chips">'+relatedMotifs(id).map(function(r){ return chipHTML(r,true); }).join("")+'</div>';
+  html += '<h4>Highest rated</h4>';
+  topFilms[id].slice(0,10).forEach(function(n){ html += filmRow(n, id); });
+  setPanel(html);
+}
+function setPanel(html){
+  panel.innerHTML = html; panel.classList.add("show"); hideTip();
+  document.getElementById("pclose").onclick = closePanel;
+  Array.prototype.forEach.call(panel.querySelectorAll(".conn,.filmrow"), function(el){
+    el.onclick = function(){ var t=byName[el.getAttribute("data-name")]; if(t){ openFilmPanel(t); centerOn(t); } };
+  });
+  Array.prototype.forEach.call(panel.querySelectorAll(".chip"), function(el){
+    el.onclick = function(){ selectMotif(el.getAttribute("data-motif"), true); };
+  });
+}
+function closePanel(){ selected=null; motifPanel=null; panel.classList.remove("show"); renderConstLabel(); draw(performance.now()); }
+
+// motif selection
+var constLabel = document.getElementById("constLabel");
+function selectMotif(id, openP){
+  var act = activeMotifs();
+  motifFilter[id] = !(act && act.length===1 && act[0]===id && motifFilter[id] === true && true) ? true : !motifFilter[id];
+  if (act && act.length===1 && act[0]===id) { motifFilter[id] = !motifFilter[id]; } // toggle off if solo
+  if (!motifFilter[id]) { delete motifFilter[id]; }
+  if (motifFilter[id]) { if (openP) openMotifPanel(id); } else { closePanel(); }
+  renderLegend(); renderConstLabel(); draw(performance.now());
+}
+function renderConstLabel(){
+  var act = activeMotifs();
+  if (!act){ constLabel.style.display="none"; return; }
+  if (act.length===1){ var M=MOTIFS[act[0]]; constLabel.textContent = M.en+" — "+counts[act[0]]+" stars"; constLabel.style.color=M.c; }
+  else { constLabel.textContent = act.length+" constellations"; constLabel.style.color="#cfd4e6"; }
+  constLabel.style.display="block";
+}
+
+// interaction
+function hit(mx,my){
+  var w = world(mx,my), best=null, bd=1e9;
+  nodes.forEach(function(n){
+    if (!nodeVisible(n)) return;
+    var dx=w.x-n.x, dy=w.y-n.y, d=dx*dx+dy*dy;
+    if (d<bd && d < Math.pow(n.r/view.s+6,2)){ bd=d; best=n; }
+  });
+  return best;
+}
+canvas.addEventListener("mousedown", function(ev){ lastMX=ev.clientX; lastMY=ev.clientY; moved=false;
+  var n = hit(ev.clientX, ev.clientY);
+  if (n){ draggingNode=n; alpha=Math.max(alpha,0.35); } else { panning=true; canvas.classList.add("grabbing"); }
+});
+window.addEventListener("mousemove", function(ev){
+  if (draggingNode){ var w=world(ev.clientX,ev.clientY); draggingNode.x=w.x; draggingNode.y=w.y; moved=true; return; }
+  if (panning){ view.x -= (ev.clientX-lastMX)/view.s; view.y -= (ev.clientY-lastMY)/view.s; lastMX=ev.clientX; lastMY=ev.clientY; moved=true; return; }
+  var n = hit(ev.clientX, ev.clientY);
+  if (n) showTip(n, ev.clientX, ev.clientY); else hideTip();
+  canvas.style.cursor = n ? "pointer" : "grab";
+});
+window.addEventListener("mouseup", function(){
+  if (draggingNode && !moved){ openFilmPanel(draggingNode); }
+  draggingNode=null; panning=false; canvas.classList.remove("grabbing");
+});
+canvas.addEventListener("wheel", function(ev){
+  ev.preventDefault();
+  var f = ev.deltaY<0 ? 1.12 : 0.89;
+  var w = world(ev.clientX,ev.clientY);
+  view.s = Math.max(0.35, Math.min(6, view.s*f));
+  var w2 = world(ev.clientX,ev.clientY);
+  view.x += w.x-w2.x; view.y += w.y-w2.y;
+}, {passive:false});
+window.addEventListener("keydown", function(ev){
+  if (ev.key==="Escape"){ motifFilter={}; closePanel(); renderLegend(); draw(performance.now()); }
+});
+
+// search
+var searchEl = document.getElementById("search"), hitsEl = document.getElementById("hits");
+searchEl.addEventListener("input", function(){
+  var q = searchEl.value.trim().toLowerCase();
+  hitsEl.innerHTML = "";
+  if (q.length<2) return;
+  var found = 0;
+  MOTIF_IDS.forEach(function(id){
+    if (found>=3) return;
+    if (MOTIFS[id].en.toLowerCase().indexOf(q)>=0 || MOTIFS[id].pl.toLowerCase().indexOf(q)>=0){
+      var div = document.createElement("div"); div.className="hit motifHit";
+      div.innerHTML = "<span>☾ "+MOTIFS[id].en+"</span><span class='r'>"+counts[id]+"</span>";
+      div.onclick = function(){ selectMotif(id,true); };
+      hitsEl.appendChild(div); found++;
+    }
+  });
+  nodes.forEach(function(n){
+    if (found>=10) return;
+    if (n.m.n.toLowerCase().indexOf(q)>=0){
+      var div = document.createElement("div"); div.className="hit";
+      div.innerHTML = "<span>"+n.m.n+"</span><span class='r'>"+(n.m.y||"")+" · "+n.m.r+"</span>";
+      div.onclick = function(){ openFilmPanel(n); centerOn(n); };
+      hitsEl.appendChild(div); found++;
+    }
+  });
+});
+function centerOn(n){ view.x=n.x; view.y=n.y; if (view.s<1.2) view.s=1.4; }
+
+// ratings filter
+var ratEl = document.getElementById("ratings");
+[10,9,8,7].forEach(function(r){
+  var l = document.createElement("label"); l.textContent = r; l.className = "on";
+  l.onclick = function(){ ratingOn[r]=!ratingOn[r]; l.classList.toggle("on"); };
+  ratEl.appendChild(l);
+});
+
+// legend
+var legEl = document.getElementById("legend");
+var legRows = {};
+MOTIF_IDS.slice().sort(function(a,b){ return counts[b]-counts[a]; }).forEach(function(id){
+  var row = document.createElement("div"); row.className="leg"; legRows[id]=row;
+  row.innerHTML = '<span class="dot" style="background:'+MOTIFS[id].c+';color:'+MOTIFS[id].c+'"></span><span title="'+MOTIFS[id].src+'">'+MOTIFS[id].en+'</span><span class="cnt">'+(counts[id]||0)+'</span>';
+  row.onclick = function(){ selectMotif(id,true); };
+  row.onmouseenter = function(){ hoverMotif=id; };
+  row.onmouseleave = function(){ hoverMotif=null; };
+  legEl.appendChild(row);
+});
+function renderLegend(){
+  var act = activeMotifs();
+  MOTIF_IDS.forEach(function(id){
+    legRows[id].classList.toggle("off", !!act && !motifFilter[id]);
+  });
+}
+document.getElementById("resetLeg").onclick = function(){
+  motifFilter={}; closePanel(); renderLegend(); draw(performance.now());
+};
+
+resize(); fit();
+for (var t0=0;t0<140;t0++) tick();
+alpha = 0.6;
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
