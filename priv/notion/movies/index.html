@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -8,45 +8,45 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Piazzolla:ital,opsz,wght@0,8..30,300;0,8..30,400;0,8..30,600;1,8..30,400&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#05060d; --panel:rgba(10,12,22,.92); --line:#1c2133; --txt:#cfd4e6; --dim:#78809b; --acc:#00f5d4; }
+  :root { --bg:#080604; --panel:rgba(17,12,8,.92); --line:#2a2218; --txt:#e8ddc8; --dim:#9a8b73; --acc:#e2b458; }
   * { box-sizing:border-box; margin:0; padding:0; }
   html,body { height:100%; overflow:hidden; }
   body { background:
-      radial-gradient(1200px 800px at 18% 12%, rgba(155,93,229,.07), transparent 60%),
-      radial-gradient(1000px 700px at 82% 85%, rgba(0,245,212,.05), transparent 60%),
-      radial-gradient(900px 900px at 60% 40%, rgba(255,77,216,.03), transparent 65%),
-      #05060d;
+      radial-gradient(1200px 800px at 18% 12%, rgba(226,180,88,.06), transparent 60%),
+      radial-gradient(1000px 700px at 82% 85%, rgba(168,107,183,.05), transparent 60%),
+      radial-gradient(900px 900px at 60% 40%, rgba(217,93,118,.035), transparent 65%),
+      #080604;
     color:var(--txt); font:13px/1.55 "Piazzolla","Segoe UI",system-ui,sans-serif; }
   body::after { content:""; position:fixed; inset:0; pointer-events:none;
-    background:radial-gradient(ellipse at center, transparent 55%, rgba(2,3,8,.55) 100%); }
+    background:radial-gradient(ellipse at center, transparent 55%, rgba(4,2,1,.6) 100%); }
   #sky { position:absolute; inset:0; display:block; cursor:grab; }
   #sky.grabbing { cursor:grabbing; }
 
   header { position:absolute; top:0; left:0; right:0; padding:14px 22px 10px; text-align:center; pointer-events:none;
     background:linear-gradient(180deg, rgba(5,6,13,.85) 0%, rgba(5,6,13,0) 100%); }
   header h1 { font-family:"Pirata One","Palatino Linotype",Georgia,serif; font-weight:400;
-    font-size:26px; letter-spacing:.06em; color:#e8e4f6; text-shadow:0 0 18px rgba(155,93,229,.35); }
-  header h1 .moon { color:#cbb8ff; }
+    font-size:26px; letter-spacing:.06em; color:#f0e6cf; text-shadow:0 0 18px rgba(155,93,229,.35); }
+  header h1 .moon { color:#e8c27a; }
 
   #constLabel { position:absolute; top:56px; left:50%; transform:translateX(-50%);
     font-family:"Pirata One",Georgia,serif; font-size:20px; letter-spacing:.08em;
     display:none; pointer-events:auto; cursor:pointer; white-space:nowrap; text-shadow:0 0 14px currentColor; }
-  #constLabel:hover::after { content:"  ✕"; opacity:.7; }
+  #constLabel:hover::after { content:"  âœ•"; opacity:.7; }
 
   #controls { position:absolute; top:70px; left:16px; width:248px; display:flex; flex-direction:column; gap:10px; z-index:2; }
   .card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:10px 12px; backdrop-filter:blur(8px); }
   .card h3 { font-weight:300; font-size:10.5px;
     text-transform:uppercase; letter-spacing:.3em; color:var(--dim); margin-bottom:8px; }
-  #search { width:100%; background:#070912; border:1px solid var(--line); color:var(--txt);
+  #search { width:100%; background:#0d0906; border:1px solid var(--line); color:var(--txt);
     border-radius:7px; padding:7px 10px; font-size:13px; outline:none; }
-  #search:focus { border-color:#3a4160; }
+  #search:focus { border-color:#4d4030; }
   #hits .hit { padding:4px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; display:flex; justify-content:space-between; gap:8px; }
-  #hits .hit:hover { background:#171b2c; }
+  #hits .hit:hover { background:#221b12; }
   #hits .hit .r { color:var(--dim); }
-  #hits .hit.motifHit { color:#cbb8ff; font-family:"Palatino Linotype",Palatino,Georgia,serif; letter-spacing:.06em; }
+  #hits .hit.motifHit { color:#e8c27a; font-family:"Palatino Linotype",Palatino,Georgia,serif; letter-spacing:.06em; }
   .ratings { display:flex; gap:6px; }
   .ratings label { flex:1; text-align:center; padding:4px 0; border:1px solid var(--line); border-radius:7px; cursor:pointer; font-size:12.5px; color:var(--dim); }
-  .ratings label.on { border-color:#4a5378; color:#e8e4f6; background:rgba(155,93,229,.08); }
+  .ratings label.on { border-color:#5a4a2e; color:#f0e6cf; background:rgba(226,180,88,.09); }
   #legend { display:flex; flex-direction:column; gap:1px; max-height:46vh; overflow:auto;
     scrollbar-width:none; -ms-overflow-style:none; }
   #legend::-webkit-scrollbar { display:none; }
@@ -54,15 +54,15 @@
     scrollbar-width:none; -ms-overflow-style:none; }
   #hits::-webkit-scrollbar { display:none; }
   .leg { display:flex; align-items:center; gap:8px; padding:3.5px 6px; border-radius:6px; cursor:pointer; font-size:12.5px; transition:opacity .2s, background .15s; }
-  .leg:hover { background:#171b2c; }
+  .leg:hover { background:#221b12; }
   .leg .dot { width:9px; height:9px; border-radius:50%; flex:none; box-shadow:0 0 6px currentColor; transition:transform .15s; }
   .leg .cnt { margin-left:auto; color:var(--dim); font-size:10.5px; }
-  .leg.on { background:#171b2c; }
+  .leg.on { background:#221b12; }
   .leg.on .dot { transform:scale(1.5); }
   .leg.off { opacity:.28; }
   #resetLeg { margin-top:8px; font-size:11px; color:var(--dim); cursor:pointer; text-align:center;
     border:1px solid var(--line); border-radius:7px; padding:4px; letter-spacing:.08em; }
-  #resetLeg:hover { color:var(--txt); border-color:#3a4160; }
+  #resetLeg:hover { color:var(--txt); border-color:#4d4030; }
   #resetLeg.idle { opacity:.35; pointer-events:none; }
 
   #panel { position:absolute; top:70px; right:16px; width:330px; max-height:calc(100vh - 100px); overflow:auto;
@@ -74,35 +74,35 @@
   #panel .navrow { display:flex; align-items:center; gap:8px; }
   #panel .navrow h2 { flex:1; }
   #panel .navbtn { color:var(--dim); cursor:pointer; font-size:15px; padding:4px 6px; border:1px solid var(--line); border-radius:7px; }
-  #panel .navbtn:hover { color:#fff; border-color:#3a4160; background:#171b2c; }
+  #panel .navbtn:hover { color:#fff; border-color:#4d4030; background:#221b12; }
   #panel .kicker { font-size:10px; letter-spacing:.3em;
     text-transform:uppercase; margin-bottom:6px; color:var(--dim); }
   #panel h2 { font-family:"Pirata One",Georgia,serif; font-weight:400; font-size:22px;
-    color:#eeeafc; padding-right:22px; line-height:1.2; }
+    color:#f3e9d5; padding-right:22px; line-height:1.2; }
   #panel .def { font-size:13px; color:#a8b0cc; margin:10px 0 4px; padding:2px 0 2px 10px;
     line-height:1.6; border-left:2px solid; font-weight:300; }
   #panel .src { color:var(--dim); font-size:12px; margin-top:5px; font-style:italic; }
   #panel .meta { color:var(--dim); font-size:12px; margin:6px 0 10px; }
-  #panel .meta b { color:#d7fbe8; font-weight:600; }
+  #panel .meta b { color:#f3e2c0; font-weight:600; }
   #panel .chips { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px; }
   #panel .chip { font-size:10.5px; padding:3px 10px; border-radius:20px; border:1px solid; cursor:pointer; letter-spacing:.04em; }
   #panel .syn { font-size:12.5px; color:#9aa2bd; margin-bottom:12px; font-style:italic; }
   #panel h4 { font-size:10px; text-transform:uppercase; letter-spacing:.25em; color:var(--dim); margin:12px 0 6px; }
   #panel .conn { display:flex; justify-content:space-between; gap:8px; padding:5px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; }
-  #panel .conn:hover { background:#171b2c; }
+  #panel .conn:hover { background:#221b12; }
   #panel .conn .why { color:var(--dim); font-size:10.5px; text-align:right; }
   #panel .filmrow { display:flex; justify-content:space-between; gap:8px; padding:5px 8px; border-radius:6px; cursor:pointer; font-size:12.5px; }
-  #panel .filmrow:hover { background:#171b2c; }
+  #panel .filmrow:hover { background:#221b12; }
   #panel .filmrow .stars { color:var(--dim); font-size:11px; letter-spacing:2px; }
   #panel .filmitem { margin-bottom:5px; }
   #panel .why2 { font-size:11.5px; color:#8d95b2; padding:0 10px 2px; line-height:1.5; font-weight:300; border-left:1px solid #232838; margin-left:8px; }
 
-  #tip { position:absolute; pointer-events:none; background:rgba(8,10,18,.95); border:1px solid var(--line);
+  #tip { position:absolute; pointer-events:none; background:rgba(14,10,7,.95); border:1px solid var(--line);
     padding:6px 10px; border-radius:8px; font-size:12px; display:none; z-index:5; max-width:250px; }
-  #tip .t { font-weight:600; color:#e8e4f6; }
+  #tip .t { font-weight:600; color:#f0e6cf; }
   #tip .m { color:var(--dim); font-size:11px; margin-top:2px; }
 
-  footer { position:absolute; bottom:0; left:0; right:0; padding:8px 18px; color:#4d5470; font-size:10.5px;
+  footer { position:absolute; bottom:0; left:0; right:0; padding:8px 18px; color:#6b5c47; font-size:10.5px;
     text-align:center; letter-spacing:.05em;
     background:linear-gradient(0deg, rgba(5,6,13,.85), rgba(5,6,13,0)); pointer-events:none; }
 </style>
@@ -110,13 +110,13 @@
 <body>
 <canvas id="sky"></canvas>
 
-<header><h1><span class="moon">☾</span>&nbsp; Motif Constellation</h1></header>
+<header><h1><span class="moon">â˜¾</span>&nbsp; Motif Constellation</h1></header>
 <div id="constLabel"></div>
 
 <div id="controls">
   <div class="card">
     <h3>Search</h3>
-    <input id="search" type="text" placeholder="title or motif…" autocomplete="off">
+    <input id="search" type="text" placeholder="title or motifâ€¦" autocomplete="off">
     <div id="hits"></div>
   </div>
   <div class="card">
@@ -132,7 +132,7 @@
 
 <div id="panel"></div>
 <div id="tip"></div>
-<footer>Notion “Movies” · personal ratings 7+ · motifs after Jung, Freud, Kristeva, Foucault, Baudrillard, Eliade, Heidegger, Bergson, Beauvoir, Turner, Laing, Kant, Sartre · star size = rating</footer>
+<footer>Notion â€œMoviesâ€ Â· personal ratings 7+ Â· motifs after Jung, Freud, Kristeva, Foucault, Baudrillard, Eliade, Heidegger, Bergson, Beauvoir, Turner, Laing, Kant, Sartre Â· star size = rating</footer>
 
 <script src="data.js"></script>
 <script>
@@ -263,7 +263,7 @@ function draw(t){
   ctx.clearRect(0,0,W,H);
   bgStars.forEach(function(s){
     var tw = 0.25 + 0.55*(0.5+0.5*Math.sin(t*0.001*s.sp+s.ph));
-    ctx.fillStyle = "rgba(220,225,255,"+tw*0.5+")";
+    ctx.fillStyle = "rgba(255,244,220,"+tw*0.5+")";
     ctx.fillRect(s.x*W, s.y*H, s.sz, s.sz);
   });
 
@@ -280,8 +280,8 @@ function draw(t){
     var hl = selected && selSet[e.a] && selSet[e.b] && (e.a===selected.i||e.b===selected.i);
     if (hl){ ctx.strokeStyle="rgba(0,245,212,0.45)"; ctx.lineWidth=1.2; }
     else if (sharedAct){ ctx.strokeStyle=hexA(MOTIFS[sharedAct].c, 0.28); ctx.lineWidth=1; }
-    else if (act || selected){ ctx.strokeStyle="rgba(200,210,255,0.03)"; ctx.lineWidth=1; }
-    else { ctx.strokeStyle="rgba(200,210,255,"+Math.min(0.15, 0.04+e.w*0.035)+")"; ctx.lineWidth=1; }
+    else if (act || selected){ ctx.strokeStyle="rgba(235,215,185,0.03)"; ctx.lineWidth=1; }
+    else { ctx.strokeStyle="rgba(235,215,185,"+Math.min(0.15, 0.04+e.w*0.035)+")"; ctx.lineWidth=1; }
     ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke();
   });
 
@@ -305,7 +305,7 @@ function draw(t){
       var L=R*3.2;
       ctx.beginPath(); ctx.moveTo(p.x-L,p.y); ctx.lineTo(p.x+L,p.y); ctx.moveTo(p.x,p.y-L); ctx.lineTo(p.x,p.y+L); ctx.stroke();
     }
-    if (n===selected){ ctx.strokeStyle="rgba(255,255,255,0.85)"; ctx.lineWidth=1.2;
+    if (n===selected){ ctx.strokeStyle="rgba(255,247,230,0.85)"; ctx.lineWidth=1.2;
       ctx.beginPath(); ctx.arc(p.x,p.y,R+4,0,7); ctx.stroke(); }
     if (n.m.r>=10 || (view.s>1.7 && n.m.r>=8)){
       ctx.font = "600 10.5px 'Piazzolla','Segoe UI',sans-serif"; ctx.fillStyle = "rgba(207,212,230,0.85)";
@@ -319,7 +319,7 @@ function loop(t){ if (alpha>0.02 || draggingNode) { tick(); tick(); } draw(t||0)
 // tooltip
 var tip = document.getElementById("tip");
 function showTip(n, x, y){
-  tip.innerHTML = '<div class="t">'+n.m.n+' <span style="color:var(--dim)">('+(n.m.y||"?")+')</span></div><div class="m">'+n.m.m.map(function(id){return MOTIFS[id].en;}).join(" · ")+'</div>';
+  tip.innerHTML = '<div class="t">'+n.m.n+' <span style="color:var(--dim)">('+(n.m.y||"?")+')</span></div><div class="m">'+n.m.m.map(function(id){return MOTIFS[id].en;}).join(" Â· ")+'</div>';
   tip.style.display="block";
   tip.style.left = Math.min(x+14, W-260)+"px"; tip.style.top = Math.max(10,y-40)+"px";
 }
@@ -335,23 +335,23 @@ function chipHTML(id, clickable){
 function filmRow(n, mid){
   var key = n.m.n.toLowerCase() + "|" + mid;
   var why = (typeof WHY !== "undefined") ? WHY[key] : null;
-  var stars = '<span>'+"★".repeat(n.m.r-6)+'</span><span style="opacity:.22">'+"★".repeat(10-n.m.r)+'</span>';
+  var stars = '<span>'+"â˜…".repeat(n.m.r-6)+'</span><span style="opacity:.22">'+"â˜…".repeat(10-n.m.r)+'</span>';
   return '<div class="filmitem"><div class="filmrow" data-name="'+n.m.n.toLowerCase().replace(/"/g,"")+'"><span>'+n.m.n+'</span><span class="stars">'+stars+'</span></div>'+(why?'<div class="why2">'+why+'</div>':'')+'</div>';
 }
 function openFilmPanel(n){
   selected = n; motifPanel = null; renderConstLabel();
   var m = n.m;
-  var html = '<span class="close" id="pclose">✕</span>';
-  html += '<div class="kicker" style="color:'+MOTIFS[m.m[0]].c+'">'+(m.t||"")+(m.y?" · "+m.y:"")+'</div>';
+  var html = '<span class="close" id="pclose">âœ•</span>';
+  html += '<div class="kicker" style="color:'+MOTIFS[m.m[0]].c+'">'+(m.t||"")+(m.y?" Â· "+m.y:"")+'</div>';
   html += '<h2>'+m.n+'</h2>';
-  html += '<div class="meta">'+(m.d?"directed by "+m.d+" · ":"")+'rating <b>'+m.r+'</b>/10'+(m.g?" · "+m.g:"")+'</div>';
+  html += '<div class="meta">'+(m.d?"directed by "+m.d+" Â· ":"")+'rating <b>'+m.r+'</b>/10'+(m.g?" Â· "+m.g:"")+'</div>';
   html += '<div class="chips">'+m.m.map(function(id){ return chipHTML(id,true); }).join("")+'</div>';
   if (m.s) html += '<div class="syn">'+m.s+'</div>';
   html += '<h4>Nearest stars</h4>';
   var cnt=0;
   n.links.forEach(function(l){
     if (cnt>=8 || !nodeVisible(l.n)) return;
-    var names = m.m.filter(function(id){ return l.n.m.m.indexOf(id)>=0; }).map(function(id){ return MOTIFS[id].en; }).join(" · ");
+    var names = m.m.filter(function(id){ return l.n.m.m.indexOf(id)>=0; }).map(function(id){ return MOTIFS[id].en; }).join(" Â· ");
     html += '<div class="conn" data-name="'+l.n.m.n.toLowerCase().replace(/"/g,"")+'"><span>'+l.n.m.n+'</span><span class="why">'+names+'</span></div>';
     cnt++;
   });
@@ -360,12 +360,12 @@ function openFilmPanel(n){
 function openMotifPanel(id){
   selected = null; motifPanel = id; renderConstLabel();
   var M = MOTIFS[id];
-  var html = '<span class="close" id="pclose">✕</span>';
+  var html = '<span class="close" id="pclose">âœ•</span>';
   html += '<div class="kicker" style="color:'+M.c+'">constellation '+(motifOrder.indexOf(id)+1)+' / '+motifOrder.length+'</div>';
-  html += '<div class="navrow"><span class="navbtn" id="mPrev">◀</span><h2>'+M.en+'</h2><span class="navbtn" id="mNext">▶</span></div>';
+  html += '<div class="navrow"><span class="navbtn" id="mPrev">â—€</span><h2>'+M.en+'</h2><span class="navbtn" id="mNext">â–¶</span></div>';
   html += '<div class="def" style="border-left-color:'+M.c+'66">'+M.def+'</div>';
-  html += '<div class="src">'+M.src+' · also: '+M.pl+'</div>';
-  html += '<div class="meta">'+counts[id]+' films · co-travels most with '+relatedMotifs(id).map(function(r){ return MOTIFS[r].en; }).join(", ")+'</div>';
+  html += '<div class="src">'+M.src+' Â· also: '+M.pl+'</div>';
+  html += '<div class="meta">'+counts[id]+' films Â· co-travels most with '+relatedMotifs(id).map(function(r){ return MOTIFS[r].en; }).join(", ")+'</div>';
   html += '<div class="chips">'+relatedMotifs(id).map(function(r){ return chipHTML(r,true); }).join("")+'</div>';
   html += '<h4>Highest rated</h4>';
   topFilms[id].slice(0,10).forEach(function(n){ html += filmRow(n, id); });
@@ -400,7 +400,7 @@ function selectMotif(id, openP){
 function renderConstLabel(){
   var act = activeMotifs();
   if (!act){ constLabel.style.display="none"; return; }
-  if (act.length===1){ var M=MOTIFS[act[0]]; constLabel.textContent = M.en+" — "+counts[act[0]]+" stars"; constLabel.style.color=M.c; }
+  if (act.length===1){ var M=MOTIFS[act[0]]; constLabel.textContent = M.en+" â€” "+counts[act[0]]+" stars"; constLabel.style.color=M.c; }
   else { constLabel.textContent = act.length+" constellations"; constLabel.style.color="#cfd4e6"; }
   constLabel.style.display="block";
 }
@@ -453,7 +453,7 @@ searchEl.addEventListener("input", function(){
     if (found>=3) return;
     if (MOTIFS[id].en.toLowerCase().indexOf(q)>=0 || MOTIFS[id].pl.toLowerCase().indexOf(q)>=0){
       var div = document.createElement("div"); div.className="hit motifHit";
-      div.innerHTML = "<span>☾ "+MOTIFS[id].en+"</span><span class='r'>"+counts[id]+"</span>";
+      div.innerHTML = "<span>â˜¾ "+MOTIFS[id].en+"</span><span class='r'>"+counts[id]+"</span>";
       div.onclick = function(){ selectMotif(id,true); };
       hitsEl.appendChild(div); found++;
     }
@@ -462,7 +462,7 @@ searchEl.addEventListener("input", function(){
     if (found>=10) return;
     if (n.m.n.toLowerCase().indexOf(q)>=0){
       var div = document.createElement("div"); div.className="hit";
-      div.innerHTML = "<span>"+n.m.n+"</span><span class='r'>"+(n.m.y||"")+" · "+n.m.r+"</span>";
+      div.innerHTML = "<span>"+n.m.n+"</span><span class='r'>"+(n.m.y||"")+" Â· "+n.m.r+"</span>";
       div.onclick = function(){ openFilmPanel(n); centerOn(n); };
       hitsEl.appendChild(div); found++;
     }
@@ -490,7 +490,7 @@ motifOrder.forEach(function(id){
   row.onmouseleave = function(){ hoverMotif=null; };
   legEl.appendChild(row);
 });
-document.getElementById("motifsH3").textContent = "Motifs · " + motifOrder.length;
+document.getElementById("motifsH3").textContent = "Motifs Â· " + motifOrder.length;
 function renderLegend(){
   var act = activeMotifs();
   motifOrder.forEach(function(id){
@@ -511,3 +511,4 @@ requestAnimationFrame(loop);
 </script>
 </body>
 </html>
+
