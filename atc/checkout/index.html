@@ -425,8 +425,8 @@
           <div class="plan-sub">Monthly subscription</div>
           <div class="plan-divider"></div>
           <div class="plan-tokens">
-            <span class="tok-dot"></span>100,000 tokens/month
-            <span class="info" tabindex="0" data-tip="Token usage resets at the start of each billing cycle.">
+            <span class="tok-dot"></span>Between X–X prompts each month
+            <span class="info" tabindex="0" data-tip="Prompt usage resets at the start of each billing cycle.">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>
             </span>
           </div>
@@ -444,8 +444,8 @@
           <div class="plan-sub">Monthly subscription</div>
           <div class="plan-divider"></div>
           <div class="plan-tokens">
-            <span class="tok-dot"></span>Unlimited tokens/month
-            <span class="info" tabindex="0" data-tip="No hard token caps; fair-use policy applies.">
+            <span class="tok-dot"></span>Between X–X prompts per month
+            <span class="info" tabindex="0" data-tip="Prompt allowance resets at the start of each billing cycle.">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>
             </span>
           </div>
@@ -467,8 +467,9 @@
           </svg>
         </div>
         <div class="bonus-body">
-          <div class="bonus-title">Exclusive signup bonus: First 30 days of AI — free</div>
-          <div class="bonus-line">Add AI now and explore your selected plan at no cost for 30 days.</div>
+          <div class="bonus-title">Exclusive signup bonus: free AI trial credits</div>
+          <div class="bonus-line">Every new account receives free credits as a trial period to test out our AI coach.</div>
+          <div class="bonus-line">That’s about X–X prompts, depending on how complex the question is.</div>
           <div class="bonus-line"><b>Signup only, new accounts only.</b></div>
         </div>
         <div class="bonus-price">
@@ -507,7 +508,7 @@
           </label>
           <label class="consent" id="cb-ai-wrap">
             <input class="checkbox" type="checkbox" id="cb-ai">
-            <span>I understand and agree that after my 30-day free trial period, my
+            <span>I understand and agree that once my free trial credits are used up, my
             <b id="ai-plan-name">Advanced</b> AI Plan will automatically renew at
             <b id="ai-plan-price">$49/month</b> unless I cancel it before the renewal date.</span>
           </label>
@@ -619,11 +620,11 @@
       const p = PLANS[state.plan];
       html += `
       <div class="o-item">
-        <div><div class="o-title">${p.name} AI — first 30 days</div><div class="o-sub">Free trial for 30 days</div></div>
+        <div><div class="o-title">${p.name} AI — trial credits</div><div class="o-sub">Free credits to test the AI coach</div></div>
         <div class="o-price free">$0</div>
       </div>
       <div class="o-item">
-        <div><div class="o-title">${p.name} AI</div><div class="o-sub">Renews monthly after 30 days</div></div>
+        <div><div class="o-title">${p.name} AI</div><div class="o-sub">Renews monthly once trial credits are used</div></div>
         <div class="o-price">$${p.price}/month</div>
       </div>`;
     }
