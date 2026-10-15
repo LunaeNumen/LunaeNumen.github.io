@@ -131,7 +131,27 @@
   .plan-divider{height:1px;background:#e8eaf3;margin:16px 0 14px}
   .plan-tokens{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--ink)}
   .tok-dot{width:6px;height:6px;background:var(--accent);border-radius:2px;flex:none}
-  .info{color:var(--muted);display:inline-flex;cursor:help}
+  .info{position:relative;color:var(--muted);display:inline-flex;cursor:help}
+  .info::after{
+    content:attr(data-tip);
+    position:absolute;bottom:calc(100% + 9px);left:50%;
+    transform:translateX(-50%) translateY(3px);
+    background:#1d2233;color:#fff;font-size:12px;font-weight:500;line-height:1.45;
+    padding:8px 12px;border-radius:8px;width:max-content;max-width:240px;
+    opacity:0;pointer-events:none;transition:opacity .15s ease,transform .15s ease;
+    z-index:999;box-shadow:0 8px 20px rgba(20,24,60,.25);white-space:normal;text-align:left;
+  }
+  .info::before{
+    content:"";position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);
+    border:6px solid transparent;border-top-color:#1d2233;
+    opacity:0;transition:opacity .15s ease;z-index:999;
+  }
+  .info:hover::after,.info:focus-visible::after{opacity:1;transform:translateX(-50%) translateY(0)}
+  .info:hover::before,.info:focus-visible::before{opacity:1}
+  @media(max-width:640px){
+    .info::after{left:auto;right:-8px;transform:translateY(3px)}
+    .info:hover::after,.info:focus-visible::after{transform:translateY(0)}
+  }
 
   /* radios */
   .radio{
@@ -406,7 +426,7 @@
           <div class="plan-divider"></div>
           <div class="plan-tokens">
             <span class="tok-dot"></span>100,000 tokens/month
-            <span class="info" title="Token usage resets at the start of each billing cycle.">
+            <span class="info" tabindex="0" data-tip="Token usage resets at the start of each billing cycle.">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>
             </span>
           </div>
@@ -425,7 +445,7 @@
           <div class="plan-divider"></div>
           <div class="plan-tokens">
             <span class="tok-dot"></span>Unlimited tokens/month
-            <span class="info" title="No hard token caps; fair-use policy applies.">
+            <span class="info" tabindex="0" data-tip="No hard token caps; fair-use policy applies.">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></svg>
             </span>
           </div>
